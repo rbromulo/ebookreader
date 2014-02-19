@@ -1,11 +1,11 @@
-"Vade Mecum" for Android
+"AuJur E-Book Reader" for Android
 ========================================================
 
-"Vade Mecum" is a free, open-source ebook reader. It is licensed under the GPL-V3 license and based on PageTurner.
+"AuJur E-Book Reader" is a free, open-source ebook reader. It is licensed under the GPL-V3 license and based on PageTurner.
 
 
-Building "Vade Mecum"
-----------------------------
+Building "AuJur E-Book Reader"
+------------------------------
 
 # Install Java
 *   On Ubuntu
@@ -34,17 +34,17 @@ Building "Vade Mecum"
         List of devices attached 
         015d18ad5c14000c        device
 
-NOTE: Currently "Vade Mecum" won't build using Maven.
+NOTE: Currently "AuJur E-Book Reader" won't build using Maven.
 
 Eclipse
 -------
 
-To use "Vade Mecum" in Eclipse, there is at least 1 option:
+To use "AuJur E-Book Reader" in Eclipse, there is at least 1 option:
 
 #The easy way
-=======
+-------
 
-The recommended way to build "Vade Mecum" in Eclipse is using the m2e-android plugin.
+The recommended way to build "AuJur E-Book Reader" in Eclipse is using the m2e-android plugin.
 
 =======
 You can follow these steps to use dependencies (jar files):
@@ -52,7 +52,7 @@ You can follow these steps to use dependencies (jar files):
 1.   Download and unpack the sources        
 
 2.   In Eclipse, select "New Android Project" -> "From existing source" and
-     point it to the folder you unpacked "Vade Mecum" in.
+     point it to the folder you unpacked "AuJur E-Book Reader" in.
 
 3.   inside the source folder, there is a folder called "libs". Put all JAR files in the classpath of the project
 
