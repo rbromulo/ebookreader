@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:dcterms="http://purl.org/dc/terms/" xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:opds="http://opds-spec.org/2010/catalog" xml:lang="en" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:app="http://www.w3.org/2007/app" xmlns="http://www.w3.org/2005/Atom">
+  <id>livros/catalogo.xml</id>
+  <title>Sites recomendados</title>
+  <updated>2013-10-10T18:42:26Z</updated>
+  <author>
+    <name>AuJur</name>
+    <uri>http://www.auxiliojuridico.com/</uri>
+    <email>contato@auxiliojuridico.com</email>
+  </author>
+  <link type="application/atom+xml; profile=opds-catalog; kind=navigation" rel="self" href="vademecum/AuJurCatalog/index.xml"/>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" title="Vade Mecum" rel="start" href="vademecum/AuJurCatalog/index.xml"/>
+<entry>
+  <title>Smashwords</title>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="subsection" href="http://www.smashwords.com/nightwhistler"/>
+  <updated>2012-12-18T18:42:26Z</updated>
+  <id>http://www.smashwords.com/nightwhistler</id>
+  <content type="text">Self-published books, both free and for purchase. Buying books here helps support PageTurner</content>
+  <link type="image/png" rel="http://opds-spec.org/image/thumbnail" href="icons/globe.png" />
+</entry>
+<entry>
+  <title>Feedbooks</title>
+  <link type="application/atom+xml;profile=opds-catalog;kind=acquisition" rel="subsection" href="http://www.feedbooks.com/site/free_books.atom"/>
+  <link type="image/png" rel="http://opds-spec.org/image/thumbnail" href="icons/globe.png" />
+  <updated>2012-12-18T18:42:26Z</updated>
+  <id>http://www.feedbooks.com/site/free_books.atom</id>
+  <content type="text">Feedbooks free section. Both classics and modern works.</content>
+</entry>
+<entry>
+  <title>ManyBooks.net</title>
+  <link type="application/atom+xml;profile=opds-catalog;kind=acquisition" rel="subsection" href="http://www.manybooks.net/opds/index.php"/>
+  <link type="image/png" rel="http://opds-spec.org/image/thumbnail" href="icons/globe.png" />
+  <updated>2012-12-18T18:42:26Z</updated>
+  <id>http://www.manybooks.net/opds/index.php</id>
+  <content type="text">Large collection of free books.</content>
+</entry>
+<entry>
+  <title>Gutenberg.org</title>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="subsection" href="http://m.gutenberg.org/ebooks/?format=opds"/>
+  <link type="image/png" rel="http://opds-spec.org/image/thumbnail" href="icons/globe.png" />
+  <updated>2012-12-18T18:42:26Z</updated>
+  <id>http://m.gutenberg.org/ebooks/?format=opds</id>
+  <content type="text">Large collection of classic books in many languages.</content>
+</entry>
+<entry>
+  <title>Qumran</title>
+  <link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="subsection" href="http://ebooks.qumran.org/opds/?lang=en"/>
+  <link type="image/png" rel="http://opds-spec.org/image/thumbnail" href="icons/globe.png" />
+  <updated>2012-12-18T18:42:26Z</updated>
+  <id>http://ebooks.qumran.org/opds/?lang=en</id>
+  <content type="text">Izzys Public Domain Library</content>
+</entry>
+</feed>

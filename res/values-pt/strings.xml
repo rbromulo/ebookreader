@@ -1,0 +1,403 @@
+<resources>
+    <string name="title">Título</string>
+    <string name="app_desc">AuJur é um leitor de e-books que permite sincronizar seus progerros de leitura entre múltiples dispositivos.</string>
+
+    <string name="open_file">Abrir arquivo ePub</string>
+    <string name="open_library">Meus livros</string>
+
+    <string name="profile_day">Modo diurno</string>  
+    <string name="profile_night">Modo noturno</string>
+    <string name="manual_sync">Sincronize seus progressos</string>
+    <string name="prefs">Preferências</string>
+
+    <string name="show_toc">Mostrar Índice</string>   
+    <string name="rolling_blind">Rolagem automática</string>
+    <string name="about">Sobre</string>
+    <string name="error_open_bk">Erro abrindo o livro: %s</string>
+
+    <string name="dictionary_lookup">Buscar no dicionário</string>
+    <string name="direitonet_lookup">Buscar no DireitoNet</string>
+    <string name="wikipedia_lookup">Buscar na Wikipedia</string>
+    <string name="google_lookup">Buscar no Google</string>    
+    <string name="word_select">"Voçê selecionou '%s'</string>    
+
+    <string name="loading_wait">Carregando, por favor espere</string>
+    <string name="install_oi">Por favor instale \'OI File Manager\' do Google Play Store</string>  
+
+
+    <string name="cloud_bm">Marcadores Sincronizados</string>
+    <string name="toc_label">Índice</string>
+    <string name="syncing">"Progresso da sincronização…"</string>
+    <string name="sync_failed">Falha na Sincronização</string>
+    <string name="connection_fail">Não foi possível conectar ao servidor de sincronização.</string>    
+
+    <string name="never_read">Nunca</string>
+
+    <string name="library">Biblioteca</string>
+    <string name="book_details">Detalhes do livro</string>
+
+    <string name="book_by">Por %s</string>
+    <string name="last_read">Última leitura: %s</string>
+    <string name="added_to_lib">Adicionado à biblioteca: %s</string>
+
+    <string name="view_details">Ver detalles</string>
+    <string name="delete">Excluir</string>
+    <string name="scan_books">Buscar por livros</string>    
+
+    <string name="importing_books">Importando livros…</string>
+    <string name="scanning_epub">Procurando arquivos EPUB.</string>
+    <string name="importing">Importando %1$d de %2$d</string>
+    <string name="scan_folders">Procurando por arquivos EPUB.\nPastas percorridas: %d</string>
+    <string name="import_errors">Alguns arquivos possuem erros:</string>
+    <string name="no_books_found">Nenhum livro encontrado.</string>
+    <string name="no_bks_fnd_text">Nenhum livro foi encontrado em seu dispositivo.\nVoçê pode baixar livros de gutenberg.org ou feedbooks.com</string>
+    <string name="loading_library">Carregando biblioteca…</string>
+    <string name="scan_bks_question">Não há livros em sua biblioteca.\nVoçê gostaria de procurar livros em seu dispositivo?</string>    
+    <string name="brightness">Brilho</string>    
+
+    <string-array name="v_animLabels">
+        <item>Deslizamento</item>
+        <item>Sem animação</item>        
+    </string-array>
+
+    <string-array name="h_animLabels">
+        <item>Página de livro</item>
+        <item>Deslizamento</item>
+        <item>Sem animação</item>
+    </string-array>
+
+    <string-array name="orientationLabels">
+        <item>Não bloquear orientação</item>
+        <item>Vertical</item>
+        <item>Horizontal</item>
+        <item>Vertical Invertido</item>
+        <item>Horizontal Invertido</item>
+    </string-array>  
+
+    <string-array name="autoscrollLabels">
+        <item>Cortina</item>
+        <item>Barra de tempo para mudança</item>
+    </string-array>
+    
+    <string-array name="nook_touch_direction_labels">
+        <item>Top buttons move forward</item>
+        <item>Bottom buttons move forward</item>
+    </string-array>
+
+    <string-array name="libraryQueries">
+        <item>Lidos recentemente</item>
+        <item>Adicionados recentemente</item>
+        <item>Não lidos</item>
+        <item>Ordenar por título</item>
+        <item>Ordenar por autor</item> 
+    </string-array>
+
+    <string name="access_denied">Sua chave de acesso é inválida. Por favor, obtenha uma chave de acesso válida.</string>
+    <string name="import_books">Importar livros</string>
+    <string name="import_desc">Você pode pesquisar todo o seu cartão de memória, ou especificar uma pasta.</string>
+    <string name="scan_whole_card">Pesquisar todo o meu cartão de memória</string>
+    <string name="scan_folder">Pesquisar uma pasta específica</string>
+    <string name="copy_to_library">Copiar livros para minha pasta de biblioteca</string>
+    <string name="no_such_folder">A pasta %s não existe.</string>
+    <string name="import_failed">Falha na importação</string>
+
+    <string name="list_view">Mudar para o modo lista</string>    
+	<string name="shelves_view">Mudar para o modo estante</string>
+    <string name="read">Ler agora</string>
+
+    <string name="download">Baixar livros</string>
+    <string name="downloading">Baixando livro…</string>
+	<string name="browse">Navegar…</string>
+	<string name="search_books">Procurar livros</string>
+	<string name="enter_query">Por favor, digite um termo de pesquisa</string>
+	<string name="buy_now">Comprar</string>
+    <string name="enter_email">A sincronização nas nuvens está desativada. Para habilitá-la, por favor digite um endereço de e-mail nas preferências.</string>
+    <string name="add_to_library">Adicionar</string>
+
+    <string name="search_wait">Pesquisando… por favor espere.</string>
+    <string name="search_text">Pesquisa de texto</string>
+    <string name="search_hits">Pesquisando…\nEncontradas %d iguais.</string>
+    <string name="search_cancelled">Pesquisa cancelada.</string>
+    <string name="search_no_matches">Pesquisa não encontrou nada.</string>
+    <string name="search_results">Resultados da pesquisa</string>
+
+    <string name="opening_file">Abrindo arquivo…</string>
+    <string name="loading_text">Carregando Texto…</string>
+
+    <string name="end_of_section">Final do capítulo.\nClique para continuar.</string>
+
+    <string name="download_complete">Download completo.\nO Livro foi adicionado a sua biblioteca.</string>
+    <string name="feed_failed">Não foi possível contactar o site. Por favor, tente novamente.</string>
+    <string name="book_failed">Não foi possível baixar o livro. Por favor, tente novamente.</string>
+
+    <string name="custom_site">Meus próprios sites OPDS</string>
+    <string name="add_site">Adicionar um site próprio</string>
+    <string name="edit_site">Editar site próprio</string>
+    <string name="add_site_header">Que tipo de site que você gostaria de acrescentar?</string>
+    <string name="calibre_server">Servidor de conteúdo do Calibre</string>
+    <string name="cops_server">Servidor COPS</string>
+    <string name="c2opds_server">Calibre2OPDS</string>
+    <string name="generic_server">Site OPDS genérico</string>
+    <string name="save">Salvar alterações</string>
+
+    <string name="custom_site_desc">Seus próprios sites OPDS / Calibre. Você pode adicionar sites a partir da tela de Preferências.</string>
+    <string name="site_name">Nome do site</string>
+    <string name="site_url">URL do site</string>
+    <string name="site_desc">Descrição</string>
+    <string name="site_username">Nome de usuário</string>
+    <string name="site_password">Senha</string>
+
+    <string name="msg_name_blank">Por favor, preencha um nome.</string>
+    <string name="msg_url_blank">Por favor, preencha um endereço URL.</string>
+
+    <string name="edit">Editar</string>
+
+    <string name="no_custom_sites">Você não tem sites personalizados definidos. Por favor, adicione algum nas preferências.</string>
+    <string name="text_to_speech">Ler em voz alta (TTS)</string>
+
+    <string name="init_tts">Iniciando o TTS…\nPor favor espere.</string>
+    <string name="tts_failed">TTS falhou.</string>
+
+    <string name="search_library">Buscar na biblioteca</string>
+    <string name="no_sync_points">Você não tem nenhum ponto sincronização na nuvem armazenado ainda. Pontos de sincronização são armazenados automaticamente quando você sair do programa.</string>
+    <string name="no_new_books_found">A busca não encontrou novos livros.</string>
+
+    <string name="next_page">Próxima página…</string>
+    <string name="prev_page">Página anterior…</string>
+
+    <string name="empty_opds_feed">Não há resultados. Por favor, verifique se você está usando o endereço URL correto.</string>
+    <string name="search_results_item">Resultados da busca…</string>
+    <string name="lookup_wiktionary">Pesquisar no Wiktionary</string>
+
+    <string name="no_search_results">A pesquisa não encontrou nada.</string>
+
+    <string name="dead_link">Desculpe, parece que o link que você clicou está quebrado.</string>
+    <string name="could_not_load">Não foi possível carregar o texto: %s</string>
+    <string name="out_of_memory">Desculpe, não foi possível liberar memória suficiente para carregar este arquivo.</string>
+
+    <string name="highlight">Realçar (Marca Texto)</string>
+    <string name="highlights">Realçados</string>
+
+    <string name="highlight_options">Opções de marca texto</string>
+    <string name="text_note">Anotação</string>
+    <string name="clear_note">Excluir anotação</string>
+    <string name="save_note">Salvar anotação</string>
+
+    <string name="set_colour">Selecione a Cor</string>
+
+    <string name="page_number_of">Página %1$d de %2$d</string>
+
+    <string name="import_this">Importar esta pasta</string>
+    <string name="cancelling">Cancelando...</string>
+
+    <string name="no_bks_fnd_text2">Não foram encontrados livros em seu dispositivo.\nVoçê gostaria de baixar algum?</string>
+    <string name="notes_attached">Este texto realçado com marca texto tem uma anotação.\nVoçê tem certeza que deseja excluí-lo?</string>
+    <string name="highlight_deleted">O realce do texto foi removido</string>
+
+    <string name="add_bookmark">Adicionar marcador</string>
+    <string name="add">Adicionar</string>
+    <string name="bookmarks">Marcadores</string>
+    <string name="bookmark_options">Opções de marcadores</string>
+    <string name="bookmark_deleted">O marcador foi excluído</string>
+
+
+    <!-- Preferences -->    
+
+    <string name="pref_sync_settings">Preferências de sincronização</string>
+    <string name="pref_email">Correio eletrônico</string>
+    <string name="pref_email_summary">Usado para sincronizar o seu progresso através de dispositivos. Deixe em branco para desativar a sincronização.</string>
+    <string name="pref_email_message">Por favor insira um endereço de e-mail válido.</string>
+    <string name="pref_device_name">Nome do dispositivo</string>
+    <string name="pref_device_name_summary">Nome exclusivo para este dispositivo, para a resolução de conflitos.</string>
+    <string name="pref_device_name_message">Por favor insira um nome para o seu dispositivo.</string>
+    <string name="pref_access_key">Chave de acesso</string>
+    <string name="pref_access_key_summary">Uma chave de acesso é necessária para utilizar o serviço de sincronização. Visite o site para aprender como obter uma chave.</string>
+    <string name="pref_access_key_message">Por favor insira a sua chave de acesso.</string>
+
+    <string name="pref_autoscroll_settings">Configuração da auto rolagem</string>
+    <string name="pref_scroll_style">Estilo de auto rolagem</string>
+    <string name="pref_scroll_style_summary">Cortina ou Barra.</string>
+    <string name="pref_scroll_speed">Velocidade de auto rolagem</string>
+    <string name="pref_scroll_speed_summary">Quantos segundos uma página será exibida.</string>
+
+    <string name="pref_my_books_settings">Configurações da minha biblioteca</string>
+    <string name="pref_copy_to_library">Copiar para a pasta da biblioteca</string>
+    <string name="pref_copy_to_library_summary">Este programa deve copiar os arquivos para a sua própria pasta.</string>
+    <string name="pref_calibre_server">Servidor de conteúdos do Calibre</string>
+    <string name="pref_calibre_server_summary">Conecte-se a sua própria biblioteca do Calibre.</string>
+    <string name="pref_calibre_server_message">URL do servidor Calibre</string>
+    <string name="pref_calibre_server_hint">http://192.168.1.1:8080/opds</string>
+    <string name="pref_calibre_user">Nome de usuário</string>
+    <string name="pref_calibre_user_summary">Seu nome de usuário do Calibre.</string>
+    <string name="pref_calibre_user_hint">calibre</string>
+    <string name="pref_calibre_password">Senha</string>
+    <string name="pref_calibre_password_summary">Sua senha do Calibre.</string>
+
+    <string name="pref_visual_settings">Configurações Visuais</string>
+    <string name="pref_full_screen">Tela cheia</string>
+    <string name="pref_full_screen_summary">Oculta todas as barras de estado.</string>
+    <string name="pref_screen_orientation">Orientação da tela</string>
+    <string name="pref_screen_orientation_summary">Permite voçê bloquear a orientação da tela.</string>
+    <string name="pref_keep_screen_on">Manter a tela acesa</string>
+    <string name="pref_keep_screen_on_summary">Impede a tela de bloqueio durante a leitura.</string>
+    <string name="pref_set_brightness">Controles de brilho</string>
+    <string name="pref_set_brightness_summary">Deixa o controle de brilho por conta do programa.</string>
+    <string name="pref_day_bright">Brilho da tela</string>
+    <string name="pref_day_bright_summary">Para modo diurno.</string>
+    <string name="pref_day_night">Brilho da tela</string>
+    <string name="pref_day_night_summary">Para modo noturno.</string>
+
+    <string name="pref_text_display_settings">Configurações de exibição de texto</string>
+    <string name="pref_font_face">Fonte</string>
+    <string name="pref_font_face_summary">Fonte principal de exibição de texto.</string>
+    <string name="pref_strip_whitespace">Retira espaços em branco</string>
+    <string name="pref_strip_whitespace_summary">Tiras linhas em branco desnecessárias.</string>
+    <string name="pref_itext_size">Tamanho da fonte</string>
+    <string name="pref_itext_size_summary">Tamanho da fonte para exibição de livros.</string>
+    <string name="pref_margin_h">Margem horizontal</string>
+    <string name="pref_margin_h_summary">Espaço na borda esquerda e direita da tela.</string>
+    <string name="pref_margin_v">Margem vertical</string>
+    <string name="pref_margin_v_summary">Espaço na borda superior e inferior da tela.</string>
+    <string name="pref_line_spacing">Espaço entre as linhas</string>
+    <string name="pref_line_spacing_summary">Adiciona espaço vertical entre as linhas.</string>
+
+    <string name="pref_colour_settings">Configurações de cor</string>
+    <string name="pref_day_text">Cor do texto</string>
+    <string name="pref_day_text_summary">Para modo diurno.</string>
+    <string name="pref_day_bg">Cor de fundo</string>
+    <string name="pref_day_bg_summary">Para modo diurno.</string>
+    
+    <!-- Not yet translated -->
+    
+    
+    <string name="pref_day_link">Cor do link</string>
+    <string name="pref_day_link_summary">Para modo díurno.</string>
+    <string name="pref_night_text">Cor do texto</string>
+    <string name="pref_night_text_summary">Para modo noturno.</string>
+    <string name="pref_night_bg">Cor de fundo</string>
+    <string name="pref_night_bg_summary">Para modo noturno.</string>
+    <string name="pref_night_link">Cor do link</string>
+    <string name="pref_night_link_summary">Para modo noturno.</string>
+
+    <string name="pref_animations">Animações</string>
+    <string name="pref_h_animation">Animações horizontais</string>
+    <string name="pref_h_animation_summary">Animações para mudança horizontal de página.</string>
+    <string name="pref_v_animation">Animações verticais</string>
+    <string name="pref_v_animation_summary">Animações para mudança vertical de página.</string>
+
+    <string name="pref_navigation_settings">Configurações de navegação</string>
+    <string name="pref_scrolling">Ativar rolagem</string>
+    <string name="pref_scrolling_summary">Ativar rolagem estilo navegador.</string>
+    <string name="pref_nav_vol">Ativar botões de volume</string>
+    <string name="pref_nav_vol_summary">Mudar páginas com as teclas de volume.</string>
+    <string name="pref_nav_swipe_h">Ativar deslizamento horizontal</string>
+    <string name="pref_nav_swipe_h_summary">Deslize esq/dir para mudar página.</string>
+    <string name="pref_nav_swipe_v">Ativar deslizamento vertical</string>
+    <string name="pref_nav_swipe_v_summary">Deslize esq/dir para mudar página.</string>
+    <string name="pref_nav_tap_h">Ativar toques laterais</string>
+    <string name="pref_nav_tap_h_summary">Toque na borda esquerda/direita da tela para mudar as páginas.</string>
+    <string name="pref_nav_tap_v">Ativar toques superior/inferior</string>
+    <string name="pref_nav_tap_v_summary">Toque na borda superior/inferior da tela para mudar de páginas.</string>
+
+    <string name="pref_show_pagenum">Mostrar número da página</string>
+    <string name="pref_show_pagenum_summary">Mostrar número da página durante a leitura. Pode demorar alguns segundos para os números das páginas a serem exibidos pela primeira vez.</string>
+
+    <string name="pref_nook_touch">Preferências de toque para Nook</string>
+
+    <string name="pref_nook_touch_button_nav">Botão de navegação</string>
+    <string name="pref_nook_touch_button_nav_summary">Como devem mudar de página os botões laterais do Nook?</string>
+    
+
+    <string name="pref_reading_direction">Direção da leitura</string>
+    <string name="pref_reading_direction_summary">Ler da esquerda para a direita, ou da direita para a esquerda (hebraico e árabe)</string>
+    
+    <string-array name="reading_directionsLabels">
+        <item>Da esquerda para a direita</item>
+        <item>Da direita para a esquerda</item>
+    </string-array>
+
+    <string name="pref_manage_sites">Gerenciar Catálogos OPDS / Calibre</string>
+    <string name="pref_manage_sites_summary">Adicionar ou excluir catálogos personalizados e servidores Calibre.</string>
+    <string name="pref_serif_font">Fonte Serif</string>
+    <string name="pref_serif_summary">Fonte para usar se um livro pede uma fonte Serif.</string>
+
+    <string name="pref_sans_serif_font">Fonte Sans-Serif</string>
+    <string name="pref_sans_serif_summary">Fonte para usar se um livro pede uma fonte Sans-Serif.</string>
+
+    <string name="pref_lang">Idioma do programa</string>
+    <string name="pref_lang_summary">Permite mudar as configurações de linguagem do programa.</string>
+    
+    <string name="language_switch_message">A nova configuração de idioma será ativada na próxima vez que você abrir um livro.</string>
+
+
+    <string name="pref_accept_self_signed">Permite certificados auto-assinados</string>
+    <string name="pref_accept_self_signed_summary">Permite conectar à sites OPDS que usam certificados auto-assinados.</string>
+
+    <string-array name="supported_languagesLabels">
+        <item>Usar configuração do dispositivo</item>
+        <item>Português do Brasil</item>
+        <item>Inglês</item>
+        <item>Holandês</item>
+        <item>Alemão</item>
+        <item>Espanhol</item>
+        <item>Italiano</item>
+        <item>Árabe</item>
+        <item>Hebreo</item>
+        <item>Persa</item>
+    </string-array>
+
+
+    <string name="pref_dim_system_ui">Brilho da tela</string>
+    <string name="pref_dim_system_ui_summary">Controlar o brilho do dispositivo estando em tela cheia.</string>
+
+    <string name="pref_long_short">Opção de clique longo/clique rápido</string>
+    <string name="pref_long_short_summary">Como abrir livros na biblioteca</string>
+
+    <string-array name="long_short_labels">
+        <item>Pressione e segure para abrir, pressione rapidamente para mais detalhes</item>
+        <item>Pressione rapidamente para abrir, pressione e segure para mais detalhes</item>
+    </string-array>
+
+    <string name="pref_dev_settings">Configurações de desenvolvimento</string>
+
+    <string name="pref_acra">Enviar relatórios de erros</string>
+    <string name="pref_acra_summary">Permite o programa enviar relatórios de erros anônimos quando o programa trava.</string>
+
+    <string name="opds_settings">Configurações OPDS</string>
+    
+    <string name="pref_use_publisher_style">Usar o prórpio estilo do livro (CSS)</string>
+    <string name="pref_use_publisher_style_summary">Permitir que o livro mude de fonte, cores, etc.</string>
+
+    <string name="drawer_open">Abrir menu esquerdo</string>
+    <string name="drawer_close">Menu esquerdo fechado</string>
+    <string name="drawer_layout">Disposição do menu esquerdo</string>
+
+    <string name="pref_allow_css_colours">Permitir que o livro configure as cores</string>
+    <string name="pref_css_colours_day_summary">Para modo diurno</string>
+    <string name="pref_css_colours_night_summary">Para modo noturno</string>
+
+    <string name="pref_always_open_book">Sempre abrir o último livro</string>
+    <string name="pref_always_open_book_summary">O programa sempre começará no último livro de leitura em vez da última tela aberta.</string>
+
+    <string name="pref_sync_server">Sincronizar com o servidor.</string>
+    <string name="pref_sync_server_summary">Selecione qual servidor você gostaria de sincronizar.</string>
+    <string name="pref_sync_server_message">Por favor introduza o endereço URL do servidor.</string>
+    
+    <!-- Translation is not needed for the strings below -->
+    <string name="no_author_byline">de João Mateus</string>
+    <string name="zero_percent">0%  </string>
+    <string name="default_timestamp">01-01-2012 15:44</string>
+    <string name="default_device_name_and_progress">Fone - 15%</string>
+    <string name="ebook_path">/sdcard/eBooks</string>
+    <string name="folder_name">Nome da pasta</string>
+    <string name="small_text">Texto pequeno</string>
+    <string name="large_text">Texto grande</string>
+    <string name="default_added_to_library">Adicionado à biblioteca: nunca</string>
+    <string name="default_last_read">Última leitura: nunca</string>
+    <string name="default_filename">book.epub</string>
+    <string name="default_book_title">Titulo do livro</string>
+    <string name="hello_world">Olá mundo!</string>
+
+
+
+</resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.aujur.ebookreader"
+    android:installLocation="auto"
+    android:versionCode="7"
+    android:versionName="7" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".PageTurner"
+        android:description="@string/app_desc"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        >
+        <receiver android:name=".activity.MediaButtonReceiver" >
+            <intent-filter android:priority="10000" >
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activity.ReadingActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/epub+zip" />
+                <data android:pathPattern=".*\\.epub" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.PageTurnerPrefsActivity"
+            android:label="@string/prefs" />
+        <activity
+            android:name=".activity.LibraryActivity"
+            android:label="@string/library" />
+        <activity
+            android:name=".activity.FileBrowseActivity"
+            android:label="@string/browse" />
+        <activity
+            android:name=".activity.CatalogBookDetailsActivity"
+            android:label="@string/book_details" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="epub" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.CatalogActivity"
+            android:label="@string/download" />
+        <activity
+            android:name="com.aujur.ebookreader.activity.ManageSitesActivity"
+            android:label="@string/pref_manage_sites" >
+            <intent-filter>
+                <action android:name="com.aujur.ebookreader.activity.ManageSitesActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.acra.CrashReportDialog"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
+    </application>
+
+</manifest>

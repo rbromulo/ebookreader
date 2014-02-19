@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ViewSwitcher
+        android:id="@+id/mainContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <com.aujur.ebookreader.view.bookview.BookView
+            android:id="@+id/bookView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <view
+                android:id="@+id/innerView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                class="com.aujur.ebookreader.view.bookview.BookView$InnerView" />
+        </com.aujur.ebookreader.view.bookview.BookView>
+
+        <com.aujur.ebookreader.view.AnimatedImageView
+            android:id="@+id/dummyView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </ViewSwitcher>
+
+    <TextView
+        android:id="@+id/pageNumberView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/mainContainer" />
+
+    <RelativeLayout
+        android:id="@+id/myTitleBarLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/mainContainer"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/myTitleBarTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/light_grey"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:paddingTop="10dip"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/gray" />
+
+        <TextView
+            android:id="@+id/authorField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myTitleBarTextView"
+            android:background="@color/light_grey"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/gray" />
+
+        <TextView
+            android:id="@+id/percentageField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/authorField"
+            android:background="@color/light_grey"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:text="@string/zero_percent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/gray" />
+
+        <SeekBar
+            android:id="@+id/titleProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/percentageField"
+            android:background="@color/light_grey"
+            android:paddingBottom="10dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" />
+    </RelativeLayout>
+
+    <include layout="@layout/media_player_bar" />
+
+</RelativeLayout>
