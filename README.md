@@ -54,4 +54,4 @@ You can follow these steps to use dependencies (jar files):
 3.   inside the source folder, there is a folder called "libs". Put all JAR files in the classpath of the project
 
 
-[1]: https://github.com/rbromulo/aujur/blob/master/assets/screens/home.png
+[1]: http://www.auxiliojuridico.com/img/landscape_tablet.jpg
