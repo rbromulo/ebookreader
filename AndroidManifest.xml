@@ -83,7 +83,7 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".reading.options.MainOptionsActivity"
+            android:name=".reading.options.ReadingOptionsActivity"
             android:label="@string/download" />
     </application>
 
