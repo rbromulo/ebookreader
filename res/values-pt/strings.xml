@@ -50,6 +50,9 @@
     <string name="scan_folders">Procurando por arquivos EPUB.\nPastas percorridas: %d</string>
     <string name="import_errors">Alguns arquivos possuem erros:</string>
     <string name="no_books_found">Nenhum livro encontrado.</string>
+    
+    <string name="options">Opções</string>
+    
     <string name="no_bks_fnd_text">Nenhum livro foi encontrado em seu dispositivo.\nVoçê pode baixar livros de gutenberg.org ou feedbooks.com</string>
     <string name="loading_library">Carregando biblioteca…</string>
     <string name="scan_bks_question">Não há livros em sua biblioteca.\nVoçê gostaria de procurar livros em seu dispositivo?</string>    
@@ -175,13 +178,17 @@
     <string name="could_not_load">Não foi possível carregar o texto: %s</string>
     <string name="out_of_memory">Desculpe, não foi possível liberar memória suficiente para carregar este arquivo.</string>
 
-    <string name="highlight">Realçar (Marca Texto)</string>
-    <string name="highlights">Realçados</string>
-
-    <string name="highlight_options">Opções de marca texto</string>
+    <string name="notes_and_highlights">Notas &amp; Destaques</string>
+    
+    <string name="highlight">Destacar</string>
+    <string name="highlights">Destaques</string>
+    <string name="highlight_options">Opções de destaque</string>
+    <string name="highlight_deleted">O destaque do texto foi removido</string>
+    
     <string name="text_note">Anotação</string>
     <string name="clear_note">Excluir anotação</string>
     <string name="save_note">Salvar anotação</string>
+    <string name="notes_attached">Este texto destacado tem uma anotação.\nVoçê tem certeza que deseja excluí-lo?</string>
 
     <string name="set_colour">Selecione a Cor</string>
 
@@ -191,8 +198,6 @@
     <string name="cancelling">Cancelando...</string>
 
     <string name="no_bks_fnd_text2">Não foram encontrados livros em seu dispositivo.\nVoçê gostaria de baixar algum?</string>
-    <string name="notes_attached">Este texto realçado com marca texto tem uma anotação.\nVoçê tem certeza que deseja excluí-lo?</string>
-    <string name="highlight_deleted">O realce do texto foi removido</string>
 
     <string name="add_bookmark">Adicionar marcador</string>
     <string name="add">Adicionar</string>

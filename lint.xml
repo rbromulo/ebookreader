@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="NewApi">
+        <ignore path="src/com/aujur/ebookreader/activity/PageTurnerActivity.java" />
+        <ignore path="src/com/aujur/ebookreader/pager/MainActivity.java" />
+        <ignore path="src/com/aujur/ebookreader/pager/QuickContactFragment.java" />
+        <ignore path="src/com/aujur/ebookreader/pageroptions/MainOptionsFragment.java" />
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/PageTurnerActivity.java" />
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/ReadingFragment.java" />
     </issue>

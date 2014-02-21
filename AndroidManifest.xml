@@ -82,6 +82,9 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".reading.options.MainOptionsActivity"
+            android:label="@string/download" />
     </application>
 
 </manifest>

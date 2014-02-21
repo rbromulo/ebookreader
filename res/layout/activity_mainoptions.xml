@@ -12,10 +12,10 @@
         android:layout_height="match_parent" >
 
         <fragment
-            android:id="@+id/fragment_reading"
+            android:id="@+id/fragment_mainoptions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="com.aujur.ebookreader.activity.ReadingFragment" >
+            class="com.aujur.ebookreader.reading.options.MainOptionsFragment" >
         </fragment>
     </FrameLayout>
     <!-- The navigation drawer -->

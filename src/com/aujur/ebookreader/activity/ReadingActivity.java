@@ -18,240 +18,248 @@
  */
 package com.aujur.ebookreader.activity;
 
+import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import roboguice.inject.InjectFragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
+
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import roboguice.inject.InjectFragment;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ReadingActivity extends PageTurnerActivity implements
+		AdapterView.OnItemLongClickListener {
 
-public class ReadingActivity extends PageTurnerActivity implements AdapterView.OnItemLongClickListener {
+	@InjectFragment(R.id.fragment_reading)
+	private ReadingFragment readingFragment;
 
-    @InjectFragment(R.id.fragment_reading)
-    private ReadingFragment readingFragment;
+	@Inject
+	private Configuration config;
 
-    @Inject
-    private Configuration config;
+	private static final Logger LOG = LoggerFactory
+			.getLogger("ReadingActivity");
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger("ReadingActivity");
+	private int tocIndex = -1;
+	private int highlightIndex = -1;
+	private int searchIndex = -1;
+	private int bookmarksIndex = -1;
 
+	@Override
+	protected int getMainLayoutResource() {
+		return R.layout.activity_reading;
+	}
 
-    private int tocIndex = -1;
-    private int highlightIndex = -1;
-    private int searchIndex = -1;
-    private int bookmarksIndex = -1;
+	@Override
+	public void onDrawerClosed(View view) {
+		getSupportActionBar().setTitle(R.string.app_name);
+		super.onDrawerClosed(view);
+	}
 
-    @Override
-    protected int getMainLayoutResource() {
-        return R.layout.activity_reading;
-    }
+	@Override
+	protected void initDrawerItems(ExpandableListView expandableListView) {
+		super.initDrawerItems(expandableListView);
 
-    @Override
-    public void onDrawerClosed(View view) {
-        getSupportActionBar().setTitle(R.string.app_name);
-        super.onDrawerClosed(view);
-    }
+		if (expandableListView == null) {
+			return;
+		}
 
-    @Override
-    protected void initDrawerItems( ExpandableListView expandableListView ) {
-        super.initDrawerItems( expandableListView );
+		expandableListView.setOnItemLongClickListener(this);
 
-        if ( expandableListView == null ) {
-            return;
-        }
+		if (this.readingFragment != null) {
 
-        expandableListView.setOnItemLongClickListener( this );
+			List<NavigationCallback> tocCallbacks = this.readingFragment
+					.getTableOfContents();
 
-        if ( this.readingFragment != null ) {
+			if (tocCallbacks != null && !tocCallbacks.isEmpty()) {
+				getAdapter().setChildren(this.tocIndex, tocCallbacks);
+			}
 
-            List<NavigationCallback> tocCallbacks =
-                    this.readingFragment.getTableOfContents();
+			List<NavigationCallback> highlightCallbacks = this.readingFragment
+					.getHighlights();
 
-            if ( tocCallbacks != null && ! tocCallbacks.isEmpty() ) {
-                getAdapter().setChildren(this.tocIndex, tocCallbacks );
-            }
+			if (highlightCallbacks != null && !highlightCallbacks.isEmpty()) {
+				getAdapter().setChildren(this.highlightIndex,
+						highlightCallbacks);
+			}
 
-            List<NavigationCallback> highlightCallbacks =
-                    this.readingFragment.getHighlights();
+			List<NavigationCallback> searchCallbacks = this.readingFragment
+					.getSearchResults();
 
-            if ( highlightCallbacks != null && ! highlightCallbacks.isEmpty() ) {
-                getAdapter().setChildren(this.highlightIndex, highlightCallbacks);
-            }
+			if (searchCallbacks != null && !searchCallbacks.isEmpty()) {
+				getAdapter().setChildren(this.searchIndex, searchCallbacks);
+			}
 
-            List<NavigationCallback> searchCallbacks =
-                    this.readingFragment.getSearchResults();
+			List<NavigationCallback> bookmarkCallbacks = this.readingFragment
+					.getBookmarks();
 
-            if ( searchCallbacks != null && !searchCallbacks.isEmpty() ) {
-                getAdapter().setChildren(this.searchIndex, searchCallbacks);
-            }
+			if (bookmarkCallbacks != null && !bookmarkCallbacks.isEmpty()) {
+				getAdapter()
+						.setChildren(this.bookmarksIndex, bookmarkCallbacks);
+			}
 
+		}
 
-            List<NavigationCallback> bookmarkCallbacks = this.readingFragment.getBookmarks();
+	}
 
-            if ( bookmarkCallbacks != null && !bookmarkCallbacks.isEmpty() ) {
-                getAdapter().setChildren( this.bookmarksIndex, bookmarkCallbacks );
-            }
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
 
-        }
+		LOG.debug("Got long click");
 
-    }
+		if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+			int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+			int childPosition = getAdapter().getIndexForChildId(groupPosition,
+					ExpandableListView.getPackedPositionChild(id));
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+			NavigationCallback childItem = getAdapter().getChild(groupPosition,
+					childPosition);
 
-        LOG.debug("Got long click");
+			LOG.debug("Long-click on " + groupPosition + ", " + childPosition);
+			LOG.debug("Child-item: " + childItem);
 
-        if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-            int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-            int childPosition = getAdapter().getIndexForChildId( groupPosition,
-                    ExpandableListView.getPackedPositionChild(id) );
+			if (childItem != null) {
+				childItem.onLongClick();
+			}
 
-            NavigationCallback childItem = getAdapter().getChild( groupPosition, childPosition );
+			closeNavigationDrawer();
+			return true;
+		}
 
-            LOG.debug("Long-click on " + groupPosition + ", " + childPosition );
-            LOG.debug("Child-item: " + childItem );
+		return false;
+	}
 
-            if ( childItem != null ) {
-                childItem.onLongClick();
-            }
+	protected String[] getMenuItems(Configuration config) {
 
-            closeNavigationDrawer();
-            return true;
-        }
+		List<String> menuItems = new ArrayList<String>();
 
-        return false;
-    }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+				&& config.isFullScreenEnabled()) {
+			menuItems.add("");
+		}
 
+		menuItems.add(getString(R.string.open_library));
+		menuItems.add(getString(R.string.download));
+		menuItems.add(config.getLastReadTitle());
 
-    protected String[] getMenuItems( Configuration config ) {
+		menuItems.add(getString(R.string.options));
 
-        List<String> menuItems = new ArrayList<String>();
+		if (this.readingFragment != null) {
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && config.isFullScreenEnabled() ) {
-            menuItems.add("");
-        }
+			if (this.readingFragment.hasTableOfContents()) {
+				menuItems.add(getString(R.string.toc_label));
+				this.tocIndex = menuItems.size() - 1;
+			}
 
-        menuItems.add( getString(R.string.open_library));
-        menuItems.add( getString(R.string.download));
-        menuItems.add( config.getLastReadTitle() );
+			if (this.readingFragment.hasHighlights()) {
+				menuItems.add(getString(R.string.highlights));
+				this.highlightIndex = menuItems.size() - 1;
+			}
 
-        if ( this.readingFragment != null ) {
+			if (this.readingFragment.hasSearchResults()) {
+				menuItems.add(getString(R.string.search_results));
+				this.searchIndex = menuItems.size() - 1;
+			}
 
-            if ( this.readingFragment.hasTableOfContents() ) {
-                menuItems.add( getString(R.string.toc_label));
-                this.tocIndex = menuItems.size() - 1;
-            }
+			if (this.readingFragment.hasBookmarks()) {
+				menuItems.add(getString(R.string.bookmarks));
+				this.bookmarksIndex = menuItems.size() - 1;
+			}
 
-            if ( this.readingFragment.hasHighlights() ) {
-                menuItems.add( getString(R.string.highlights));
-                this.highlightIndex = menuItems.size() - 1;
-            }
+		}
 
-            if ( this.readingFragment.hasSearchResults() ) {
-                menuItems.add( getString(R.string.search_results));
-                this.searchIndex = menuItems.size() - 1;
-            }
+		return menuItems.toArray(new String[menuItems.size()]);
+	}
 
-            if ( this.readingFragment.hasBookmarks() ) {
-                menuItems.add( getString(R.string.bookmarks));
-                this.bookmarksIndex = menuItems.size() - 1;
-            }
+	@Override
+	public boolean onGroupClick(ExpandableListView expandableListView,
+			View view, int i, long l) {
 
-        }
+		int correctedIndex = getCorrectIndex(i);
 
-        return menuItems.toArray(new String[menuItems.size()]);
-    }
+		// FIXME: this is nasty and hacky!
+		if (correctedIndex == 2 || i == tocIndex || i == highlightIndex
+				|| i == searchIndex || i == bookmarksIndex) {
+			return false;
+		}
 
-    @Override
-    public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+		return super.onGroupClick(expandableListView, view, correctedIndex, l);
+	}
 
-        int correctedIndex = getCorrectIndex(i);
+	private int getCorrectIndex(int i) {
 
-        //FIXME: this is nasty and hacky!
-        if ( correctedIndex == 2 || i == tocIndex || i == highlightIndex  || i == searchIndex || i == bookmarksIndex ) {
-            return false;
-        }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+				&& config.isFullScreenEnabled()) {
+			return i - 1;
+		} else {
+			return i;
+		}
+	}
 
-        return super.onGroupClick(expandableListView, view, correctedIndex, l);
-    }
+	@Override
+	public boolean onChildClick(ExpandableListView expandableListView,
+			View view, int i, int i2, long l) {
 
-    private int getCorrectIndex( int i ) {
+		super.onChildClick(expandableListView, view, i, i2, l);
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && config.isFullScreenEnabled() ) {
-            return i - 1;
-        } else {
-            return i;
-        }
-    }
+		NavigationCallback childItem = getAdapter().getChild(i, i2);
 
-    @Override
-    public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i2, long l) {
+		if (childItem != null) {
+			childItem.onClick();
+		}
 
-        super.onChildClick(expandableListView, view, i, i2, l );
+		return false;
+	}
 
-        NavigationCallback childItem = getAdapter().getChild( i, i2 );
+	@Override
+	protected int getTheme(Configuration config) {
+		int theme = config.getTheme();
 
-        if ( childItem != null ) {
-            childItem.onClick();
-        }
+		if (config.isFullScreenEnabled()) {
+			if (config.getColourProfile() == Configuration.ColourProfile.NIGHT) {
+				theme = R.style.DarkFullScreen;
+			} else {
+				theme = R.style.LightFullScreen;
+			}
+		}
 
-        return false;
-    }
+		return theme;
+	}
 
-    @Override
-    protected int getTheme(Configuration config) {
-        int theme = config.getTheme();
+	@Override
+	protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
 
-        if ( config.isFullScreenEnabled() ) {
-            if (config.getColourProfile() == Configuration.ColourProfile.NIGHT) {
-                theme = R.style.DarkFullScreen;
-            } else {
-                theme = R.style.LightFullScreen;
-            }
-        }
+		Class<? extends PageTurnerActivity> lastActivityClass = config
+				.getLastActivity();
 
-        return theme;
-    }
+		if (!config.isAlwaysOpenLastBook() && lastActivityClass != null
+				&& lastActivityClass != ReadingActivity.class
+				&& getIntent().getData() == null) {
+			Intent intent = new Intent(this, lastActivityClass);
 
-    @Override
-    protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
+			startActivity(intent);
+			finish();
+		}
 
-        Class<? extends PageTurnerActivity> lastActivityClass = config.getLastActivity();
+	}
 
-        if ( !config.isAlwaysOpenLastBook() && lastActivityClass != null
-                && lastActivityClass != ReadingActivity.class
-                && getIntent().getData() == null ) {
-            Intent intent = new Intent(this, lastActivityClass);
-
-            startActivity(intent);
-            finish();
-        }
-
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        readingFragment.onSearchRequested();
-        return true;
-    }
+	@Override
+	public boolean onSearchRequested() {
+		readingFragment.onSearchRequested();
+		return true;
+	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -270,25 +278,26 @@ public class ReadingActivity extends PageTurnerActivity implements AdapterView.O
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
+		int action = event.getAction();
+		int keyCode = event.getKeyCode();
 
-        if ( action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK && isDrawerOpen() ) {
-            closeNavigationDrawer();
-            return true;
-        }
+		if (action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK
+				&& isDrawerOpen()) {
+			closeNavigationDrawer();
+			return true;
+		}
 
-        if ( readingFragment.dispatchKeyEvent(event) ) {
-            return true;
-        }
+		if (readingFragment.dispatchKeyEvent(event)) {
+			return true;
+		}
 
-        return super.dispatchKeyEvent(event);
+		return super.dispatchKeyEvent(event);
 	}
 
-    @Override
-    protected void beforeLaunchActivity() {
-        readingFragment.saveReadingPosition();
-        readingFragment.getBookView().releaseResources();
-    }
+	@Override
+	protected void beforeLaunchActivity() {
+		readingFragment.saveReadingPosition();
+		readingFragment.getBookView().releaseResources();
+	}
 
 }

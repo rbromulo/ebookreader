@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string name="app_name">PagerSlidingTabStrip</string>
+    <string name="action_contact">Contact</string>
 
     
     <string name="app_name">AuJur</string>
@@ -44,6 +47,8 @@
     <string name="scan_folders">Scanning for EPUB files.\nFolders scanned: %d</string>
     <string name="import_errors">Some files had errors while importing:</string>
     <string name="no_books_found">No books found.</string>
+    
+    <string name="options">Options</string>
 
     <string name="no_bks_fnd_text">No books were found on your device.\nYou can download books at gutenberg.org or feedbooks.com</string>
 
@@ -164,6 +169,8 @@
     <string name="dead_link">Sorry, it looks like the link you clicked is broken.</string>
     <string name="could_not_load">Could not load text: %s</string>
     <string name="out_of_memory">Sorry, the program could not free enough memory to load this file.</string>
+    
+    <string name="notes_and_highlights">Notes &amp; Highlights</string>
 
     <string name="highlight">Highlight</string>
     <string name="highlights">Highlights</string>
