@@ -18,7 +18,7 @@ import com.actionbarsherlock.view.Window;
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.PageTurner;
 import com.aujur.ebookreader.R;
-import com.aujur.ebookreader.reading.options.MainOptionsActivity;
+import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.limecreativelabs.sherlocksupport.ActionBarDrawerToggleCompat;
@@ -199,14 +199,13 @@ public abstract class PageTurnerActivity extends RoboSherlockFragmentActivity
 	}
 
 	public void launchActivity(Class<? extends PageTurnerActivity> activityClass) {
+
 		Intent intent = new Intent(this, activityClass);
-
 		beforeLaunchActivity();
-
 		config.setLastActivity(activityClass);
-
 		startActivity(intent);
 		finish();
+
 	}
 
 	@Override
@@ -234,7 +233,7 @@ public abstract class PageTurnerActivity extends RoboSherlockFragmentActivity
 		} else if (i == 2) {
 			launchActivity(ReadingActivity.class);
 		} else if (i == 3) {
-			launchActivity(MainOptionsActivity.class);
+			launchActivity(ReadingOptionsActivity.class);
 		}
 
 		closeNavigationDrawer();

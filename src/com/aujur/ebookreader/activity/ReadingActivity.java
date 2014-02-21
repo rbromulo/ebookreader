@@ -36,6 +36,7 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 
@@ -192,6 +193,15 @@ public class ReadingActivity extends PageTurnerActivity implements
 		// FIXME: this is nasty and hacky!
 		if (correctedIndex == 2 || i == tocIndex || i == highlightIndex
 				|| i == searchIndex || i == bookmarksIndex) {
+			return false;
+		}
+
+		if (correctedIndex == 3) {
+			// this.readingFragment has methods necessary to show index for
+			// instance
+			// or book object has too
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			startActivity(intent);
 			return false;
 		}
 

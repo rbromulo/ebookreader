@@ -15,7 +15,7 @@
             android:id="@+id/fragment_mainoptions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="com.aujur.ebookreader.reading.options.MainOptionsFragment" >
+            class="com.aujur.ebookreader.reading.options.ReadingOptionsFragment" >
         </fragment>
     </FrameLayout>
     <!-- The navigation drawer -->

@@ -40,7 +40,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.aujur.ebookreader.R;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 
-public class MainOptionsFragment extends RoboSherlockFragment {
+public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	private final Handler handler = new Handler();
 
@@ -181,6 +181,11 @@ public class MainOptionsFragment extends RoboSherlockFragment {
 
 		@Override
 		public Fragment getItem(int position) {
+
+			if (position == 0) {
+				return IndexFragment.newInstance();
+			}
+
 			return SuperAwesomeCardFragment.newInstance(position);
 		}
 

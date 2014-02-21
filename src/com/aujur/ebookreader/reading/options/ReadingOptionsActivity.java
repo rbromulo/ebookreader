@@ -16,10 +16,19 @@
 
 package com.aujur.ebookreader.reading.options;
 
+import android.os.Bundle;
+
 import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.PageTurnerActivity;
 
-public class MainOptionsActivity extends PageTurnerActivity {
+public class ReadingOptionsActivity extends PageTurnerActivity {
+
+	@Override
+	protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
+
+		super.onCreatePageTurnerActivity(savedInstanceState);
+
+	}
 
 	@Override
 	protected int getMainLayoutResource() {

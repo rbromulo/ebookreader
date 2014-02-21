@@ -15,6 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs_options"
-        tools:context="com.aujur.ebookreader.reading.options.MainOptionsActivity" />
+        tools:context="com.aujur.ebookreader.reading.options.ReadingOptionsActivity" />
 
 </RelativeLayout>
