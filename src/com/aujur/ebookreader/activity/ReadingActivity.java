@@ -36,7 +36,7 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
-import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
+import com.aujur.ebookreader.reading.options.QuickContactFragment;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 
@@ -200,8 +200,14 @@ public class ReadingActivity extends PageTurnerActivity implements
 			// this.readingFragment has methods necessary to show index for
 			// instance
 			// or book object has too
-			Intent intent = new Intent(this, ReadingOptionsActivity.class);
-			startActivity(intent);
+			// Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			// startActivity(intent);
+
+			QuickContactFragment dialog = new QuickContactFragment();
+			dialog.setBookView(this.readingFragment.getBookView());
+			dialog.show(getSupportFragmentManager(), "QuickContactFragment");
+
+			closeNavigationDrawer();
 			return false;
 		}
 

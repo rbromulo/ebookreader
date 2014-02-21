@@ -26,6 +26,8 @@ public class ReadingOptionsActivity extends PageTurnerActivity {
 	@Override
 	protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
 
+		System.out.println("");
+
 		super.onCreatePageTurnerActivity(savedInstanceState);
 
 	}
