@@ -2,6 +2,6 @@ eclipse.preferences.version=1
 encoding//src/com/aujur/ebookreader/TextUtil.java=UTF-8
 encoding//src/com/aujur/ebookreader/activity/ReadingFragment.java=UTF-8
 encoding//src/com/aujur/ebookreader/catalog/Catalog.java=UTF-8
-encoding//src/com/aujur/ebookreader/reading/options/MainOptionsFragment.java=UTF-8
+encoding//src/com/aujur/ebookreader/reading/options/ReadingOptionsFragment.java=UTF-8
 encoding//src/com/aujur/ebookreader/tasks/SearchTextTask.java=UTF-8
 encoding/<project>=UTF-8
