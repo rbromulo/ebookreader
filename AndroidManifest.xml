@@ -84,7 +84,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".reading.options.ReadingOptionsActivity"
-            android:label="@string/download" />
+            android:label="@string/options" />
     </application>
 
 </manifest>

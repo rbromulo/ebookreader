@@ -9,6 +9,7 @@
         <ignore path="src/com/aujur/ebookreader/reading/options/MainOptionsFragment.java" />
         <ignore path="src/com/aujur/ebookreader/reading/options/QuickContactFragment.java" />
         <ignore path="src/com/aujur/ebookreader/reading/options/ReadingOptionsActivity.java" />
+        <ignore path="src/com/aujur/ebookreader/reading/options/ReadingOptionsFragment.java" />
         <ignore path="src/com/aujur/ebookreader/view/bookview/BookView.java" />
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/PageTurnerActivity.java" />
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/ReadingFragment.java" />

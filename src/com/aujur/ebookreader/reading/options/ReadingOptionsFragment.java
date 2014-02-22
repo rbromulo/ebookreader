@@ -182,11 +182,15 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 		@Override
 		public Fragment getItem(int position) {
 
-			if (position == 0) {
-				return IndexFragment.newInstance();
-			}
+			switch (position) {
 
-			return SuperAwesomeCardFragment.newInstance(position);
+			case 0:
+				return IndexFragment.newInstance();
+
+			default:
+				return SuperAwesomeCardFragment.newInstance(position);
+
+			}
 		}
 
 	}

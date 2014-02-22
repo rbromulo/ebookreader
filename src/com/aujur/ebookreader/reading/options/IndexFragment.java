@@ -20,20 +20,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.TextView;
+import android.widget.ListView;
 
-import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.ReadingFragment;
 
-public class IndexFragment extends Fragment {
+public class IndexFragment extends ListFragment {
+
+	private IndexArrayAdapter mAdapter;
 
 	private static final Logger LOG = LoggerFactory.getLogger("IndexFragment");
 
@@ -49,34 +44,33 @@ public class IndexFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
+		super.onActivityCreated(savedInstanceState);
 
-		FrameLayout fl = new FrameLayout(getActivity());
-		fl.setLayoutParams(params);
+		// Create an empty adapter we will use to display the loaded data.
+		mAdapter = new IndexArrayAdapter(getActivity());
+		setListAdapter(mAdapter);
 
-		final int margin = (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
-						.getDisplayMetrics());
-
-		TextView v = new TextView(getActivity());
-		params.setMargins(margin, margin, margin, margin);
-		v.setLayoutParams(params);
-		v.setLayoutParams(params);
-		v.setGravity(Gravity.CENTER);
-		v.setBackgroundResource(R.drawable.background_card);
-
-		StringBuffer sb = new StringBuffer();
-		sb.append(ReadingFragment.getBookViewWraper().getBookView().getBook()
+		// Start out with a progress indicator.
+		// setListShown(false);
+		mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
 				.getTableOfContents());
 
-		v.setText(sb.toString());
+	}
 
-		fl.addView(v);
-		return fl;
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+
+		ReadingFragment
+				.getBookViewWraper()
+				.getBookView()
+				.navigateTo(
+						ReadingFragment.getBookViewWraper().getBookView()
+								.getTableOfContents().get(position).getHref());
+
+		getActivity().finish();
+
 	}
 
 }
