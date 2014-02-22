@@ -161,9 +161,11 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 
-		private final String[] TITLES = { getString(R.string.toc_label),
-				getString(R.string.notes_and_highlights),
-				getString(R.string.bookmarks) };
+		// private final String[] TITLES = { getString(R.string.toc_label),
+		// getString(R.string.notes_and_highlights),
+		// getString(R.string.bookmarks) };
+
+		private final String[] TITLES = { getString(R.string.toc_label) };
 
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);

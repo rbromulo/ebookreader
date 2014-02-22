@@ -33,8 +33,10 @@ public class ReadingOptionsActivity extends PageTurnerActivity {
 
 		ab.setTitle(ReadingFragment.getBookViewWraper().getBookView().getBook()
 				.getTitle());
-		//ab.setSubtitle((CharSequence) ReadingFragment.getBookViewWraper()
-		//		.getBookView().getBook().getMetadata().getAuthors().get(0));
+
+		// TODO: you can show author's name
+		// ab.setSubtitle((CharSequence) ReadingFragment.getBookViewWraper()
+		// .getBookView().getBook().getMetadata().getAuthors().get(0));
 
 	}
 

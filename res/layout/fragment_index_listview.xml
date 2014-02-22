@@ -5,5 +5,11 @@
     android:background="@color/light_grey"
     android:orientation="vertical" >
 
+    <ListView
+        android:id="@android:id/list"
+        style="@style/AuJurListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>

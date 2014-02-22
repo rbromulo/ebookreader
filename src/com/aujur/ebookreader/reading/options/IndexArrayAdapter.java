@@ -18,8 +18,6 @@ public class IndexArrayAdapter extends ArrayAdapter<TocEntry> {
 
 	public IndexArrayAdapter(Context context) {
 
-		// super(context, android.R.layout.simple_list_item_2);
-
 		super(context, R.layout.fragment_index_listview);
 
 		mInflater = (LayoutInflater) context

@@ -16,47 +16,53 @@
 
 package com.aujur.ebookreader.reading.options;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.ReadingFragment;
 
 public class IndexFragment extends ListFragment {
 
 	private IndexArrayAdapter mAdapter;
 
-	private static final Logger LOG = LoggerFactory.getLogger("IndexFragment");
-
 	public static IndexFragment newInstance() {
 		IndexFragment f = new IndexFragment();
-		Bundle b = new Bundle();
 		return f;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = (View) inflater.inflate(R.layout.fragment_index_listview,
+				container, false);
+
+		mAdapter = new IndexArrayAdapter(getActivity());
+		setListAdapter(mAdapter);
+
+		mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
+				.getTableOfContents());
+
+		mAdapter.notifyDataSetChanged();
+
+		return view;
+
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-
-		super.onActivityCreated(savedInstanceState);
-
-		// Create an empty adapter we will use to display the loaded data.
-		mAdapter = new IndexArrayAdapter(getActivity());
-		setListAdapter(mAdapter);
-
-		// Start out with a progress indicator.
-		// setListShown(false);
-		mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
-				.getTableOfContents());
-
 	}
 
 	@Override
