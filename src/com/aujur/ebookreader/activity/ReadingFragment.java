@@ -19,11 +19,40 @@
 
 package com.aujur.ebookreader.activity;
 
+import static com.aujur.ebookreader.PlatformUtil.isIntentAvailable;
+
+import java.io.File;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+
+import net.nightwhistler.htmlspanner.spans.CenterSpan;
+import nl.siegmann.epublib.domain.Author;
+import nl.siegmann.epublib.domain.Book;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import roboguice.inject.InjectView;
+import yuku.ambilwarna.AmbilWarnaDialog;
 import android.annotation.TargetApi;
-import android.app.*;
-import android.support.v4.app.FragmentTransaction;
-import android.content.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -33,35 +62,64 @@ import android.graphics.Paint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.DisplayMetrics;
-import com.actionbarsherlock.view.ActionMode;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Display;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.aujur.ebookreader.Configuration;
-import com.aujur.ebookreader.R;
-import com.aujur.ebookreader.TextUtil;
 import com.aujur.ebookreader.Configuration.AnimationStyle;
 import com.aujur.ebookreader.Configuration.ColourProfile;
 import com.aujur.ebookreader.Configuration.ReadingDirection;
 import com.aujur.ebookreader.Configuration.ScrollStyle;
-import com.aujur.ebookreader.animation.*;
+import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.TextUtil;
+import com.aujur.ebookreader.animation.Animations;
+import com.aujur.ebookreader.animation.Animator;
+import com.aujur.ebookreader.animation.PageCurlAnimator;
+import com.aujur.ebookreader.animation.PageTimer;
+import com.aujur.ebookreader.animation.RollingBlindAnimator;
 import com.aujur.ebookreader.bookmark.Bookmark;
 import com.aujur.ebookreader.bookmark.BookmarkDatabaseHelper;
+import com.aujur.ebookreader.dto.BookViewWraper;
 import com.aujur.ebookreader.dto.HighLight;
 import com.aujur.ebookreader.dto.SearchResult;
 import com.aujur.ebookreader.dto.TocEntry;
@@ -73,31 +131,22 @@ import com.aujur.ebookreader.tasks.SearchTextTask;
 import com.aujur.ebookreader.tts.SpeechCompletedCallback;
 import com.aujur.ebookreader.tts.TTSPlaybackItem;
 import com.aujur.ebookreader.tts.TTSPlaybackQueue;
-import com.aujur.ebookreader.view.*;
+import com.aujur.ebookreader.view.AnimatedImageView;
+import com.aujur.ebookreader.view.HighlightManager;
+import com.aujur.ebookreader.view.NavGestureDetector;
+import com.aujur.ebookreader.view.NavigationCallback;
+import com.aujur.ebookreader.view.ProgressListAdapter;
+import com.aujur.ebookreader.view.SearchResultAdapter;
 import com.aujur.ebookreader.view.bookview.BookView;
 import com.aujur.ebookreader.view.bookview.BookViewListener;
 import com.aujur.ebookreader.view.bookview.TextLoader;
 import com.aujur.ebookreader.view.bookview.TextSelectionCallback;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import net.nightwhistler.htmlspanner.spans.CenterSpan;
-import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Book;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import roboguice.inject.InjectView;
-import yuku.ambilwarna.AmbilWarnaDialog;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.*;
-
-import static com.aujur.ebookreader.PlatformUtil.isIntentAvailable;
 
 public class ReadingFragment extends RoboSherlockFragment implements
 		BookViewListener, TextSelectionCallback, OnUtteranceCompletedListener,
-        SpeechCompletedCallback, DialogFactory.SearchCallBack {
+		SpeechCompletedCallback, DialogFactory.SearchCallBack {
 
 	private static final String POS_KEY = "offset:";
 	private static final String IDX_KEY = "index:";
@@ -116,7 +165,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	public static final String EXTRA_MARGIN_BOTTOM = "EXTRA_MARGIN_BOTTOM";
 	public static final String EXTRA_MARGIN_RIGHT = "EXTRA_MARGIN_RIGHT";
 
-    private static final int BOOK_OPEN_STAGES = 5;
+	private static final int BOOK_OPEN_STAGES = 5;
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger("ReadingFragment");
@@ -130,14 +179,14 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@Inject
 	private Configuration config;
 
-    @Inject
-    private DialogFactory dialogFactory;
+	@Inject
+	private DialogFactory dialogFactory;
 
-    @Inject
-    private NotificationManager notificationManager;
+	@Inject
+	private NotificationManager notificationManager;
 
-    @Inject
-    private Context context;
+	@Inject
+	private Context context;
 
 	@InjectView(R.id.mainContainer)
 	private ViewSwitcher viewSwitcher;
@@ -145,12 +194,14 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.bookView)
 	private BookView bookView;
 
+	private static BookViewWraper bookViewWraper;
+
 	@InjectView(R.id.myTitleBarTextView)
 	private TextView titleBar;
 
 	@InjectView(R.id.myTitleBarLayout)
 	private RelativeLayout titleBarLayout;
-		
+
 	@InjectView(R.id.mediaPlayerLayout)
 	private LinearLayout mediaLayout;
 
@@ -165,74 +216,74 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	@InjectView(R.id.dummyView)
 	private AnimatedImageView dummyView;
-	
+
 	@InjectView(R.id.mediaProgress)
 	private SeekBar mediaProgressBar;
 
 	@InjectView(R.id.pageNumberView)
 	private TextView pageNumberView;
-	
+
 	@InjectView(R.id.playPauseButton)
 	private ImageButton playPauseButton;
-	
+
 	@InjectView(R.id.stopButton)
 	private ImageButton stopButton;
 
-    @InjectView(R.id.nextButton)
-    private ImageButton nextButton;
+	@InjectView(R.id.nextButton)
+	private ImageButton nextButton;
 
-    @InjectView(R.id.prevButton)
-    private ImageButton prevButton;
+	@InjectView(R.id.prevButton)
+	private ImageButton prevButton;
 
-    @InjectView(R.id.wordView)
-    private TextView wordView;
-	
+	@InjectView(R.id.wordView)
+	private TextView wordView;
+
 	@Inject
 	private TelephonyManager telephonyManager;
 
 	@Inject
 	private PowerManager powerManager;
-	
+
 	@Inject
 	private AudioManager audioManager;
 
-    @Inject
-    private TTSPlaybackQueue ttsPlaybackItemQueue;
+	@Inject
+	private TTSPlaybackQueue ttsPlaybackItemQueue;
 
-    @Inject
-    private TextLoader textLoader;
+	@Inject
+	private TextLoader textLoader;
 
-    @Inject
-    private HighlightManager highlightManager;
+	@Inject
+	private HighlightManager highlightManager;
 
-    @Inject
-    private BookmarkDatabaseHelper bookmarkDatabaseHelper;
+	@Inject
+	private BookmarkDatabaseHelper bookmarkDatabaseHelper;
 
-    private MenuItem searchMenuItem;
+	private MenuItem searchMenuItem;
 
-    private Map<String, TTSPlaybackItem> ttsItemPrep = new HashMap<String, TTSPlaybackItem>();
-    private List<SearchResult> searchResults = new ArrayList<SearchResult>();
+	private Map<String, TTSPlaybackItem> ttsItemPrep = new HashMap<String, TTSPlaybackItem>();
+	private List<SearchResult> searchResults = new ArrayList<SearchResult>();
 
 	private ProgressDialog waitDialog;
 
-    private TextToSpeech textToSpeech;
-	
+	private TextToSpeech textToSpeech;
+
 	private boolean ttsAvailable = false;
-		
+
 	private String bookTitle;
 	private String titleBase;
 
 	private String fileName;
 	private int progressPercentage;
 
-    private String language = "en";
-	
-	private int currentPageNumber = -1;	
-	
+	private String language = "en";
+
+	private int currentPageNumber = -1;
+
 	private static enum Orientation {
 		HORIZONTAL, VERTICAL
 	}
-	
+
 	private static class SavedConfigState {
 		private boolean brightness;
 		private boolean stripWhiteSpace;
@@ -245,8 +296,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		private int hMargin;
 		private int textSize;
 		private boolean scrolling;
-        private boolean allowStyling;
-        private boolean allowColoursFromCSS;
+		private boolean allowStyling;
+		private boolean allowColoursFromCSS;
 	}
 
 	private SavedConfigState savedConfigState = new SavedConfigState();
@@ -258,7 +309,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	private Toast brightnessToast;
 
 	private PageTurnerMediaReceiver mediaReceiver;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -270,157 +321,164 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		bgThread.start();
 		this.backgroundHandler = new Handler(bgThread.getLooper());
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&  config.isFullScreenEnabled() ) {
-            return inflater.inflate(R.layout.fragment_reading_fs, container, false);
-        } else {
-		    return inflater.inflate(R.layout.fragment_reading, container, false);
-        }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+				&& config.isFullScreenEnabled()) {
+			return inflater.inflate(R.layout.fragment_reading_fs, container,
+					false);
+		} else {
+			return inflater
+					.inflate(R.layout.fragment_reading, container, false);
+		}
 	}
-	
+
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		setHasOptionsMenu(true);
 		this.bookView.init();
 
+		bookViewWraper = new BookViewWraper();
+		bookViewWraper.setBookView(this.bookView);
+
 		this.progressBar.setFocusable(true);
-		this.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		this.progressBar
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-            private int seekValue;
+					private int seekValue;
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                bookView.navigateToPercentage(this.seekValue);
-            }
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						bookView.navigateToPercentage(this.seekValue);
+					}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+					}
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar,
-                                          int progress, boolean fromUser) {
-                if (fromUser) {
-                    seekValue = progress;
-                    percentageField.setText(progress + "% ");
-                }
-            }
-        });
+					@Override
+					public void onProgressChanged(SeekBar seekBar,
+							int progress, boolean fromUser) {
+						if (fromUser) {
+							seekValue = progress;
+							percentageField.setText(progress + "% ");
+						}
+					}
+				});
 
-        this.mediaProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		this.mediaProgressBar
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
+					}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+					}
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar,
-                                          int progress, boolean fromUser) {
-                if (fromUser) {
-                    seekToPointInPlayback(progress);
-                }
-            }
-        });
+					@Override
+					public void onProgressChanged(SeekBar seekBar,
+							int progress, boolean fromUser) {
+						if (fromUser) {
+							seekToPointInPlayback(progress);
+						}
+					}
+				});
 
-
-		this.textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-			@Override
-			public void onInit(int status) {
-				onTextToSpeechInit(status);				
-			}
-		});
-
+		this.textToSpeech = new TextToSpeech(context,
+				new TextToSpeech.OnInitListener() {
+					@Override
+					public void onInit(int status) {
+						onTextToSpeechInit(status);
+					}
+				});
 
 		this.bookView.addListener(this);
 		this.bookView.setTextSelectionCallback(this);
 	}
-	
+
 	private void seekToPointInPlayback(int position) {
 
-        TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
+		TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
 
-		if ( item != null ) {
+		if (item != null) {
 			item.getMediaPlayer().seekTo(position);
 		}
 	}
-	
-	public void onMediaButtonEvent( int buttonId ) {		
-		
-		if ( buttonId == R.id.playPauseButton &&
-				! ttsIsRunning() ) {
+
+	public void onMediaButtonEvent(int buttonId) {
+
+		if (buttonId == R.id.playPauseButton && !ttsIsRunning()) {
 			startTextToSpeech();
 			return;
 		}
 
-        TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
-		
-		if ( item == null ) {
+		TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
+
+		if (item == null) {
 			stopTextToSpeech(false);
 			return;
 		}
 
-        MediaPlayer mediaPlayer = item.getMediaPlayer();
-        uiHandler.removeCallbacks(progressBarUpdater);
+		MediaPlayer mediaPlayer = item.getMediaPlayer();
+		uiHandler.removeCallbacks(progressBarUpdater);
 
-        switch ( buttonId ) {
-            case R.id.stopButton:
-                stopTextToSpeech(true);
-                return;
-            case R.id.nextButton:
-                performSkip(true);
-                uiHandler.post(progressBarUpdater);
-                return;
-            case R.id.prevButton:
-                performSkip(false);
-                uiHandler.post(progressBarUpdater);
-                return;
+		switch (buttonId) {
+		case R.id.stopButton:
+			stopTextToSpeech(true);
+			return;
+		case R.id.nextButton:
+			performSkip(true);
+			uiHandler.post(progressBarUpdater);
+			return;
+		case R.id.prevButton:
+			performSkip(false);
+			uiHandler.post(progressBarUpdater);
+			return;
 
-            case R.id.playPauseButton:
-                if ( mediaPlayer.isPlaying() ) {
-                    mediaPlayer.pause();
-                } else {
-                    mediaPlayer.start();
-                    uiHandler.post(progressBarUpdater);
-                }
-                return;
-        }
+		case R.id.playPauseButton:
+			if (mediaPlayer.isPlaying()) {
+				mediaPlayer.pause();
+			} else {
+				mediaPlayer.start();
+				uiHandler.post(progressBarUpdater);
+			}
+			return;
+		}
 	}
 
-    private void performSkip( boolean toEnd ) {
+	private void performSkip(boolean toEnd) {
 
-        if ( ! ttsIsRunning() ) {
-            return;
-        }
+		if (!ttsIsRunning()) {
+			return;
+		}
 
-        TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
+		TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
 
-        if ( item != null ) {
-            MediaPlayer player = item.getMediaPlayer();
+		if (item != null) {
+			MediaPlayer player = item.getMediaPlayer();
 
-            if ( toEnd ) {
-                player.seekTo( player.getDuration() );
-            } else {
-                player.seekTo(0);
-            }
+			if (toEnd) {
+				player.seekTo(player.getDuration());
+			} else {
+				player.seekTo(0);
+			}
 
-        }
+		}
 
-    }
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
 		DisplayMetrics metrics = new DisplayMetrics();
-        SherlockFragmentActivity activity = getSherlockActivity();
+		SherlockFragmentActivity activity = getSherlockActivity();
 
 		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -431,26 +489,26 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		View.OnTouchListener gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				
-				if ( ttsIsRunning() ) {
+
+				if (ttsIsRunning()) {
 					return false;
 				}
-				
+
 				return gestureDetector.onTouchEvent(event);
 			}
 		};
-		
+
 		this.viewSwitcher.setOnTouchListener(gestureListener);
 		this.bookView.setOnTouchListener(gestureListener);
-        this.dummyView.setOnTouchListener(gestureListener);
-		
+		this.dummyView.setOnTouchListener(gestureListener);
+
 		registerForContextMenu(bookView);
 		saveConfigState();
 
-        Intent intent = activity.getIntent();
+		Intent intent = activity.getIntent();
 		String file = null;
 
-		if ( intent.getData() != null) {
+		if (intent.getData() != null) {
 			file = intent.getData().getPath();
 		}
 
@@ -460,11 +518,12 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		updateFromPrefs();
 		updateFileName(savedInstanceState, file);
-		
-		if ("".equals(fileName) || ! new File(fileName).exists() ) {
 
-            LOG.info( "Requested to open file " + fileName + ", which doesn't seem to exist. " +
-                    "Switching back to the library.");
+		if ("".equals(fileName) || !new File(fileName).exists()) {
+
+			LOG.info("Requested to open file " + fileName
+					+ ", which doesn't seem to exist. "
+					+ "Switching back to the library.");
 
 			Intent newIntent = new Intent(context, LibraryActivity.class);
 			startActivity(newIntent);
@@ -480,59 +539,58 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			}
 		}
 
-        if ( ttsIsRunning() ) {
-            this.mediaLayout.setVisibility(View.VISIBLE);
-            this.ttsPlaybackItemQueue.updateSpeechCompletedCallbacks(this);
-            uiHandler.post( progressBarUpdater );
-        }
+		if (ttsIsRunning()) {
+			this.mediaLayout.setVisibility(View.VISIBLE);
+			this.ttsPlaybackItemQueue.updateSpeechCompletedCallbacks(this);
+			uiHandler.post(progressBarUpdater);
+		}
 
-        activity.getSupportActionBar().addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
-            @Override
-            public void onMenuVisibilityChanged(boolean isVisible) {
+		activity.getSupportActionBar().addOnMenuVisibilityListener(
+				new ActionBar.OnMenuVisibilityListener() {
+					@Override
+					public void onMenuVisibilityChanged(boolean isVisible) {
 
-                LOG.debug("Detected change of visibility in action-bar: visible=" + isVisible );
+						LOG.debug("Detected change of visibility in action-bar: visible="
+								+ isVisible);
 
-                if (isVisible) {
-                    titleBarLayout.setVisibility(View.VISIBLE);
-                } else {
-                    titleBarLayout.setVisibility(View.GONE);
-                }
-            }
-        });
+						if (isVisible) {
+							titleBarLayout.setVisibility(View.VISIBLE);
+						} else {
+							titleBarLayout.setVisibility(View.GONE);
+						}
+					}
+				});
 
-
-        /*
-        new ShakeListener(getActivity()).setOnShakeListener(new ShakeListener.OnShakeListener() {
-            @Override
-            public void onShake() {
-                if ( ! ttsIsRunning() ) {
-                    startTextToSpeech();
-                }
-            }
-        });
-        */
+		/*
+		 * new ShakeListener(getActivity()).setOnShakeListener(new
+		 * ShakeListener.OnShakeListener() {
+		 * 
+		 * @Override public void onShake() { if ( ! ttsIsRunning() ) {
+		 * startTextToSpeech(); } } });
+		 */
 	}
 
 	private void saveConfigState() {
 		// Cache old settings to check if we'll need a restart later
 		savedConfigState.brightness = config.isBrightnessControlEnabled();
 		savedConfigState.stripWhiteSpace = config.isStripWhiteSpaceEnabled();
-	
+
 		savedConfigState.usePageNum = config.isShowPageNumbers();
 		savedConfigState.fullscreen = config.isFullScreenEnabled();
-		
+
 		savedConfigState.hMargin = config.getHorizontalMargin();
 		savedConfigState.vMargin = config.getVerticalMargin();
-		
+
 		savedConfigState.textSize = config.getTextSize();
 		savedConfigState.fontName = config.getDefaultFontFamily().getName();
 		savedConfigState.serifFontName = config.getSerifFontFamily().getName();
-		savedConfigState.sansSerifFontName = config.getSansSerifFontFamily().getName();
-		
+		savedConfigState.sansSerifFontName = config.getSansSerifFontFamily()
+				.getName();
+
 		savedConfigState.scrolling = config.isScrollingEnabled();
-        savedConfigState.allowStyling = config.isAllowStyling();
-        savedConfigState.allowColoursFromCSS = config.isUseColoursFromCSS();
-		
+		savedConfigState.allowStyling = config.isAllowStyling();
+		savedConfigState.allowColoursFromCSS = config.isUseColoursFromCSS();
+
 	}
 
 	/*
@@ -540,216 +598,228 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	 */
 	@Override
 	public void onPause() {
-        LOG.debug("onPause() called.");
-			
+		LOG.debug("onPause() called.");
+
 		saveReadingPosition();
 		super.onPause();
 	}
-	
+
 	private void printScreenAndCallState(String calledFrom) {
-	    boolean isScreenOn = powerManager.isScreenOn();
+		boolean isScreenOn = powerManager.isScreenOn();
 
-	    if (!isScreenOn) {
-	    	LOG.debug(calledFrom + ": Screen is off");
-	    } else {
-	    	LOG.debug(calledFrom + ": Screen is on");
-	    }
-	    
-	    int phoneState = telephonyManager.getCallState();
-	    
-	    if ( phoneState == TelephonyManager.CALL_STATE_RINGING || phoneState == TelephonyManager.CALL_STATE_OFFHOOK ) {
-	    	LOG.debug(calledFrom + ": Detected call activity");
-	    } else {
-	    	LOG.debug(calledFrom + ": No active call.");
-	    }
-	}
-
-    private void playBeep( boolean error ) {
-
-        if ( ! isAdded() ) {
-            return;
-        }
-
-        try {
-            MediaPlayer beepPlayer = new MediaPlayer();
-
-            String file = "beep.mp3";
-
-            if ( error ) {
-                file = "error.mp3";
-            }
-
-            AssetFileDescriptor descriptor = context.getAssets().openFd(file);
-            beepPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-            descriptor.close();
-
-            beepPlayer.prepare();
-
-            beepPlayer.start();
-        } catch (Exception io) {
-            //We'll manage without the beep :)
-        }
-    }
-	
-	private void startTextToSpeech() {
-
-        if ( audioManager.isMusicActive() ) {
-            return;
-        }
-
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO ) {
-			subscribeToMediaButtons();
+		if (!isScreenOn) {
+			LOG.debug(calledFrom + ": Screen is off");
+		} else {
+			LOG.debug(calledFrom + ": Screen is on");
 		}
 
-        playBeep(false);
+		int phoneState = telephonyManager.getCallState();
 
-		File fos = new File( config.getTTSFolder() );
-
-        if ( fos.exists() && ! fos.isDirectory() ) {
-            fos.delete();
-        }
-
-        fos.mkdirs();
-
-        if ( ! (fos.exists() && fos.isDirectory() )  ) {
-            LOG.error("Failed to create folder " + fos.getAbsolutePath() );
-            showTTSFailed("Failed to create folder " + fos.getAbsolutePath() );
-            return;
-        }
-
-        saveReadingPosition();
-		//Delete any old TTS files still present.
-		for ( File f: fos.listFiles() ) {
-			f.delete();
+		if (phoneState == TelephonyManager.CALL_STATE_RINGING
+				|| phoneState == TelephonyManager.CALL_STATE_OFFHOOK) {
+			LOG.debug(calledFrom + ": Detected call activity");
+		} else {
+			LOG.debug(calledFrom + ": No active call.");
 		}
-
-        ttsItemPrep.clear();
-
-        if (! ttsAvailable ) {
-            return;
-        }
-
-        this.wordView.setTextColor( config.getTextColor() );
-        this.wordView.setBackgroundColor( config.getBackgroundColor() );
-
-        this.ttsPlaybackItemQueue.activate();
-		this.mediaLayout.setVisibility(View.VISIBLE);
-		
-		this.getWaitDialog().setMessage(getString(R.string.init_tts));
-		this.getWaitDialog().show();
-
-        streamTTSToDisk();
 	}
 
-    private void streamTTSToDisk() {
-        new Thread( new StreamToDiskRunnable() ).start();
-    }
+	private void playBeep(boolean error) {
 
-    private class StreamToDiskRunnable implements Runnable {
-        @Override
-        public void run() {
-
-            CharSequence text = bookView.getStrategy().getText();
-
-            if ( text == null || ! ttsIsRunning()) {
-                return;
-            }
-
-            File ttsFolder = new File( config.getTTSFolder() );
-            String textToSpeak = text.toString().substring( bookView.getStartOfCurrentPage() );
-
-            textToSpeak = TextUtil.splitOnPunctuation(textToSpeak);
-            String[] parts = textToSpeak.split("\n");
-
-            int offset = bookView.getStartOfCurrentPage();
-
-            try {
-                for ( int i=0; i < parts.length && ttsIsRunning(); i++ ) {
-
-                    LOG.debug("Streaming part " + i + " to disk." );
-
-                    String part = parts[i];
-
-                    boolean lastPart = i == parts.length -1;
-
-                    //Utterance ID doubles as the filename
-                    String pageName = new File( ttsFolder, "tts_" + UUID.randomUUID() + ".wav").getAbsolutePath();
-                    streamPartToDisk(pageName, part, offset, textToSpeak.length(), lastPart);
-
-                    offset += part.length() +1;
-
-                    Thread.yield();
-                }
-            } catch (TTSFailedException e) {
-                //Just stop streaming
-            }
-        }
-    }
-
-    private void showTTSFailed(final String message) {
-        uiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                stopTextToSpeech(true);
-                closeWaitDialog();
-
-                if ( isAdded() ) {
-                    playBeep(true);
-
-                    StringBuilder textBuilder = new StringBuilder( getString(R.string.tts_failed) );
-                    textBuilder.append("\n").append(message);
-
-                    Toast.makeText(context, textBuilder.toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } );
-    }
-
-    /** Checked exception to indicate TTS failure **/
-    private static class TTSFailedException extends Exception {}
-
-    private void streamPartToDisk(String fileName, String part, int offset, int totalLength, boolean endOfPage )
-        throws TTSFailedException {
-
-        LOG.debug("Request to stream text to file " + fileName + " with text " + part );
-
-        if ( part.trim().length() > 0 || endOfPage ) {
-
-            HashMap<String, String> params = new HashMap<String, String>();
-
-            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, fileName);
-
-            TTSPlaybackItem item = new TTSPlaybackItem( part, new MediaPlayer(), totalLength, offset, endOfPage, fileName);
-            ttsItemPrep.put(fileName, item);
-
-            int result = textToSpeech.synthesizeToFile(part, params, fileName);
-            if ( result != TextToSpeech.SUCCESS ) {
-                String message = "synthesizeToFile failed with result " + result;
-                LOG.error(message);
-                showTTSFailed(message);
-                throw new TTSFailedException();
-            }
-        } else {
-            LOG.debug("Skipping part, since it's empty.");
-        }
-    }
-	
-	@Override
-	public void onUtteranceCompleted(final String wavFile) {
-		
-        LOG.debug("TTS streaming completed for " + wavFile );
-
-		if ( ! ttsIsRunning() ) {
-            this.textToSpeech.stop();
+		if (!isAdded()) {
 			return;
 		}
 
-        if ( ! ttsItemPrep.containsKey(wavFile) ) {
-            LOG.error("Got onUtteranceCompleted for " + wavFile + " but there is no corresponding TTSPlaybackItem!");
-            return;
-        }
+		try {
+			MediaPlayer beepPlayer = new MediaPlayer();
 
-        final TTSPlaybackItem item = ttsItemPrep.remove(wavFile);
+			String file = "beep.mp3";
+
+			if (error) {
+				file = "error.mp3";
+			}
+
+			AssetFileDescriptor descriptor = context.getAssets().openFd(file);
+			beepPlayer.setDataSource(descriptor.getFileDescriptor(),
+					descriptor.getStartOffset(), descriptor.getLength());
+			descriptor.close();
+
+			beepPlayer.prepare();
+
+			beepPlayer.start();
+		} catch (Exception io) {
+			// We'll manage without the beep :)
+		}
+	}
+
+	private void startTextToSpeech() {
+
+		if (audioManager.isMusicActive()) {
+			return;
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+			subscribeToMediaButtons();
+		}
+
+		playBeep(false);
+
+		File fos = new File(config.getTTSFolder());
+
+		if (fos.exists() && !fos.isDirectory()) {
+			fos.delete();
+		}
+
+		fos.mkdirs();
+
+		if (!(fos.exists() && fos.isDirectory())) {
+			LOG.error("Failed to create folder " + fos.getAbsolutePath());
+			showTTSFailed("Failed to create folder " + fos.getAbsolutePath());
+			return;
+		}
+
+		saveReadingPosition();
+		// Delete any old TTS files still present.
+		for (File f : fos.listFiles()) {
+			f.delete();
+		}
+
+		ttsItemPrep.clear();
+
+		if (!ttsAvailable) {
+			return;
+		}
+
+		this.wordView.setTextColor(config.getTextColor());
+		this.wordView.setBackgroundColor(config.getBackgroundColor());
+
+		this.ttsPlaybackItemQueue.activate();
+		this.mediaLayout.setVisibility(View.VISIBLE);
+
+		this.getWaitDialog().setMessage(getString(R.string.init_tts));
+		this.getWaitDialog().show();
+
+		streamTTSToDisk();
+	}
+
+	private void streamTTSToDisk() {
+		new Thread(new StreamToDiskRunnable()).start();
+	}
+
+	private class StreamToDiskRunnable implements Runnable {
+		@Override
+		public void run() {
+
+			CharSequence text = bookView.getStrategy().getText();
+
+			if (text == null || !ttsIsRunning()) {
+				return;
+			}
+
+			File ttsFolder = new File(config.getTTSFolder());
+			String textToSpeak = text.toString().substring(
+					bookView.getStartOfCurrentPage());
+
+			textToSpeak = TextUtil.splitOnPunctuation(textToSpeak);
+			String[] parts = textToSpeak.split("\n");
+
+			int offset = bookView.getStartOfCurrentPage();
+
+			try {
+				for (int i = 0; i < parts.length && ttsIsRunning(); i++) {
+
+					LOG.debug("Streaming part " + i + " to disk.");
+
+					String part = parts[i];
+
+					boolean lastPart = i == parts.length - 1;
+
+					// Utterance ID doubles as the filename
+					String pageName = new File(ttsFolder, "tts_"
+							+ UUID.randomUUID() + ".wav").getAbsolutePath();
+					streamPartToDisk(pageName, part, offset,
+							textToSpeak.length(), lastPart);
+
+					offset += part.length() + 1;
+
+					Thread.yield();
+				}
+			} catch (TTSFailedException e) {
+				// Just stop streaming
+			}
+		}
+	}
+
+	private void showTTSFailed(final String message) {
+		uiHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				stopTextToSpeech(true);
+				closeWaitDialog();
+
+				if (isAdded()) {
+					playBeep(true);
+
+					StringBuilder textBuilder = new StringBuilder(
+							getString(R.string.tts_failed));
+					textBuilder.append("\n").append(message);
+
+					Toast.makeText(context, textBuilder.toString(),
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
+
+	/** Checked exception to indicate TTS failure **/
+	private static class TTSFailedException extends Exception {
+	}
+
+	private void streamPartToDisk(String fileName, String part, int offset,
+			int totalLength, boolean endOfPage) throws TTSFailedException {
+
+		LOG.debug("Request to stream text to file " + fileName + " with text "
+				+ part);
+
+		if (part.trim().length() > 0 || endOfPage) {
+
+			HashMap<String, String> params = new HashMap<String, String>();
+
+			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, fileName);
+
+			TTSPlaybackItem item = new TTSPlaybackItem(part, new MediaPlayer(),
+					totalLength, offset, endOfPage, fileName);
+			ttsItemPrep.put(fileName, item);
+
+			int result = textToSpeech.synthesizeToFile(part, params, fileName);
+			if (result != TextToSpeech.SUCCESS) {
+				String message = "synthesizeToFile failed with result "
+						+ result;
+				LOG.error(message);
+				showTTSFailed(message);
+				throw new TTSFailedException();
+			}
+		} else {
+			LOG.debug("Skipping part, since it's empty.");
+		}
+	}
+
+	@Override
+	public void onUtteranceCompleted(final String wavFile) {
+
+		LOG.debug("TTS streaming completed for " + wavFile);
+
+		if (!ttsIsRunning()) {
+			this.textToSpeech.stop();
+			return;
+		}
+
+		if (!ttsItemPrep.containsKey(wavFile)) {
+			LOG.error("Got onUtteranceCompleted for " + wavFile
+					+ " but there is no corresponding TTSPlaybackItem!");
+			return;
+		}
+
+		final TTSPlaybackItem item = ttsItemPrep.remove(wavFile);
 
 		try {
 
@@ -757,209 +827,219 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			mediaPlayer.reset();
 			mediaPlayer.setDataSource(wavFile);
 			mediaPlayer.prepare();
-			
+
 			this.ttsPlaybackItemQueue.add(item);
-			
+
 		} catch (Exception e) {
 			LOG.error("Could not play", e);
-            showTTSFailed(e.getLocalizedMessage());
-            return;
-		} 
-		
+			showTTSFailed(e.getLocalizedMessage());
+			return;
+		}
+
 		this.uiHandler.post(new Runnable() {
-			
+
 			@Override
-			public void run() {					
+			public void run() {
 				closeWaitDialog();
 			}
-		});		
-		
-		//If the queue is size 1, it only contains the player we just added,
-		//meaning this is a first playback start.
-		if ( ttsPlaybackItemQueue.size() == 1 ) {
+		});
+
+		// If the queue is size 1, it only contains the player we just added,
+		// meaning this is a first playback start.
+		if (ttsPlaybackItemQueue.size() == 1) {
 			startPlayback();
 		}
-	}	
-	
+	}
+
 	private Runnable progressBarUpdater = new Runnable() {
 
-        private boolean pausedBecauseOfCall = false;
+		private boolean pausedBecauseOfCall = false;
 
 		public void run() {
 
-            if ( ! ttsIsRunning() ) {
-                return;
-            }
+			if (!ttsIsRunning()) {
+				return;
+			}
 
-            long delay = 1000;
+			long delay = 1000;
 
-            synchronized ( ttsPlaybackItemQueue ) {
+			synchronized (ttsPlaybackItemQueue) {
 
-                TTSPlaybackItem item = ttsPlaybackItemQueue.peek();
+				TTSPlaybackItem item = ttsPlaybackItemQueue.peek();
 
-                if ( item != null ) {
+				if (item != null) {
 
-                    MediaPlayer mediaPlayer = item.getMediaPlayer();
+					MediaPlayer mediaPlayer = item.getMediaPlayer();
 
-                    int phoneState = telephonyManager.getCallState();
+					int phoneState = telephonyManager.getCallState();
 
-                    if ( mediaPlayer != null && mediaPlayer.isPlaying() ) {
+					if (mediaPlayer != null && mediaPlayer.isPlaying()) {
 
-                        if ( phoneState == TelephonyManager.CALL_STATE_RINGING ||
-                                phoneState == TelephonyManager.CALL_STATE_OFFHOOK ) {
+						if (phoneState == TelephonyManager.CALL_STATE_RINGING
+								|| phoneState == TelephonyManager.CALL_STATE_OFFHOOK) {
 
-                            LOG.debug("Detected call, pausing TTS.");
+							LOG.debug("Detected call, pausing TTS.");
 
-                            mediaPlayer.pause();
-                            this.pausedBecauseOfCall = true;
-                        } else {
+							mediaPlayer.pause();
+							this.pausedBecauseOfCall = true;
+						} else {
 
-                            double percentage = (double) mediaPlayer.getCurrentPosition() / (double) mediaPlayer.getDuration();
+							double percentage = (double) mediaPlayer
+									.getCurrentPosition()
+									/ (double) mediaPlayer.getDuration();
 
-                            mediaProgressBar.setMax(mediaPlayer.getDuration());
-                            mediaProgressBar.setProgress(mediaPlayer.getCurrentPosition());
+							mediaProgressBar.setMax(mediaPlayer.getDuration());
+							mediaProgressBar.setProgress(mediaPlayer
+									.getCurrentPosition());
 
-                            int currentDuration = item.getOffset() + (int) (percentage * item.getText().length());
+							int currentDuration = item.getOffset()
+									+ (int) (percentage * item.getText()
+											.length());
 
-                            bookView.navigateTo(bookView.getIndex(), currentDuration );
+							bookView.navigateTo(bookView.getIndex(),
+									currentDuration);
 
-                            wordView.setText( item.getText() );
+							wordView.setText(item.getText());
 
-                            delay = 100;
+							delay = 100;
 
-                        }
+						}
 
-                    } else if ( mediaPlayer != null && phoneState == TelephonyManager.CALL_STATE_IDLE
-                            && pausedBecauseOfCall ) {
-                        LOG.debug("Call over, resuming TTS.");
+					} else if (mediaPlayer != null
+							&& phoneState == TelephonyManager.CALL_STATE_IDLE
+							&& pausedBecauseOfCall) {
+						LOG.debug("Call over, resuming TTS.");
 
-                        //We reset to the start of the current section before resuming playback.
-                        mediaPlayer.seekTo(0);
+						// We reset to the start of the current section before
+						// resuming playback.
+						mediaPlayer.seekTo(0);
 
-                        mediaPlayer.start();
-                        pausedBecauseOfCall = false;
-                        delay = 100;
-                    }
-                }
-            }
-			
-            // Running this thread after 100 milliseconds
-            uiHandler.postDelayed(this, delay);
+						mediaPlayer.start();
+						pausedBecauseOfCall = false;
+						delay = 100;
+					}
+				}
+			}
+
+			// Running this thread after 100 milliseconds
+			uiHandler.postDelayed(this, delay);
 
 		}
 	};
-	
+
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	private void subscribeToMediaButtons() {
-		if ( this.mediaReceiver == null ) {
+		if (this.mediaReceiver == null) {
 			this.mediaReceiver = new PageTurnerMediaReceiver();
-			IntentFilter filter = new IntentFilter(MediaButtonReceiver.INTENT_PAGETURNER_MEDIA);
+			IntentFilter filter = new IntentFilter(
+					MediaButtonReceiver.INTENT_PAGETURNER_MEDIA);
 			context.registerReceiver(mediaReceiver, filter);
 
-			audioManager.registerMediaButtonEventReceiver(
-					new ComponentName(context, MediaButtonReceiver.class));
+			audioManager.registerMediaButtonEventReceiver(new ComponentName(
+					context, MediaButtonReceiver.class));
 		}
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.FROYO)
-	private void unsubscribeFromMediaButtons() {		
-		if ( this.mediaReceiver != null  ) {
+	private void unsubscribeFromMediaButtons() {
+		if (this.mediaReceiver != null) {
 			context.unregisterReceiver(mediaReceiver);
 			this.mediaReceiver = null;
-		
-			audioManager.unregisterMediaButtonEventReceiver(
-                    new ComponentName(context, MediaButtonReceiver.class));
+
+			audioManager.unregisterMediaButtonEventReceiver(new ComponentName(
+					context, MediaButtonReceiver.class));
 		}
 	}
-	
-	
+
 	private boolean ttsIsRunning() {
 		return ttsPlaybackItemQueue.isActive();
 	}
-	
-	public void speechCompleted( TTSPlaybackItem item, MediaPlayer mediaPlayer ) {
-		
-        LOG.debug("Speech completed for " + item.getFileName() );       
 
-		if (! ttsPlaybackItemQueue.isEmpty() ) {
+	public void speechCompleted(TTSPlaybackItem item, MediaPlayer mediaPlayer) {
+
+		LOG.debug("Speech completed for " + item.getFileName());
+
+		if (!ttsPlaybackItemQueue.isEmpty()) {
 			this.ttsPlaybackItemQueue.remove();
 		}
 
-		if ( ttsIsRunning()  ) {
+		if (ttsIsRunning()) {
 
 			startPlayback();
 
-            if ( item.isLastElementOfPage() ) {
-                this.uiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        pageDown(Orientation.VERTICAL);
-                    }
-                });
-            }
-		}		
+			if (item.isLastElementOfPage()) {
+				this.uiHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						pageDown(Orientation.VERTICAL);
+					}
+				});
+			}
+		}
 
-		mediaPlayer.release();		
+		mediaPlayer.release();
 		new File(item.getFileName()).delete();
 	}
-	
+
 	private void startPlayback() {
 
-        LOG.debug("startPlayback() - doing peek()");
+		LOG.debug("startPlayback() - doing peek()");
 
-        final TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
+		final TTSPlaybackItem item = this.ttsPlaybackItemQueue.peek();
 
-        if ( item == null ) {
-            LOG.debug("Got null item, bailing out.");
+		if (item == null) {
+			LOG.debug("Got null item, bailing out.");
 			return;
 		}
 
-        LOG.debug("Start playback for item " + item.getFileName());
-        LOG.debug("Text: '" + item.getText() + "'");
-		
-		if ( item.getMediaPlayer().isPlaying() ) {
+		LOG.debug("Start playback for item " + item.getFileName());
+		LOG.debug("Text: '" + item.getText() + "'");
+
+		if (item.getMediaPlayer().isPlaying()) {
 			return;
 		}
 
-        item.setOnSpeechCompletedCallback(this);
-        uiHandler.post(progressBarUpdater);
+		item.setOnSpeechCompletedCallback(this);
+		uiHandler.post(progressBarUpdater);
 		item.getMediaPlayer().start();
 
 	}
-	
+
 	private void stopTextToSpeech(boolean unsubscribeMediaButtons) {
 
-        this.ttsPlaybackItemQueue.deactivate();
+		this.ttsPlaybackItemQueue.deactivate();
 
 		this.mediaLayout.setVisibility(View.GONE);
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO && unsubscribeMediaButtons ) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO
+				&& unsubscribeMediaButtons) {
 			unsubscribeFromMediaButtons();
 		}
 
-        this.textToSpeech.stop();
+		this.textToSpeech.stop();
 
-        this.ttsItemPrep.clear();
+		this.ttsItemPrep.clear();
 
-        saveReadingPosition();
+		saveReadingPosition();
 	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.textToSpeech.shutdown();
-        this.closeWaitDialog();
-    }
-
-    @SuppressWarnings("deprecation")
-	public void onTextToSpeechInit(int status) {					
-
-		this.ttsAvailable = (status == TextToSpeech.SUCCESS) && !Configuration.IS_NOOK_TOUCH;
-
-        if ( this.ttsAvailable ) {
-            this.textToSpeech.setOnUtteranceCompletedListener(this);
-        }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		this.textToSpeech.shutdown();
+		this.closeWaitDialog();
 	}
-	
+
+	@SuppressWarnings("deprecation")
+	public void onTextToSpeechInit(int status) {
+
+		this.ttsAvailable = (status == TextToSpeech.SUCCESS)
+				&& !Configuration.IS_NOOK_TOUCH;
+
+		if (this.ttsAvailable) {
+			this.textToSpeech.setOnUtteranceCompletedListener(this);
+		}
+	}
+
 	private void updateFileName(Bundle savedInstanceState, String fileName) {
 
 		this.fileName = fileName;
@@ -977,18 +1057,18 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		this.bookView.setIndex(lastIndex);
 
 		config.setLastOpenedFile(fileName);
-	}	
+	}
 
 	@Override
 	public void progressUpdate(int progressPercentage, int pageNumber,
 			int totalPages) {
 
-        if ( ! isAdded() || getActivity() == null ) {
-            return;
-        }
+		if (!isAdded() || getActivity() == null) {
+			return;
+		}
 
 		this.currentPageNumber = pageNumber;
-		
+
 		// Work-around for calculation errors and weird values.
 		if (progressPercentage < 0 || progressPercentage > 100) {
 			return;
@@ -999,10 +1079,10 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		if (config.isShowPageNumbers() && pageNumber > 0) {
 			percentageField.setText("" + progressPercentage + "%  "
 					+ pageNumber + " / " + totalPages);
-			displayPageNumber(pageNumber);			
+			displayPageNumber(pageNumber);
 
 		} else {
-			percentageField.setText("" + progressPercentage + "%");			
+			percentageField.setText("" + progressPercentage + "%");
 		}
 
 		this.progressBar.setProgress(progressPercentage);
@@ -1013,7 +1093,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		String pageString;
 
-		if ( !config.isScrollingEnabled() && pageNumber > 0) {
+		if (!config.isScrollingEnabled() && pageNumber > 0) {
 			pageString = Integer.toString(pageNumber) + "\n";
 		} else {
 			pageString = "\n";
@@ -1025,26 +1105,27 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		pageNumberView.setTextColor(config.getTextColor());
 		pageNumberView.setTextSize(config.getTextSize());
 
-		pageNumberView.setTypeface(config.getDefaultFontFamily().getDefaultTypeface());
+		pageNumberView.setTypeface(config.getDefaultFontFamily()
+				.getDefaultTypeface());
 
 		pageNumberView.setText(builder);
-        pageNumberView.invalidate();
+		pageNumberView.invalidate();
 	}
 
 	private void updateFromPrefs() {
 
-        SherlockFragmentActivity activity = getSherlockActivity();
+		SherlockFragmentActivity activity = getSherlockActivity();
 
-        if ( activity == null ) {
-            return;
-        }
+		if (activity == null) {
+			return;
+		}
 
 		bookView.setTextSize(config.getTextSize());
 
 		int marginH = config.getHorizontalMargin();
 		int marginV = config.getVerticalMargin();
 
-        this.textLoader.setFontFamily(config.getDefaultFontFamily());
+		this.textLoader.setFontFamily(config.getDefaultFontFamily());
 		this.bookView.setFontFamily(config.getDefaultFontFamily());
 		this.textLoader.setSansSerifFontFamily(config.getSansSerifFontFamily());
 		this.textLoader.setSerifFontFamily(config.getSerifFontFamily());
@@ -1057,30 +1138,34 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		}
 
 		textLoader.setStripWhiteSpace(config.isStripWhiteSpaceEnabled());
-        textLoader.setAllowStyling( config.isAllowStyling() );
-        textLoader.setUseColoursFromCSS( config.isUseColoursFromCSS() );
+		textLoader.setAllowStyling(config.isAllowStyling());
+		textLoader.setUseColoursFromCSS(config.isUseColoursFromCSS());
 
 		bookView.setLineSpacing(config.getLineSpacing());
 
 		if (config.isFullScreenEnabled()) {
-			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			activity.getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			activity.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			activity.getSupportActionBar().hide();
 		} else {
 			activity.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			activity.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			activity.getSupportActionBar().show();
 		}
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && config.isDimSystemUI() ) {
-            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-        }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+				&& config.isDimSystemUI()) {
+			activity.getWindow().getDecorView()
+					.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		}
 
 		if (config.isKeepScreenOn()) {
-			activity.getWindow()
-					.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			activity.getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		} else {
 			activity.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1093,17 +1178,20 @@ public class ReadingFragment extends RoboSherlockFragment implements
 				|| config.isShowPageNumbers() != savedConfigState.usePageNum
 				|| config.isBrightnessControlEnabled() != savedConfigState.brightness
 				|| config.isStripWhiteSpaceEnabled() != savedConfigState.stripWhiteSpace
-				|| !config.getDefaultFontFamily().getName().equalsIgnoreCase(savedConfigState.fontName)
-				|| !config.getSerifFontFamily().getName().equalsIgnoreCase(savedConfigState.serifFontName)
-				|| !config.getSansSerifFontFamily().getName().equalsIgnoreCase(savedConfigState.sansSerifFontName)
+				|| !config.getDefaultFontFamily().getName()
+						.equalsIgnoreCase(savedConfigState.fontName)
+				|| !config.getSerifFontFamily().getName()
+						.equalsIgnoreCase(savedConfigState.serifFontName)
+				|| !config.getSansSerifFontFamily().getName()
+						.equalsIgnoreCase(savedConfigState.sansSerifFontName)
 				|| config.getHorizontalMargin() != savedConfigState.hMargin
 				|| config.getVerticalMargin() != savedConfigState.vMargin
-				|| config.getTextSize() != savedConfigState.textSize 
+				|| config.getTextSize() != savedConfigState.textSize
 				|| config.isScrollingEnabled() != savedConfigState.scrolling
-                || config.isAllowStyling() != savedConfigState.allowStyling
-                || config.isUseColoursFromCSS() != savedConfigState.allowColoursFromCSS ) {
+				|| config.isAllowStyling() != savedConfigState.allowStyling
+				|| config.isUseColoursFromCSS() != savedConfigState.allowColoursFromCSS) {
 
-            textLoader.invalidateCachedText();
+			textLoader.invalidateCachedText();
 			restartActivity();
 		}
 
@@ -1112,10 +1200,12 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		switch (orientation) {
 		case PORTRAIT:
-			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			getActivity().setRequestedOrientation(
+					ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			break;
 		case LANDSCAPE:
-			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			getActivity().setRequestedOrientation(
+					ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			break;
 		case REVERSE_LANDSCAPE:
 			getActivity().setRequestedOrientation(8); // Android 2.3+ value
@@ -1124,31 +1214,32 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			getActivity().setRequestedOrientation(9); // Android 2.3+ value
 			break;
 		default:
-			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+			getActivity().setRequestedOrientation(
+					ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
-	}	
+	}
 
 	private void restartActivity() {
 
 		onStop();
 
-        //Clear any cached text.
-        textLoader.closeCurrentBook();
+		// Clear any cached text.
+		textLoader.closeCurrentBook();
 		Intent intent = new Intent(context, ReadingActivity.class);
 		intent.setData(Uri.parse(this.fileName));
 		startActivity(intent);
 		this.libraryService.close();
 
-        Activity activity = getActivity();
+		Activity activity = getActivity();
 
-        if ( activity != null ) {
-            activity.finish();
-        }
+		if (activity != null) {
+			activity.finish();
+		}
 	}
 
 	public void onWindowFocusChanged(boolean hasFocus) {
 		if (hasFocus) {
-            hideTitleBar();
+			hideTitleBar();
 			updateFromPrefs();
 		} else {
 			getActivity().getWindow().clearFlags(
@@ -1156,30 +1247,30 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		}
 	}
 
-	public boolean onTouchEvent(MotionEvent event) {	
+	public boolean onTouchEvent(MotionEvent event) {
 		return bookView.onTouchEvent(event);
 	}
 
 	@Override
 	public void bookOpened(final Book book) {
 
-        SherlockFragmentActivity activity = getSherlockActivity();
+		SherlockFragmentActivity activity = getSherlockActivity();
 
-        if ( activity == null ) {
-            return;
-        }
+		if (activity == null) {
+			return;
+		}
 
-        this.language = this.bookView.getBook().getMetadata().getLanguage();
-        LOG.debug("Got language for book: " + language );
+		this.language = this.bookView.getBook().getMetadata().getLanguage();
+		LOG.debug("Got language for book: " + language);
 
 		this.bookTitle = book.getTitle();
 
-        this.config.setLastReadTitle(this.bookTitle);
+		this.config.setLastReadTitle(this.bookTitle);
 
 		this.titleBase = this.bookTitle;
 		activity.setTitle(titleBase);
 		this.titleBar.setText(titleBase);
-		
+
 		activity.supportInvalidateOptionsMenu();
 
 		if (book.getMetadata() != null
@@ -1202,7 +1293,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 				}
 			}
 		});
-		
+
 		updateFromPrefs();
 	}
 
@@ -1216,11 +1307,11 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		if (this.selectedWord != null) {
 
 			final CharSequence word = this.selectedWord.getText();
-            final int startIndex = this.selectedWord.getStartOffset();
-            final int endIndex = this.selectedWord.getEndOffset();
+			final int startIndex = this.selectedWord.getStartOffset();
+			final int endIndex = this.selectedWord.getEndOffset();
 
 			String header = String.format(getString(R.string.word_select),
-					selectedWord.getText() );
+					selectedWord.getText());
 
 			menu.setHeaderTitle(header);
 
@@ -1236,17 +1327,17 @@ public class ReadingFragment extends RoboSherlockFragment implements
 				});
 			}
 
-            menu.add(R.string.highlight).setOnMenuItemClickListener(
-                    new OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(android.view.MenuItem menuItem) {
+			menu.add(R.string.highlight).setOnMenuItemClickListener(
+					new OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(
+								android.view.MenuItem menuItem) {
 
-                            highLight( startIndex, endIndex, word.toString() );
+							highLight(startIndex, endIndex, word.toString());
 
-                            return false;
-                        }
-                    });
-
+							return false;
+						}
+					});
 
 			android.view.MenuItem newItem = menu
 					.add(getString(R.string.wikipedia_lookup));
@@ -1257,16 +1348,16 @@ public class ReadingFragment extends RoboSherlockFragment implements
 					return true;
 				}
 			});
-			
-            android.view.MenuItem newItem3 = menu
-                    .add(getString(R.string.lookup_wiktionary));
-            newItem3.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(android.view.MenuItem item) {
-                    lookupWiktionary(word.toString());
-                    return true;
-                }
-            });
+
+			android.view.MenuItem newItem3 = menu
+					.add(getString(R.string.lookup_wiktionary));
+			newItem3.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(android.view.MenuItem item) {
+					lookupWiktionary(word.toString());
+					return true;
+				}
+			});
 
 			android.view.MenuItem newItem2 = menu
 					.add(getString(R.string.google_lookup));
@@ -1277,7 +1368,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 					return true;
 				}
 			});
-			
+
 			android.view.MenuItem newItem4 = menu
 					.add(getString(R.string.direitonet_lookup));
 			newItem4.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -1292,209 +1383,219 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		}
 	}
 
-    @Override
+	@Override
 	public void highLight(int from, int to, String selectedText) {
 
-        int pageStart = bookView.getStartOfCurrentPage();
+		int pageStart = bookView.getStartOfCurrentPage();
 
-        String text = TextUtil.shortenText( selectedText );
+		String text = TextUtil.shortenText(selectedText);
 
-        this.highlightManager.registerHighlight(fileName, text, bookView.getIndex(),
-                pageStart + from, pageStart + to);
+		this.highlightManager.registerHighlight(fileName, text,
+				bookView.getIndex(), pageStart + from, pageStart + to);
 
-        bookView.update();
-    }
+		bookView.update();
+	}
 
-    private void showHighlightEditDialog( final HighLight highLight ) {
-        final AlertDialog.Builder editalert = new AlertDialog.Builder(context);
+	private void showHighlightEditDialog(final HighLight highLight) {
+		final AlertDialog.Builder editalert = new AlertDialog.Builder(context);
 
-        editalert.setTitle(R.string.text_note);
-        final EditText input = new EditText(context);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        input.setLayoutParams(lp);
-        editalert.setView(input);
-        input.setText( highLight.getTextNote() );
+		editalert.setTitle(R.string.text_note);
+		final EditText input = new EditText(context);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		input.setLayoutParams(lp);
+		editalert.setView(input);
+		input.setText(highLight.getTextNote());
 
-        editalert.setPositiveButton(R.string.save_note, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                highLight.setTextNote(input.getText().toString());
-                bookView.update();
-                highlightManager.saveHighLights();
-            }
-        });
-        editalert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+		editalert.setPositiveButton(R.string.save_note,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						highLight.setTextNote(input.getText().toString());
+						bookView.update();
+						highlightManager.saveHighLights();
+					}
+				});
+		editalert.setNegativeButton(android.R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
 
-            }
-        });
+					}
+				});
 
-        editalert.setNeutralButton(R.string.clear_note, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                highLight.setTextNote(null);
-                bookView.update();
-                highlightManager.saveHighLights();
-            }
-        });
+		editalert.setNeutralButton(R.string.clear_note,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						highLight.setTextNote(null);
+						bookView.update();
+						highlightManager.saveHighLights();
+					}
+				});
 
-        editalert.show();
-    }
+		editalert.show();
+	}
 
-    private void showHighlightColourDialog( final HighLight highLight ) {
+	private void showHighlightColourDialog(final HighLight highLight) {
 
-        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(
-                context, highLight.getColor(), new AmbilWarnaDialog.OnAmbilWarnaListener() {
-            @Override
-            public void onCancel(AmbilWarnaDialog dialog) {
-                //do nothing.
-            }
+		AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(context,
+				highLight.getColor(),
+				new AmbilWarnaDialog.OnAmbilWarnaListener() {
+					@Override
+					public void onCancel(AmbilWarnaDialog dialog) {
+						// do nothing.
+					}
 
-            @Override
-            public void onOk(AmbilWarnaDialog dialog, int color) {
-                highLight.setColor( color );
-                bookView.update();
-                highlightManager.saveHighLights();
-            }
-        });
+					@Override
+					public void onOk(AmbilWarnaDialog dialog, int color) {
+						highLight.setColor(color);
+						bookView.update();
+						highlightManager.saveHighLights();
+					}
+				});
 
-        ambilWarnaDialog.show();
-    }
+		ambilWarnaDialog.show();
+	}
 
-    public void onBookmarkClick( final Bookmark bookmark ) {
+	public void onBookmarkClick(final Bookmark bookmark) {
 
-        getSherlockActivity().startActionMode( new ActionMode.Callback() {
+		getSherlockActivity().startActionMode(new ActionMode.Callback() {
 
-            private MenuItem delete;
+			private MenuItem delete;
 
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			@Override
+			public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 
-                this.delete = menu.add( R.string.delete );
-                this.delete.setIcon( R.drawable.trash_can );
+				this.delete = menu.add(R.string.delete);
+				this.delete.setIcon(R.drawable.trash_can);
 
-                return true;
-            }
+				return true;
+			}
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                actionMode.setTitle( R.string.bookmark_options );
-                return true;
-            }
+			@Override
+			public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+				actionMode.setTitle(R.string.bookmark_options);
+				return true;
+			}
 
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+			@Override
+			public boolean onActionItemClicked(ActionMode actionMode,
+					MenuItem menuItem) {
 
-                boolean result = false;
+				boolean result = false;
 
-                if ( menuItem == delete ) {
-                    bookmarkDatabaseHelper.deleteBookmark( bookmark );
-                    Toast.makeText( context,R.string.bookmark_deleted, Toast.LENGTH_SHORT ).show();
-                    result = true;
-                }
+				if (menuItem == delete) {
+					bookmarkDatabaseHelper.deleteBookmark(bookmark);
+					Toast.makeText(context, R.string.bookmark_deleted,
+							Toast.LENGTH_SHORT).show();
+					result = true;
+				}
 
-                if ( result ) {
-                    actionMode.finish();
-                }
+				if (result) {
+					actionMode.finish();
+				}
 
-                return result;
-            }
+				return result;
+			}
 
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
+			@Override
+			public void onDestroyActionMode(ActionMode actionMode) {
 
-            }
-        });
-    }
+			}
+		});
+	}
 
-    @Override
-    public void onHighLightClick(final HighLight highLight) {
+	@Override
+	public void onHighLightClick(final HighLight highLight) {
 
-        LOG.debug( "onHighLightClick" );
+		LOG.debug("onHighLightClick");
 
-        getSherlockActivity().startActionMode( new ActionMode.Callback() {
+		getSherlockActivity().startActionMode(new ActionMode.Callback() {
 
-            private MenuItem edit;
-            private MenuItem delete;
-            private MenuItem colour;
+			private MenuItem edit;
+			private MenuItem delete;
+			private MenuItem colour;
 
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			@Override
+			public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 
-                this.edit = menu.add( R.string.edit );
-                this.edit.setIcon( R.drawable.edit );
+				this.edit = menu.add(R.string.edit);
+				this.edit.setIcon(R.drawable.edit);
 
-                this.colour = menu.add( R.string.set_colour );
-                this.colour.setIcon( R.drawable.color );
+				this.colour = menu.add(R.string.set_colour);
+				this.colour.setIcon(R.drawable.color);
 
-                this.delete = menu.add( R.string.delete );
-                this.delete.setIcon( R.drawable.trash_can );
+				this.delete = menu.add(R.string.delete);
+				this.delete.setIcon(R.drawable.trash_can);
 
-                return true;
-            }
+				return true;
+			}
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                actionMode.setTitle( R.string.highlight_options );
-                return true;
-            }
+			@Override
+			public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+				actionMode.setTitle(R.string.highlight_options);
+				return true;
+			}
 
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+			@Override
+			public boolean onActionItemClicked(ActionMode actionMode,
+					MenuItem menuItem) {
 
-                boolean result = false;
+				boolean result = false;
 
-                if ( menuItem == edit ) {
-                    showHighlightEditDialog( highLight );
-                    result = true;
-                } else if ( menuItem == delete ) {
-                    deleteHightlight( highLight);
-                    result = true;
-                } else if ( menuItem == colour ) {
-                    showHighlightColourDialog( highLight );
-                    result = true;
-                }
+				if (menuItem == edit) {
+					showHighlightEditDialog(highLight);
+					result = true;
+				} else if (menuItem == delete) {
+					deleteHightlight(highLight);
+					result = true;
+				} else if (menuItem == colour) {
+					showHighlightColourDialog(highLight);
+					result = true;
+				}
 
-                if ( result ) {
-                    actionMode.finish();
-                }
+				if (result) {
+					actionMode.finish();
+				}
 
-                return result;
-            }
+				return result;
+			}
 
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
+			@Override
+			public void onDestroyActionMode(ActionMode actionMode) {
 
-            }
-        });
+			}
+		});
 
-    }
+	}
 
-    private void deleteHightlight( final HighLight highLight ) {
+	private void deleteHightlight(final HighLight highLight) {
 
-        final OnClickListener deleteHighlight = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                highlightManager.removeHighLight(highLight);
-                Toast.makeText( context,R.string.highlight_deleted, Toast.LENGTH_SHORT ).show();
-                bookView.update();
-            }
-        };
+		final OnClickListener deleteHighlight = new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				highlightManager.removeHighLight(highLight);
+				Toast.makeText(context, R.string.highlight_deleted,
+						Toast.LENGTH_SHORT).show();
+				bookView.update();
+			}
+		};
 
-        if ( highLight.getTextNote() != null && highLight.getTextNote().length() > 0 ) {
-            new AlertDialog.Builder(context)
-                    .setMessage( R.string.notes_attached )
-                    .setNegativeButton( android.R.string.no, null )
-                    .setPositiveButton(android.R.string.yes, deleteHighlight )
-                    .show();
-        } else {
-            highlightManager.removeHighLight(highLight);
-            Toast.makeText( context,R.string.highlight_deleted, Toast.LENGTH_SHORT ).show();
-            bookView.update();
-        }
-    }
+		if (highLight.getTextNote() != null
+				&& highLight.getTextNote().length() > 0) {
+			new AlertDialog.Builder(context)
+					.setMessage(R.string.notes_attached)
+					.setNegativeButton(android.R.string.no, null)
+					.setPositiveButton(android.R.string.yes, deleteHighlight)
+					.show();
+		} else {
+			highlightManager.removeHighLight(highLight);
+			Toast.makeText(context, R.string.highlight_deleted,
+					Toast.LENGTH_SHORT).show();
+			bookView.update();
+		}
+	}
 
-    @Override
+	@Override
 	public boolean isDictionaryAvailable() {
 		return isIntentAvailable(context, getDictionaryIntent());
 	}
@@ -1506,32 +1607,35 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		startActivityForResult(intent, 5);
 	}
 
-    private String getLanguageCode() {
-        if ( this.language == null || this.language.equals("") || this.language.equalsIgnoreCase("und") ) {
-            return Locale.getDefault().getLanguage();
-        }
+	private String getLanguageCode() {
+		if (this.language == null || this.language.equals("")
+				|| this.language.equalsIgnoreCase("und")) {
+			return Locale.getDefault().getLanguage();
+		}
 
-        return this.language;
-    }
-    
-    @Override
-    public void lookupLawDictionary(String text) {
-    	openBrowser("http://www.direitonet.com.br/dicionario/busca?palavras="
-                + URLEncoder.encode(text));
-    }
+		return this.language;
+	}
+
+	@Override
+	public void lookupLawDictionary(String text) {
+		openBrowser("http://www.direitonet.com.br/dicionario/busca?palavras="
+				+ URLEncoder.encode(text));
+	}
 
 	@Override
 	public void lookupWikipedia(String text) {
 
-		openBrowser("http://" + getLanguageCode() + ".wikipedia.org/wiki/Special:Search?search="
-                + URLEncoder.encode(text));
+		openBrowser("http://" + getLanguageCode()
+				+ ".wikipedia.org/wiki/Special:Search?search="
+				+ URLEncoder.encode(text));
 	}
 
-    public void lookupWiktionary(String text) {
-        openBrowser("http://" + getLanguageCode() + ".wiktionary.org/w/index.php?title=Special%3ASearch&search="
-                + URLEncoder.encode(text));
+	public void lookupWiktionary(String text) {
+		openBrowser("http://" + getLanguageCode()
+				+ ".wiktionary.org/w/index.php?title=Special%3ASearch&search="
+				+ URLEncoder.encode(text));
 
-    }
+	}
 
 	@Override
 	public void lookupGoogle(String text) {
@@ -1560,7 +1664,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		this.bookView.setBackgroundColor(config.getBackgroundColor());
 		this.viewSwitcher.setBackgroundColor(config.getBackgroundColor());
-		
+
 		this.bookView.setTextColor(config.getTextColor());
 		this.bookView.setLinkColor(config.getLinkColor());
 
@@ -1573,143 +1677,144 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	private void setScreenBrightnessLevel(int level) {
 
-        Activity activity = getActivity();
+		Activity activity = getActivity();
 
-        if ( activity != null ) {
-		    WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-		    lp.screenBrightness = (float) level / 100f;
-		    activity.getWindow().setAttributes(lp);
-        }
+		if (activity != null) {
+			WindowManager.LayoutParams lp = activity.getWindow()
+					.getAttributes();
+			lp.screenBrightness = (float) level / 100f;
+			activity.getWindow().setAttributes(lp);
+		}
 	}
 
 	@Override
 	public void errorOnBookOpening(String errorMessage) {
 
-        LOG.error( errorMessage );
+		LOG.error(errorMessage);
 
 		closeWaitDialog();
 
-        ReadingActivity readingActivity = (ReadingActivity) getActivity();
+		ReadingActivity readingActivity = (ReadingActivity) getActivity();
 
-        if ( readingActivity != null ) {
+		if (readingActivity != null) {
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(readingActivity);
-            builder.setContentTitle(getString(R.string.app_name))
-                    .setContentText(errorMessage)
-                    .setSmallIcon(R.drawable.cross)
-                    .setAutoCancel( true );
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(
+					readingActivity);
+			builder.setContentTitle(getString(R.string.app_name))
+					.setContentText(errorMessage)
+					.setSmallIcon(R.drawable.cross).setAutoCancel(true);
 
-            builder.setTicker(errorMessage);
-            PendingIntent pendingIntent = PendingIntent.getActivity( readingActivity, 0, new Intent(), 0);
-            builder.setContentIntent( pendingIntent );
+			builder.setTicker(errorMessage);
+			PendingIntent pendingIntent = PendingIntent.getActivity(
+					readingActivity, 0, new Intent(), 0);
+			builder.setContentIntent(pendingIntent);
 
-            notificationManager.notify( errorMessage.hashCode(), builder.build() );
+			notificationManager
+					.notify(errorMessage.hashCode(), builder.build());
 
-            readingActivity.launchActivity(LibraryActivity.class);
-        }
+			readingActivity.launchActivity(LibraryActivity.class);
+		}
 	}
 
-    private ProgressDialog getWaitDialog() {
+	private ProgressDialog getWaitDialog() {
 
-        if ( this.waitDialog == null ) {
-            this.waitDialog = new ProgressDialog(context);
-            this.waitDialog.setOwnerActivity(getActivity());
-        }
+		if (this.waitDialog == null) {
+			this.waitDialog = new ProgressDialog(context);
+			this.waitDialog.setOwnerActivity(getActivity());
+		}
 
-        this.waitDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode,
-                                 KeyEvent event) {
-                // This just consumes all key events and does nothing.
-                return true;
+		this.waitDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode,
+					KeyEvent event) {
+				// This just consumes all key events and does nothing.
+				return true;
 
-            }
-        });
+			}
+		});
 
-        return this.waitDialog;
-    }
+		return this.waitDialog;
+	}
 
+	private void closeWaitDialog() {
 
+		if (waitDialog != null) {
+			this.waitDialog.dismiss();
+			this.waitDialog = null;
+		}
 
-    private void closeWaitDialog() {
-
-        if ( waitDialog != null ) {
-            this.waitDialog.dismiss();
-            this.waitDialog = null;
-        }
-
-    }
+	}
 
 	@Override
 	public void parseEntryComplete(int entry, String name) {
 
-        if (name != null && !name.equals(this.bookTitle)) {
+		if (name != null && !name.equals(this.bookTitle)) {
 			this.titleBase = this.bookTitle + " - " + name;
 		} else {
 			this.titleBase = this.bookTitle;
 		}
-		
+
 		Activity activity = getActivity();
 
-        if ( activity != null ) {
+		if (activity != null) {
 
-            activity.setTitle(this.titleBase);
+			activity.setTitle(this.titleBase);
 
-            if ( this.ttsPlaybackItemQueue.isActive() && this.ttsPlaybackItemQueue.isEmpty() ) {
-                streamTTSToDisk();
-            }
+			if (this.ttsPlaybackItemQueue.isActive()
+					&& this.ttsPlaybackItemQueue.isEmpty()) {
+				streamTTSToDisk();
+			}
 
-            closeWaitDialog();
-        }
+			closeWaitDialog();
+		}
 
 	}
 
 	@Override
 	public void parseEntryStart(int entry) {
 
-        if ( ! isAdded() || getActivity() == null ) {
-            return;
-        }
+		if (!isAdded() || getActivity() == null) {
+			return;
+		}
 
-
-        this.viewSwitcher.clearAnimation();
+		this.viewSwitcher.clearAnimation();
 		this.viewSwitcher.setBackgroundDrawable(null);
 		restoreColorProfile();
-		displayPageNumber(-1); //Clear page number
+		displayPageNumber(-1); // Clear page number
 
-        ProgressDialog progressDialog = getWaitDialog();
-        progressDialog.setMessage(getString( R.string.loading_wait));
+		ProgressDialog progressDialog = getWaitDialog();
+		progressDialog.setMessage(getString(R.string.loading_wait));
 
-        progressDialog.show();
-	}	
+		progressDialog.show();
+	}
 
 	@Override
 	public void readingFile() {
-        if ( isAdded() ) {
-            this.getWaitDialog().setMessage(getString( R.string.opening_file) );
-        }
+		if (isAdded()) {
+			this.getWaitDialog().setMessage(getString(R.string.opening_file));
+		}
 	}
 
 	@Override
 	public void renderingText() {
-        if ( isAdded() ) {
-            this.getWaitDialog().setMessage(getString( R.string.loading_text) );
-        }
+		if (isAdded()) {
+			this.getWaitDialog().setMessage(getString(R.string.loading_text));
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	private boolean handleVolumeButtonEvent(KeyEvent event) {
 
-		//Disable volume button handling during TTS
-		if (!config.isVolumeKeyNavEnabled() || ttsIsRunning() ) {
+		// Disable volume button handling during TTS
+		if (!config.isVolumeKeyNavEnabled() || ttsIsRunning()) {
 			return false;
 		}
 
-        Activity activity = getActivity();
+		Activity activity = getActivity();
 
-        if ( activity == null ) {
-            return false;
-        }
+		if (activity == null) {
+			return false;
+		}
 
 		boolean invert = false;
 
@@ -1733,24 +1838,23 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		if (event.getAction() != KeyEvent.ACTION_DOWN) {
 			return true;
-        }
+		}
 
-        if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
 			if (invert) {
 				pageDown(Orientation.HORIZONTAL);
-            }
-			else {
+			} else {
 				pageUp(Orientation.HORIZONTAL);
-            }
+			}
 		} else if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
 			if (invert) {
 				pageUp(Orientation.HORIZONTAL);
-            } else {
+			} else {
 				pageDown(Orientation.HORIZONTAL);
-            }
-        }
-	    
-        return true;
+			}
+		}
+
+		return true;
 	}
 
 	public boolean dispatchMediaKeyEvent(KeyEvent event) {
@@ -1758,88 +1862,89 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		int action = event.getAction();
 		int keyCode = event.getKeyCode();
 
-        if ( audioManager.isMusicActive() && ! ttsIsRunning() ) {
-            return false;
-        }
+		if (audioManager.isMusicActive() && !ttsIsRunning()) {
+			return false;
+		}
 
-        switch (keyCode) {
+		switch (keyCode) {
 
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                return simulateButtonPress(action, R.id.playPauseButton, playPauseButton);
+		case KeyEvent.KEYCODE_MEDIA_PLAY:
+		case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+		case KeyEvent.KEYCODE_MEDIA_PAUSE:
+			return simulateButtonPress(action, R.id.playPauseButton,
+					playPauseButton);
 
-            case KeyEvent.KEYCODE_MEDIA_STOP:
-                return simulateButtonPress(action, R.id.stopButton, stopButton );
+		case KeyEvent.KEYCODE_MEDIA_STOP:
+			return simulateButtonPress(action, R.id.stopButton, stopButton);
 
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-               return simulateButtonPress(action, R.id.nextButton, nextButton );
+		case KeyEvent.KEYCODE_MEDIA_NEXT:
+			return simulateButtonPress(action, R.id.nextButton, nextButton);
 
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                return simulateButtonPress(action, R.id.prevButton, prevButton );
-        }
-		
+		case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+			return simulateButtonPress(action, R.id.prevButton, prevButton);
+		}
+
 		return false;
 	}
 
-    private boolean simulateButtonPress(int action, int idToSend, ImageButton buttonToClick ) {
-        if ( action == KeyEvent.ACTION_DOWN ) {
-            onMediaButtonEvent(idToSend);
-            buttonToClick.setPressed(true);
-        } else {
-            buttonToClick.setPressed(false);
-        }
+	private boolean simulateButtonPress(int action, int idToSend,
+			ImageButton buttonToClick) {
+		if (action == KeyEvent.ACTION_DOWN) {
+			onMediaButtonEvent(idToSend);
+			buttonToClick.setPressed(true);
+		} else {
+			buttonToClick.setPressed(false);
+		}
 
-        buttonToClick.invalidate();
-        return true;
-    }
+		buttonToClick.invalidate();
+		return true;
+	}
 
-	
 	public boolean dispatchKeyEvent(KeyEvent event) {
 
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
+		int action = event.getAction();
+		int keyCode = event.getKeyCode();
 
-        LOG.debug("Got key event: " + keyCode + " with action " + action );
+		LOG.debug("Got key event: " + keyCode + " with action " + action);
 
+		if (searchMenuItem != null && searchMenuItem.isActionViewExpanded()) {
+			boolean result = searchMenuItem.getActionView().dispatchKeyEvent(
+					event);
 
-        if ( searchMenuItem != null && searchMenuItem.isActionViewExpanded() ) {
-            boolean result = searchMenuItem.getActionView().dispatchKeyEvent(event);
-
-            if ( result ) {
-                return true;
-            }
-        }
+			if (result) {
+				return true;
+			}
+		}
 
 		final int KEYCODE_NOOK_TOUCH_BUTTON_LEFT_TOP = 92;
 		final int KEYCODE_NOOK_TOUCH_BUTTON_LEFT_BOTTOM = 93;
 		final int KEYCODE_NOOK_TOUCH_BUTTON_RIGHT_TOP = 94;
 		final int KEYCODE_NOOK_TOUCH_BUTTON_RIGHT_BOTTOM = 95;
-        
+
 		boolean nook_touch_up_press = false;
 
 		if (isAnimating() && action == KeyEvent.ACTION_DOWN) {
 			stopAnimating();
 			return true;
 		}
-		
+
 		/*
-		 * Tricky bit of code here: if we are NOT running TTS,
-		 * we want to be able to start it using the play/pause button.
+		 * Tricky bit of code here: if we are NOT running TTS, we want to be
+		 * able to start it using the play/pause button.
 		 * 
-		 * When we ARE running TTS, we'll get every media event twice:
-		 * once through the receiver and once here if focused. 
+		 * When we ARE running TTS, we'll get every media event twice: once
+		 * through the receiver and once here if focused.
 		 * 
 		 * So, we only try to read media events here if tts is running.
-		 */		
-		if ( ! ttsIsRunning() && dispatchMediaKeyEvent(event) ) {
+		 */
+		if (!ttsIsRunning() && dispatchMediaKeyEvent(event)) {
 			return true;
 		}
 
-        LOG.debug("Key event is NOT a media key event.");
+		LOG.debug("Key event is NOT a media key event.");
 
-		switch (keyCode) {	
-		
+		switch (keyCode) {
+
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
 		case KeyEvent.KEYCODE_VOLUME_UP:
 			return handleVolumeButtonEvent(event);
@@ -1861,34 +1966,33 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		case KeyEvent.KEYCODE_BACK:
 			if (action == KeyEvent.ACTION_DOWN) {
 
-                if (titleBarLayout.getVisibility() == View.VISIBLE) {
+				if (titleBarLayout.getVisibility() == View.VISIBLE) {
 					hideTitleBar();
-                    updateFromPrefs();
-                    return true;
+					updateFromPrefs();
+					return true;
 				} else if (bookView.hasPrevPosition()) {
 					bookView.goBackInHistory();
 					return true;
 				}
 			}
 
-            return false;
+			return false;
 
 		case KEYCODE_NOOK_TOUCH_BUTTON_LEFT_TOP:
 		case KEYCODE_NOOK_TOUCH_BUTTON_RIGHT_TOP:
-                    nook_touch_up_press = true;
+			nook_touch_up_press = true;
 		case KEYCODE_NOOK_TOUCH_BUTTON_LEFT_BOTTOM:
 		case KEYCODE_NOOK_TOUCH_BUTTON_RIGHT_BOTTOM:
-                    if(!Configuration.IS_NOOK_TOUCH || action == KeyEvent.ACTION_UP)
-                        return false;
-                    if(nook_touch_up_press == config.isNookUpButtonForward())
-                        pageDown(Orientation.HORIZONTAL);
-                    else
-                        pageUp(Orientation.HORIZONTAL);
-                    return true;
+			if (!Configuration.IS_NOOK_TOUCH || action == KeyEvent.ACTION_UP)
+				return false;
+			if (nook_touch_up_press == config.isNookUpButtonForward())
+				pageDown(Orientation.HORIZONTAL);
+			else
+				pageUp(Orientation.HORIZONTAL);
+			return true;
 		}
 
-
-        LOG.debug("Not handling key event: returning false.");
+		LOG.debug("Not handling key event: returning false.");
 		return false;
 	}
 
@@ -1950,7 +2054,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	private void doPageCurl(boolean flipRight, boolean pageDown) {
 
-		if (isAnimating() || bookView == null ) {
+		if (isAnimating() || bookView == null) {
 			return;
 		}
 
@@ -1972,21 +2076,21 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		animator.SetCurlSpeed(bookView.getWidth() / 8);
 
 		animator.setBackgroundColor(config.getBackgroundColor());
-		
+
 		if (pageDown) {
-			bookView.pageDown();						
+			bookView.pageDown();
 		} else {
-			bookView.pageUp();			
+			bookView.pageUp();
 		}
-		
+
 		Bitmap after = getBookViewSnapshot();
-		
-		if ( flipRight ) {
+
+		if (flipRight) {
 			animator.setBackgroundBitmap(after);
 			animator.setForegroundBitmap(before);
 		} else {
 			animator.setBackgroundBitmap(before);
-			animator.setForegroundBitmap(after);		
+			animator.setForegroundBitmap(after);
 		}
 
 		dummyView.setAnimator(animator);
@@ -2121,16 +2225,18 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		inAnim.setAnimationListener(new Animation.AnimationListener() {
 
-			public void onAnimationStart(Animation animation) {}
+			public void onAnimationStart(Animation animation) {
+			}
 
-			public void onAnimationRepeat(Animation animation) {}
+			public void onAnimationRepeat(Animation animation) {
+			}
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				onSlideFinished();
 			}
 		});
-		
+
 		viewSwitcher.layout(0, 0, viewSwitcher.getWidth(),
 				viewSwitcher.getHeight());
 		dummyView.layout(0, 0, viewSwitcher.getWidth(),
@@ -2143,7 +2249,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	}
 
 	private void onSlideFinished() {
-		if ( currentPageNumber > 0 ) {
+		if (currentPageNumber > 0) {
 			this.pageNumberView.setVisibility(View.VISIBLE);
 		}
 	}
@@ -2152,7 +2258,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		if (bookView.isAtEnd()) {
 			return;
-		}		 
+		}
 
 		stopAnimating();
 
@@ -2164,15 +2270,15 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			if (animH == AnimationStyle.CURL) {
 				doPageCurl(direction == ReadingDirection.LEFT_TO_RIGHT, true);
 			} else if (animH == AnimationStyle.SLIDE) {
-				
-				if ( direction == ReadingDirection.LEFT_TO_RIGHT ) {
+
+				if (direction == ReadingDirection.LEFT_TO_RIGHT) {
 					prepareSlide(Animations.inFromRightAnimation(),
 							Animations.outToLeftAnimation());
 				} else {
 					prepareSlide(Animations.inFromLeftAnimation(),
 							Animations.outToRightAnimation());
 				}
-				
+
 				viewSwitcher.showNext();
 				bookView.pageDown();
 			} else {
@@ -2207,9 +2313,9 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			if (animH == AnimationStyle.CURL) {
 				doPageCurl(direction == ReadingDirection.RIGHT_TO_LEFT, false);
 			} else if (animH == AnimationStyle.SLIDE) {
-				if ( direction == ReadingDirection.LEFT_TO_RIGHT ) {
+				if (direction == ReadingDirection.LEFT_TO_RIGHT) {
 					prepareSlide(Animations.inFromLeftAnimation(),
-						Animations.outToRightAnimation());
+							Animations.outToRightAnimation());
 				} else {
 					prepareSlide(Animations.inFromRightAnimation(),
 							Animations.outToLeftAnimation());
@@ -2235,16 +2341,16 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 
-        SherlockFragmentActivity activity = getSherlockActivity();
+		SherlockFragmentActivity activity = getSherlockActivity();
 
-        if ( activity == null ) {
-            return;
-        }
+		if (activity == null) {
+			return;
+		}
 
 		MenuItem nightMode = menu.findItem(R.id.profile_night);
 		MenuItem dayMode = menu.findItem(R.id.profile_day);
 
-		MenuItem tts = menu.findItem( R.id.text_to_speech );
+		MenuItem tts = menu.findItem(R.id.text_to_speech);
 		tts.setEnabled(ttsAvailable);
 
 		activity.getSupportActionBar().show();
@@ -2268,7 +2374,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		activity.getWindow().addFlags(
 				WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-		activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		activity.getWindow().clearFlags(
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 
 	private void hideTitleBar() {
@@ -2296,132 +2403,137 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	private void loadNewBook(String fileName) {
 
-        Activity activity = getActivity();
+		Activity activity = getActivity();
 
-        if ( activity != null ) {
+		if (activity != null) {
 
-            activity.setTitle(R.string.app_name);
-            this.bookTitle = null;
-            this.titleBase = null;
+			activity.setTitle(R.string.app_name);
+			this.bookTitle = null;
+			this.titleBase = null;
 
-            bookView.clear();
+			bookView.clear();
 
-            updateFileName(null, fileName);
-            new DownloadProgressTask().execute();
-        }
+			updateFileName(null, fileName);
+			new DownloadProgressTask().execute();
+		}
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 
-        LOG.debug("onStop() called.");
+		LOG.debug("onStop() called.");
 		printScreenAndCallState("onStop()");
 
 		closeWaitDialog();
-        libraryService.close();
+		libraryService.close();
 	}
 
-    public BookView getBookView() {
-        return this.bookView;
-    }
+	public BookView getBookView() {
+		return this.bookView;
+	}
 
 	public void saveReadingPosition() {
 		if (this.bookView != null) {
 
 			int index = this.bookView.getIndex();
 			int position = this.bookView.getProgressPosition();
-			
-			if ( index != -1 && position != -1 ) {			
+
+			if (index != -1 && position != -1) {
 				config.setLastPosition(this.fileName, position);
 				config.setLastIndex(this.fileName, index);
-			
+
 				sendProgressUpdateToServer(index, position);
 			}
 		}
 
 	}
 
-    public void share(int from, int to, String selectedText) {
+	public void share(int from, int to, String selectedText) {
 
-        int pageStart = bookView.getStartOfCurrentPage();
+		int pageStart = bookView.getStartOfCurrentPage();
 
-        String text = bookTitle + ", " + authorField.getText() + "\n";
+		String text = bookTitle + ", " + authorField.getText() + "\n";
 
-        int offset = pageStart + from;
+		int offset = pageStart + from;
 
-        int pageNumber = bookView.getPageNumberFor( bookView.getIndex(), offset );
-        int totalPages = bookView.getTotalNumberOfPages();
+		int pageNumber = bookView.getPageNumberFor(bookView.getIndex(), offset);
+		int totalPages = bookView.getTotalNumberOfPages();
 
-        int percentage = bookView.getPercentageFor( bookView.getIndex(), offset );
+		int percentage = bookView.getPercentageFor(bookView.getIndex(), offset);
 
-        if ( pageNumber != -1 ) {
-            text = text + String.format( getString(R.string.page_number_of),
-                    pageNumber, totalPages ) + " (" + progressPercentage + "%)\n\n";
+		if (pageNumber != -1) {
+			text = text
+					+ String.format(getString(R.string.page_number_of),
+							pageNumber, totalPages) + " (" + progressPercentage
+					+ "%)\n\n";
 
-        } else {
-            text += "" + progressPercentage + "%\n\n";
-        }
+		} else {
+			text += "" + progressPercentage + "%\n\n";
+		}
 
-        text += selectedText;
+		text += selectedText;
 
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
 
+		sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+		sendIntent.setType("text/plain");
 
-        sendIntent.putExtra(Intent.EXTRA_TEXT, text );
-        sendIntent.setType("text/plain");
+		startActivity(Intent.createChooser(sendIntent,
+				getText(R.string.abs__shareactionprovider_share_with)));
 
-        startActivity(Intent.createChooser(sendIntent, getText(R.string.abs__shareactionprovider_share_with)));
-
-    }
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.reading_menu, menu);
 
-        this.searchMenuItem = menu.findItem(R.id.search_text);
+		this.searchMenuItem = menu.findItem(R.id.search_text);
 
-        if (this.searchMenuItem != null) {
-            final com.actionbarsherlock.widget.SearchView searchView =
-                    (com.actionbarsherlock.widget.SearchView) searchMenuItem.getActionView();
+		if (this.searchMenuItem != null) {
+			final com.actionbarsherlock.widget.SearchView searchView = (com.actionbarsherlock.widget.SearchView) searchMenuItem
+					.getActionView();
 
-            if (searchView != null) {
+			if (searchView != null) {
 
-                searchView.setSubmitButtonEnabled(true);
-                searchView.setOnQueryTextListener(new com.actionbarsherlock.widget.SearchView.OnQueryTextListener() {
+				searchView.setSubmitButtonEnabled(true);
+				searchView
+						.setOnQueryTextListener(new com.actionbarsherlock.widget.SearchView.OnQueryTextListener() {
 
-                    //This is a work-around, since we get the onQuerySubmit() event twice
-                    //when the user hits enter
-                    private String lastQuery = "";
+							// This is a work-around, since we get the
+							// onQuerySubmit() event twice
+							// when the user hits enter
+							private String lastQuery = "";
 
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
+							@Override
+							public boolean onQueryTextSubmit(String query) {
 
-                        if ( query.equals(lastQuery) && searchResults != null ) {
-                            showSearchResultDialog(searchResults);
-                        } else if ( ! query.equals(lastQuery) ) {
-                            searchResults = null;
-                            lastQuery = query;
-                            performSearch(query);
-                        }
+								if (query.equals(lastQuery)
+										&& searchResults != null) {
+									showSearchResultDialog(searchResults);
+								} else if (!query.equals(lastQuery)) {
+									searchResults = null;
+									lastQuery = query;
+									performSearch(query);
+								}
 
-                        return true;
-                    }
+								return true;
+							}
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        return false;
-                    }
-                } );
-            }
-        }
+							@Override
+							public boolean onQueryTextChange(String newText) {
+								return false;
+							}
+						});
+			}
+		}
 	}
 
 	@Override
 	public void onOptionsMenuClosed(android.view.Menu menu) {
 		updateFromPrefs();
-        hideTitleBar();
+		hideTitleBar();
 	}
 
 	@Override
@@ -2468,7 +2580,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		case R.id.rolling_blind:
 			startAutoScroll();
 			return true;
-			
+
 		case R.id.text_to_speech:
 			startTextToSpeech();
 			return true;
@@ -2482,18 +2594,18 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			ft.addToBackStack(null);
 			AddBookmarkFragment fragment = new AddBookmarkFragment();
 
-            fragment.setFilename(this.fileName);
-            fragment.setBookmarkDatabaseHelper(bookmarkDatabaseHelper);
+			fragment.setFilename(this.fileName);
+			fragment.setBookmarkDatabaseHelper(bookmarkDatabaseHelper);
 			fragment.setBookIndex(this.bookView.getIndex());
-            fragment.setBookPosition(this.bookView.getProgressPosition());
+			fragment.setBookPosition(this.bookView.getProgressPosition());
 
-            String firstLine = this.bookView.getFirstLine();
+			String firstLine = this.bookView.getFirstLine();
 
-            if ( firstLine.length() > 20 ) {
-                firstLine = firstLine.substring(0, 20) + "…";
-            }
+			if (firstLine.length() > 20) {
+				firstLine = firstLine.substring(0, 20) + "…";
+			}
 
-            fragment.setInitialText( firstLine );
+			fragment.setInitialText(firstLine);
 
 			fragment.show(ft, "dialog");
 			return true;
@@ -2525,42 +2637,43 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		return false;
 	}
 
-    @Override
-    public void onScreenTap() {
+	@Override
+	public void onScreenTap() {
 
-        SherlockFragmentActivity activity = getSherlockActivity();
+		SherlockFragmentActivity activity = getSherlockActivity();
 
-        if ( activity == null ) {
-            return;
-        }
+		if (activity == null) {
+			return;
+		}
 
-        stopAnimating();
+		stopAnimating();
 
-        if (this.titleBarLayout.getVisibility() == View.VISIBLE) {
-            titleBarLayout.setVisibility(View.GONE);
+		if (this.titleBarLayout.getVisibility() == View.VISIBLE) {
+			titleBarLayout.setVisibility(View.GONE);
 
-            updateFromPrefs();
-        } else {
-            titleBarLayout.setVisibility(View.VISIBLE);
+			updateFromPrefs();
+		} else {
+			titleBarLayout.setVisibility(View.VISIBLE);
 
-            getSherlockActivity().getSupportActionBar().show();
-            activity.getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-    }
-	
+			getSherlockActivity().getSupportActionBar().show();
+			activity.getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			activity.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+	}
+
 	@Override
 	public boolean onSwipeLeft() {
 
 		if (config.isHorizontalSwipeEnabled()) {
-			
-			if ( config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT ) {			
+
+			if (config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT) {
 				pageDown(Orientation.HORIZONTAL);
 			} else {
 				pageUp(Orientation.HORIZONTAL);
 			}
-		
+
 			return true;
 		}
 
@@ -2571,13 +2684,13 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	public boolean onSwipeRight() {
 
 		if (config.isHorizontalSwipeEnabled()) {
-			
-			if ( config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT ) {			
+
+			if (config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT) {
 				pageUp(Orientation.HORIZONTAL);
 			} else {
 				pageDown(Orientation.HORIZONTAL);
 			}
-			
+
 			return true;
 		}
 
@@ -2587,12 +2700,12 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@Override
 	public boolean onTapLeftEdge() {
 		if (config.isHorizontalTappingEnabled()) {
-			if ( config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT ) {			
+			if (config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT) {
 				pageUp(Orientation.HORIZONTAL);
 			} else {
 				pageDown(Orientation.HORIZONTAL);
 			}
-			
+
 			return true;
 		}
 
@@ -2602,13 +2715,13 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@Override
 	public boolean onTapRightEdge() {
 		if (config.isHorizontalTappingEnabled()) {
-			
-			if ( config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT ) {			
+
+			if (config.getReadingDirection() == ReadingDirection.LEFT_TO_RIGHT) {
 				pageDown(Orientation.HORIZONTAL);
 			} else {
 				pageUp(Orientation.HORIZONTAL);
 			}
-			
+
 			return true;
 		}
 
@@ -2650,9 +2763,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			setScreenBrightnessLevel(brightnessLevel);
 
 			if (brightnessToast == null) {
-				brightnessToast = Toast
-						.makeText(context, brightness + ": "
-								+ brightnessLevel, Toast.LENGTH_SHORT);
+				brightnessToast = Toast.makeText(context, brightness + ": "
+						+ brightnessLevel, Toast.LENGTH_SHORT);
 			} else {
 				brightnessToast.setText(brightness + ": " + brightnessLevel);
 			}
@@ -2678,15 +2790,16 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		return false;
 	}
 
+	@Override
+	public void onWordLongPressed(int startOffset, int endOffset,
+			CharSequence word) {
 
-    @Override
-    public void onWordLongPressed(int startOffset, int endOffset, CharSequence word) {
+		this.selectedWord = new BookView.SelectedWord(startOffset, endOffset,
+				word);
 
-        this.selectedWord = new BookView.SelectedWord( startOffset, endOffset, word );
+		Activity activity = getActivity();
 
-        Activity activity = getActivity();
-
-        if ( activity != null ) {
+		if (activity != null) {
 			activity.openContextMenu(bookView);
 		}
 	}
@@ -2711,7 +2824,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(getString(R.string.cloud_bm));
 
-		ProgressListAdapter adapter = new ProgressListAdapter(context, bookView, results);
+		ProgressListAdapter adapter = new ProgressListAdapter(context,
+				bookView, results);
 		builder.setAdapter(adapter, adapter);
 
 		AlertDialog dialog = builder.create();
@@ -2719,47 +2833,47 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		dialog.show();
 	}
 
-    public boolean hasTableOfContents() {
-        List<TocEntry> toc = this.bookView.getTableOfContents();
-        return toc != null && ! toc.isEmpty();
-    }
+	public boolean hasTableOfContents() {
+		List<TocEntry> toc = this.bookView.getTableOfContents();
+		return toc != null && !toc.isEmpty();
+	}
 
-    public List<NavigationCallback> getTableOfContents() {
+	public List<NavigationCallback> getTableOfContents() {
 
-        List<NavigationCallback> result = new ArrayList<NavigationCallback>();
-        List<TocEntry> tocEntries = this.bookView.getTableOfContents();
+		List<NavigationCallback> result = new ArrayList<NavigationCallback>();
+		List<TocEntry> tocEntries = this.bookView.getTableOfContents();
 
-        if ( tocEntries != null ) {
+		if (tocEntries != null) {
 
-            for ( final TocEntry tocEntry: tocEntries ) {
+			for (final TocEntry tocEntry : tocEntries) {
 
-                result.add(new NavigationCallback() {
-                    @Override
-                    public String getTitle() {
-                        return tocEntry.getTitle();
-                    }
+				result.add(new NavigationCallback() {
+					@Override
+					public String getTitle() {
+						return tocEntry.getTitle();
+					}
 
-                    @Override
-                    public String getSubtitle() {
-                        return "";
-                    }
+					@Override
+					public String getSubtitle() {
+						return "";
+					}
 
-                    @Override
-                    public void onClick() {
-                        bookView.navigateTo( tocEntry.getHref() );
-                    }
+					@Override
+					public void onClick() {
+						bookView.navigateTo(tocEntry.getHref());
+					}
 
-                    @Override
-                    public void onLongClick() {
-                        //Do nothing
-                    }
-                });
-            }
+					@Override
+					public void onLongClick() {
+						// Do nothing
+					}
+				});
+			}
 
-        }
+		}
 
-        return result;
-    }
+		return result;
+	}
 
 	@Override
 	public void onSaveInstanceState(final Bundle outState) {
@@ -2772,14 +2886,13 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	private void sendProgressUpdateToServer(final int index, final int position) {
 
-        libraryService.updateReadingProgress(fileName, progressPercentage);
+		libraryService.updateReadingProgress(fileName, progressPercentage);
 
 		backgroundHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					progressService.storeProgress(fileName,
-							index, position,
+					progressService.storeProgress(fileName, index, position,
 							progressPercentage);
 				} catch (Exception e) {
 					LOG.error("Error saving progress", e);
@@ -2788,328 +2901,336 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		});
 	}
 
-    @Override
-    public void performSearch(String query) {
+	@Override
+	public void performSearch(String query) {
 
-        LOG.debug("Starting search for: " + query );
+		LOG.debug("Starting search for: " + query);
 
-        final ProgressDialog searchProgress = new ProgressDialog(context);
-        searchProgress.setOwnerActivity(getActivity());
-        searchProgress.setCancelable(true);
-        searchProgress.setMax(100);
-        searchProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		final ProgressDialog searchProgress = new ProgressDialog(context);
+		searchProgress.setOwnerActivity(getActivity());
+		searchProgress.setCancelable(true);
+		searchProgress.setMax(100);
+		searchProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
-        final SearchTextTask task = new SearchTextTask(bookView.getBook()) {
+		final SearchTextTask task = new SearchTextTask(bookView.getBook()) {
 
-            int i = 0;
+			int i = 0;
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
 
-                searchProgress.setMessage(getString(R.string.search_wait));
-                searchProgress.show();
+				searchProgress.setMessage(getString(R.string.search_wait));
+				searchProgress.show();
 
-                // Hide on-screen keyboard if it is showing
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+				// Hide on-screen keyboard if it is showing
+				InputMethodManager imm = (InputMethodManager) context
+						.getSystemService(Activity.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-            }
+			}
 
-            @Override
-            protected void onProgressUpdate(SearchResult... values) {
+			@Override
+			protected void onProgressUpdate(SearchResult... values) {
 
-                if ( ! isAdded() ) {
-                    return;
-                }
+				if (!isAdded()) {
+					return;
+				}
 
-                super.onProgressUpdate(values);
+				super.onProgressUpdate(values);
 
-                LOG.debug("Found match at index=" + values[0].getIndex()
-                        + ", offset=" + values[0].getStart() + " with context "
-                        + values[0].getDisplay());
-                SearchResult res = values[0];
+				LOG.debug("Found match at index=" + values[0].getIndex()
+						+ ", offset=" + values[0].getStart() + " with context "
+						+ values[0].getDisplay());
+				SearchResult res = values[0];
 
-                if (res.getDisplay() != null) {
-                    i++;
-                    String update = String.format(
-                            getString(R.string.search_hits), i);
-                    searchProgress.setMessage(update);
-                }
+				if (res.getDisplay() != null) {
+					i++;
+					String update = String.format(
+							getString(R.string.search_hits), i);
+					searchProgress.setMessage(update);
+				}
 
-                searchProgress.setProgress( bookView.getPercentageFor(res.getIndex(), res.getStart() ));
-            }
+				searchProgress.setProgress(bookView.getPercentageFor(
+						res.getIndex(), res.getStart()));
+			}
 
-            @Override
-            protected void onCancelled() {
-                if ( isAdded() ) {
-                    Toast.makeText(context, R.string.search_cancelled,
-                        Toast.LENGTH_LONG).show();
-                }
-            }
+			@Override
+			protected void onCancelled() {
+				if (isAdded()) {
+					Toast.makeText(context, R.string.search_cancelled,
+							Toast.LENGTH_LONG).show();
+				}
+			}
 
-            protected void onPostExecute(java.util.List<SearchResult> result) {
+			protected void onPostExecute(java.util.List<SearchResult> result) {
 
-                searchProgress.dismiss();
+				searchProgress.dismiss();
 
-                if (!isCancelled() && isAdded() ) {
-                    if (result.size() > 0) {
-                        searchResults = result;
-                        showSearchResultDialog(result);
-                    } else {
-                        Toast.makeText(context,
-                                R.string.search_no_matches, Toast.LENGTH_LONG)
-                                .show();
-                    }
-                }
-            };
-        };
+				if (!isCancelled() && isAdded()) {
+					if (result.size() > 0) {
+						searchResults = result;
+						showSearchResultDialog(result);
+					} else {
+						Toast.makeText(context, R.string.search_no_matches,
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			};
+		};
 
-        searchProgress
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+		searchProgress
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        task.cancel(true);
-                    }
-                });
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						task.cancel(true);
+					}
+				});
 
-        task.execute(query);
-    }
+		task.execute(query);
+	}
 
-    private void setSupportProgressBarIndeterminateVisibility(boolean enable) {
-        SherlockFragmentActivity activity = getSherlockActivity();
-        if ( activity != null) {
-            LOG.debug("Setting progress bar to " + enable );
-            activity.setSupportProgressBarIndeterminateVisibility(enable);
-        } else {
-            LOG.debug("Got null activity.");
-        }
-    }
+	private void setSupportProgressBarIndeterminateVisibility(boolean enable) {
+		SherlockFragmentActivity activity = getSherlockActivity();
+		if (activity != null) {
+			LOG.debug("Setting progress bar to " + enable);
+			activity.setSupportProgressBarIndeterminateVisibility(enable);
+		} else {
+			LOG.debug("Got null activity.");
+		}
+	}
 
-    @Override
-    public void onCalculatePageNumbersComplete() {
-       setSupportProgressBarIndeterminateVisibility(false);
-    }
+	@Override
+	public void onCalculatePageNumbersComplete() {
+		setSupportProgressBarIndeterminateVisibility(false);
+	}
 
-    @Override
-    public void onStartCalculatePageNumbers() {
-        setSupportProgressBarIndeterminateVisibility(true);
-    }
+	@Override
+	public void onStartCalculatePageNumbers() {
+		setSupportProgressBarIndeterminateVisibility(true);
+	}
 
-    public void onSearchRequested() {
-        if ( this.searchMenuItem != null && searchMenuItem.getActionView() != null ) {
-            getSherlockActivity().getSupportActionBar().show();
-            this.searchMenuItem.expandActionView();
-            this.searchMenuItem.getActionView().requestFocus();
-        } else {
-            dialogFactory.showSearchDialog(R.string.search_text, R.string.enter_query, this);
-        }
-    }
+	public void onSearchRequested() {
+		if (this.searchMenuItem != null
+				&& searchMenuItem.getActionView() != null) {
+			getSherlockActivity().getSupportActionBar().show();
+			this.searchMenuItem.expandActionView();
+			this.searchMenuItem.getActionView().requestFocus();
+		} else {
+			dialogFactory.showSearchDialog(R.string.search_text,
+					R.string.enter_query, this);
+		}
+	}
 
-    //Hack to prevent showing the dialog twice
-    private boolean isSearchResultsDialogShowing = false;
+	// Hack to prevent showing the dialog twice
+	private boolean isSearchResultsDialogShowing = false;
 
-	private void showSearchResultDialog(
-			final List<SearchResult> results) {
+	private void showSearchResultDialog(final List<SearchResult> results) {
 
-        if ( isSearchResultsDialogShowing ) {
-            return;
-        }
+		if (isSearchResultsDialogShowing) {
+			return;
+		}
 
-        isSearchResultsDialogShowing = true;
+		isSearchResultsDialogShowing = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.search_results);
 
-		SearchResultAdapter adapter = new SearchResultAdapter(context, bookView, results);
+		SearchResultAdapter adapter = new SearchResultAdapter(context,
+				bookView, results);
 		builder.setAdapter(adapter, adapter);
 
 		AlertDialog dialog = builder.create();
 		dialog.setOwnerActivity(getActivity());
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                isSearchResultsDialogShowing = false;
-            }
-        });
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialogInterface) {
+				isSearchResultsDialogShowing = false;
+			}
+		});
 		dialog.show();
 	}
 
-    public boolean hasSearchResults() {
-        return this.searchResults != null && !this.searchResults.isEmpty();
-    }
+	public boolean hasSearchResults() {
+		return this.searchResults != null && !this.searchResults.isEmpty();
+	}
 
-    public List<NavigationCallback> getSearchResults() {
+	public List<NavigationCallback> getSearchResults() {
 
-        List<NavigationCallback> result = new ArrayList<NavigationCallback>();
+		List<NavigationCallback> result = new ArrayList<NavigationCallback>();
 
-        if ( searchResults == null ) {
-            return result;
-        }
+		if (searchResults == null) {
+			return result;
+		}
 
-        final int totalNumberOfPages = bookView.getTotalNumberOfPages();
+		final int totalNumberOfPages = bookView.getTotalNumberOfPages();
 
-        int counter = 0;
+		int counter = 0;
 
-        for ( final SearchResult searchResult: this.searchResults ) {
+		for (final SearchResult searchResult : this.searchResults) {
 
-            int percentage = bookView.getPercentageFor(searchResult.getIndex(), searchResult.getStart());
-            int pageNumber = bookView.getPageNumberFor(searchResult.getIndex(), searchResult.getStart());
+			int percentage = bookView.getPercentageFor(searchResult.getIndex(),
+					searchResult.getStart());
+			int pageNumber = bookView.getPageNumberFor(searchResult.getIndex(),
+					searchResult.getStart());
 
-            final String text;
-            final int currentCount = counter;
+			final String text;
+			final int currentCount = counter;
 
-            if ( pageNumber != -1 ) {
-                text = String.format( context.getString(R.string.page_number_of),
-                        pageNumber, totalNumberOfPages )
-                        + " (" + percentage + "%)";
-            } else {
-                text = percentage + "%";
-            }
+			if (pageNumber != -1) {
+				text = String.format(
+						context.getString(R.string.page_number_of), pageNumber,
+						totalNumberOfPages)
+						+ " (" + percentage + "%)";
+			} else {
+				text = percentage + "%";
+			}
 
-            result.add( new NavigationCallback() {
-                @Override
-                public String getTitle() {
-                    return searchResult.getDisplay();
-                }
+			result.add(new NavigationCallback() {
+				@Override
+				public String getTitle() {
+					return searchResult.getDisplay();
+				}
 
-                @Override
-                public String getSubtitle() {
-                    return text;
-                }
+				@Override
+				public String getSubtitle() {
+					return text;
+				}
 
-                @Override
-                public void onClick() {
-                    bookView.navigateBySearchResult( searchResult );
-                }
+				@Override
+				public void onClick() {
+					bookView.navigateBySearchResult(searchResult);
+				}
 
-                @Override
-                public void onLongClick() {
-                    //Do nothing
-                }
-            });
+				@Override
+				public void onLongClick() {
+					// Do nothing
+				}
+			});
 
-            counter++;
-        }
+			counter++;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
+	public boolean hasHighlights() {
 
-    public boolean hasHighlights() {
+		List<HighLight> highLights = this.highlightManager
+				.getHighLights(bookView.getFileName());
 
-        List<HighLight> highLights = this.highlightManager.getHighLights( bookView.getFileName() );
+		return highLights != null && !highLights.isEmpty();
+	}
 
-        return highLights != null && ! highLights.isEmpty();
-    }
+	public boolean hasBookmarks() {
 
-    public boolean hasBookmarks() {
+		List<Bookmark> bookmarks = this.bookmarkDatabaseHelper
+				.getBookmarksForFile(bookView.getFileName());
 
-        List<Bookmark> bookmarks = this.bookmarkDatabaseHelper.getBookmarksForFile( bookView.getFileName() );
+		return bookmarks != null && !bookmarks.isEmpty();
+	}
 
-        return bookmarks != null && ! bookmarks.isEmpty();
-    }
+	private String getHighlightLabel(int index, int position, String text) {
 
-    private String getHighlightLabel( int index, int position, String text ) {
+		final int totalNumberOfPages = bookView.getTotalNumberOfPages();
 
-        final int totalNumberOfPages = bookView.getTotalNumberOfPages();
+		int percentage = bookView.getPercentageFor(index, position);
+		int pageNumber = bookView.getPageNumberFor(index, position);
 
-        int percentage = bookView.getPercentageFor( index, position );
-        int pageNumber = bookView.getPageNumberFor( index, position );
+		String result = percentage + "%";
 
-        String result = percentage + "%";
+		if (pageNumber != -1) {
+			result = String.format(context.getString(R.string.page_number_of),
+					pageNumber, totalNumberOfPages) + " (" + percentage + "%)";
+		}
 
-        if ( pageNumber != -1 ) {
-            result = String.format( context.getString(R.string.page_number_of),
-                    pageNumber, totalNumberOfPages )
-                    + " (" + percentage + "%)";
-        }
+		if (text != null && text.trim().length() > 0) {
+			result += ": " + TextUtil.shortenText(text);
+		}
 
-        if ( text != null && text.trim().length() > 0 ) {
-            result += ": " + TextUtil.shortenText( text );
-        }
+		return result;
+	}
 
-        return result;
-    }
+	public List<NavigationCallback> getBookmarks() {
 
-    public List<NavigationCallback> getBookmarks() {
+		List<Bookmark> bookmarks = this.bookmarkDatabaseHelper
+				.getBookmarksForFile(bookView.getFileName());
 
-        List<Bookmark> bookmarks = this.bookmarkDatabaseHelper.getBookmarksForFile( bookView.getFileName() );
+		List<NavigationCallback> result = new ArrayList<NavigationCallback>();
 
-        List<NavigationCallback> result = new ArrayList<NavigationCallback>();
+		for (final Bookmark bookmark : bookmarks) {
 
-        for ( final Bookmark bookmark: bookmarks ) {
+			final String finalText = getHighlightLabel(bookmark.getIndex(),
+					bookmark.getPosition(), null);
 
-            final String finalText = getHighlightLabel( bookmark.getIndex(),
-                    bookmark.getPosition(), null );
+			result.add(new NavigationCallback() {
+				@Override
+				public String getTitle() {
+					return bookmark.getName();
+				}
 
-            result.add( new NavigationCallback() {
-                @Override
-                public String getTitle() {
-                    return bookmark.getName();
-                }
+				@Override
+				public String getSubtitle() {
+					return finalText;
+				}
 
-                @Override
-                public String getSubtitle() {
-                    return finalText;
-                }
+				@Override
+				public void onClick() {
+					bookView.navigateTo(bookmark.getIndex(),
+							bookmark.getPosition());
+				}
 
-                @Override
-                public void onClick() {
-                    bookView.navigateTo( bookmark.getIndex(), bookmark.getPosition() );
-                }
+				@Override
+				public void onLongClick() {
+					onBookmarkClick(bookmark);
+				}
+			});
 
-                @Override
-                public void onLongClick() {
-                    onBookmarkClick( bookmark );
-                }
-            });
+		}
 
-        }
+		return result;
+	}
 
+	public List<NavigationCallback> getHighlights() {
 
-        return result;
-    }
+		List<HighLight> highLights = this.highlightManager
+				.getHighLights(bookView.getFileName());
 
+		List<NavigationCallback> result = new ArrayList<NavigationCallback>();
 
-    public List<NavigationCallback> getHighlights() {
+		for (final HighLight highLight : highLights) {
 
-        List<HighLight> highLights = this.highlightManager.getHighLights( bookView.getFileName() );
+			final String finalText = getHighlightLabel(highLight.getIndex(),
+					highLight.getStart(), highLight.getTextNote());
 
-        List<NavigationCallback> result = new ArrayList<NavigationCallback>();
+			result.add(new NavigationCallback() {
+				@Override
+				public String getTitle() {
+					return highLight.getDisplayText();
+				}
 
-        for ( final HighLight highLight: highLights ) {
+				@Override
+				public String getSubtitle() {
+					return finalText;
+				}
 
-            final String finalText = getHighlightLabel( highLight.getIndex(), highLight.getStart(),
-                    highLight.getTextNote() );
+				@Override
+				public void onClick() {
+					bookView.navigateTo(highLight.getIndex(),
+							highLight.getStart());
+				}
 
-            result.add( new NavigationCallback() {
-                @Override
-                public String getTitle() {
-                    return highLight.getDisplayText();
-                }
+				@Override
+				public void onLongClick() {
+					onHighLightClick(highLight);
+				}
+			});
 
-                @Override
-                public String getSubtitle() {
-                    return finalText;
-                }
+		}
 
-                @Override
-                public void onClick() {
-                    bookView.navigateTo( highLight.getIndex(), highLight.getStart() );
-                }
-
-                @Override
-                public void onLongClick() {
-                    onHighLightClick( highLight );
-                }
-            });
-
-        }
-
-        return result;
-    }
+		return result;
+	}
 
 	private class ManualProgressSync extends
 			AsyncTask<Void, Integer, List<BookProgress>> {
@@ -3118,20 +3239,21 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		@Override
 		protected void onPreExecute() {
-            if ( isAdded() ) {
+			if (isAdded()) {
 
-                ProgressDialog progressDialog = getWaitDialog();
-                progressDialog.setMessage(getString(R.string.syncing));
-                progressDialog.setCancelable(true);
-                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        ManualProgressSync.this.cancel(true);
-                    }
-                });
+				ProgressDialog progressDialog = getWaitDialog();
+				progressDialog.setMessage(getString(R.string.syncing));
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							@Override
+							public void onCancel(DialogInterface dialogInterface) {
+								ManualProgressSync.this.cancel(true);
+							}
+						});
 
-                progressDialog.show();
-            }
+				progressDialog.show();
+			}
 		}
 
 		@Override
@@ -3144,12 +3266,12 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			}
 		}
 
-        @Override
-        protected void onCancelled() {
-            closeWaitDialog();
-        }
+		@Override
+		protected void onCancelled() {
+			closeWaitDialog();
+		}
 
-        @Override
+		@Override
 		protected void onPostExecute(List<BookProgress> progress) {
 			closeWaitDialog();
 
@@ -3176,11 +3298,12 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 				alertDialog.show();
 
-			} else if ( progress.isEmpty() ) {
-			    Toast.makeText(context, R.string.no_sync_points, Toast.LENGTH_LONG).show();
+			} else if (progress.isEmpty()) {
+				Toast.makeText(context, R.string.no_sync_points,
+						Toast.LENGTH_LONG).show();
 			} else {
-                showPickProgressDialog(progress);
-            }
+				showPickProgressDialog(progress);
+			}
 		}
 	}
 
@@ -3189,34 +3312,35 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		@Override
 		protected void onPreExecute() {
-            if ( isAdded() ) {
-			    ProgressDialog progressDialog = getWaitDialog();
-                progressDialog.setMessage(getString(R.string.syncing));
-                progressDialog.setCancelable(true);
-                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        DownloadProgressTask.this.cancel(true);
+			if (isAdded()) {
+				ProgressDialog progressDialog = getWaitDialog();
+				progressDialog.setMessage(getString(R.string.syncing));
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							@Override
+							public void onCancel(DialogInterface dialogInterface) {
+								DownloadProgressTask.this.cancel(true);
 
-                        ProgressDialog progressDialog = getWaitDialog();
-                        progressDialog.setMessage( getString( R.string.cancelling) );
-                        progressDialog.show();
+								ProgressDialog progressDialog = getWaitDialog();
+								progressDialog
+										.setMessage(getString(R.string.cancelling));
+								progressDialog.show();
 
-                    }
-                });
+							}
+						});
 
-                progressDialog.show();
-            }
+				progressDialog.show();
+			}
 		}
 
-        @Override
-        protected void onCancelled() {
+		@Override
+		protected void onCancelled() {
 
+			bookView.restore();
+		}
 
-            bookView.restore();
-        }
-
-        @Override
+		@Override
 		protected BookProgress doInBackground(Void... params) {
 			try {
 				List<BookProgress> updates = progressService
@@ -3226,8 +3350,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 					return updates.get(0);
 				}
 			} catch (AccessException e) {
-			    //Ignore, since it's a background process
-            }
+				// Ignore, since it's a background process
+			}
 
 			return null;
 		}
@@ -3254,23 +3378,28 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			bookView.restore();
 		}
 	}
-	
+
 	private class PageTurnerMediaReceiver extends BroadcastReceiver {
-		
+
 		private final Logger LOG = LoggerFactory.getLogger("PTSMediaReceiver");
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
-			LOG.debug("Got intent: " + intent.getAction() );
-			
-			if ( intent.getAction().equals(MediaButtonReceiver.INTENT_PAGETURNER_MEDIA)) {
-				KeyEvent event = new KeyEvent(
-						intent.getIntExtra("action", 0),
+
+			LOG.debug("Got intent: " + intent.getAction());
+
+			if (intent.getAction().equals(
+					MediaButtonReceiver.INTENT_PAGETURNER_MEDIA)) {
+				KeyEvent event = new KeyEvent(intent.getIntExtra("action", 0),
 						intent.getIntExtra("keyCode", 0));
 				dispatchMediaKeyEvent(event);
 			}
-			
+
 		}
-	}	
+	}
+
+	public static BookViewWraper getBookViewWraper() {
+		return bookViewWraper;
+	}
+	
 }

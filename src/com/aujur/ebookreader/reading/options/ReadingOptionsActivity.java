@@ -20,6 +20,8 @@ import android.os.Bundle;
 
 import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.PageTurnerActivity;
+import com.aujur.ebookreader.activity.ReadingFragment;
+import com.aujur.ebookreader.dto.BookViewWraper;
 
 public class ReadingOptionsActivity extends PageTurnerActivity {
 
@@ -27,6 +29,8 @@ public class ReadingOptionsActivity extends PageTurnerActivity {
 	protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
 
 		System.out.println("");
+
+		BookViewWraper b = ReadingFragment.getBookViewWraper();
 
 		super.onCreatePageTurnerActivity(savedInstanceState);
 

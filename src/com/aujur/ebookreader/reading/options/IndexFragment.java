@@ -31,6 +31,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.activity.ReadingFragment;
 
 public class IndexFragment extends Fragment {
 
@@ -67,7 +68,12 @@ public class IndexFragment extends Fragment {
 		v.setLayoutParams(params);
 		v.setGravity(Gravity.CENTER);
 		v.setBackgroundResource(R.drawable.background_card);
-		v.setText("INDEX");
+
+		StringBuffer sb = new StringBuffer();
+		sb.append(ReadingFragment.getBookViewWraper().getBookView().getBook()
+				.getTableOfContents());
+
+		v.setText(sb.toString());
 
 		fl.addView(v);
 		return fl;
