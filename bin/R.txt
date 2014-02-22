@@ -482,6 +482,7 @@ int id groupName 0x7f06005f
 int id homeAsUp 0x7f060006
 int id image 0x7f060076
 int id importDialogLayout 0x7f060083
+int id index_reading 0x7f0600a1
 int id innerView 0x7f06007c
 int id itemAuthor 0x7f060057
 int id itemDescription 0x7f060058
@@ -522,11 +523,11 @@ int id radioScanSD 0x7f060084
 int id readNowButton 0x7f06005a
 int id readingProgress 0x7f060051
 int id rel 0x7f060079
-int id rolling_blind 0x7f0600a3
+int id rolling_blind 0x7f0600a4
 int id scan_books 0x7f06009b
 int id scrollPane 0x7f060062
 int id search 0x7f060093
-int id search_text 0x7f0600a1
+int id search_text 0x7f0600a2
 int id secondDivider 0x7f06005d
 int id selectBox 0x7f06006b
 int id shelves_view 0x7f060096
@@ -541,7 +542,7 @@ int id subtitleText 0x7f060061
 int id tabMode 0x7f060003
 int id tabs 0x7f060077
 int id tabs_options 0x7f060074
-int id text_to_speech 0x7f0600a2
+int id text_to_speech 0x7f0600a3
 int id timeStamp 0x7f060092
 int id titleField 0x7f060048
 int id titleProgress 0x7f060082

@@ -124,6 +124,7 @@ import com.aujur.ebookreader.dto.HighLight;
 import com.aujur.ebookreader.dto.SearchResult;
 import com.aujur.ebookreader.dto.TocEntry;
 import com.aujur.ebookreader.library.LibraryService;
+import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.sync.AccessException;
 import com.aujur.ebookreader.sync.BookProgress;
 import com.aujur.ebookreader.sync.ProgressService;
@@ -2573,6 +2574,11 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			startActivity(i);
 			return true;
 
+		case R.id.index_reading:
+			Intent intent = new Intent(context, ReadingOptionsActivity.class);
+			startActivity(intent);
+			return true;
+
 		case R.id.open_file:
 			launchFileManager();
 			return true;
@@ -3401,5 +3407,5 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	public static BookViewWraper getBookViewWraper() {
 		return bookViewWraper;
 	}
-	
+
 }

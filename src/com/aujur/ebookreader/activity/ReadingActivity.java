@@ -36,7 +36,6 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
-import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 
@@ -155,8 +154,6 @@ public class ReadingActivity extends PageTurnerActivity implements
 		menuItems.add(getString(R.string.download));
 		menuItems.add(config.getLastReadTitle());
 
-		menuItems.add(getString(R.string.options));
-
 		if (this.readingFragment != null) {
 
 			if (this.readingFragment.hasTableOfContents()) {
@@ -196,20 +193,8 @@ public class ReadingActivity extends PageTurnerActivity implements
 			return false;
 		}
 
-		if (correctedIndex == 3) {
-
-			ReadingFragment.getBookViewWraper().setBookView(
-					readingFragment.getBookView());
-
-			Intent intent = new Intent(this, ReadingOptionsActivity.class);
-			startActivity(intent);
-
-			closeNavigationDrawer();
-			return false;
-
-		}
-
 		return super.onGroupClick(expandableListView, view, correctedIndex, l);
+
 	}
 
 	private int getCorrectIndex(int i) {

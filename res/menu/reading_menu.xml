@@ -22,7 +22,12 @@
           android:title="@string/profile_night"
           android:icon="@drawable/sun"
           android:showAsAction="ifRoom"
-          />                 
+          />
+    
+    <item android:id="@+id/index_reading"          
+          android:title="@string/toc_label"
+          android:icon="@drawable/info"
+          />
     
     <item android:id="@+id/open_file"          
           android:title="@string/open_file"
