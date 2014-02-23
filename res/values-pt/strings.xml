@@ -177,6 +177,9 @@
     <string name="dead_link">Desculpe, parece que o link que você clicou está quebrado.</string>
     <string name="could_not_load">Não foi possível carregar o texto: %s</string>
     <string name="out_of_memory">Desculpe, não foi possível liberar memória suficiente para carregar este arquivo.</string>
+    
+    <string name="no_toc">Sem índice</string>
+    <string name="toc_desc">Não existe um índice para este livro. Voçê pode criar um índice ou entrar em contato com o autor solicitando sua criação.</string>
 
     <string name="notes_and_highlights">Notas &amp; Destaques</string>
     <string name="no_notes_or_highlights">Sem nota ou destaque</string>

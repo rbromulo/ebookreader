@@ -170,6 +170,9 @@
     <string name="could_not_load">Could not load text: %s</string>
     <string name="out_of_memory">Sorry, the program could not free enough memory to load this file.</string>
     
+    <string name="no_toc">No table of contents</string>
+    <string name="toc_desc">There is no table of contents for this book. You can create an index or contact the author to ask for it creation.</string>
+    
     <string name="notes_and_highlights">Notes &amp; Highlights</string>
     <string name="no_notes_or_highlights">No note or highlight</string>
     <string name="notes_or_highlights_desc">Long pressure on a word to select a passage. Then select Highlight. After highlighting you can still add a note, pressing on the highlighted word.</string>

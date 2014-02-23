@@ -59,13 +59,13 @@ public class IndexFragment extends RoboFragment {
 
 		if (hasTableOfContentes()) {
 
-			return (View) inflater.inflate(
-					R.layout.fragment_hightlight_listview, container, false);
+			return (View) inflater.inflate(R.layout.fragment_index_listview,
+					container, false);
 
 		} else {
 
-			return (View) inflater.inflate(
-					R.layout.fragment_hightlight_noitems, container, false);
+			return (View) inflater.inflate(R.layout.fragment_index_noitems,
+					container, false);
 
 		}
 
@@ -77,14 +77,14 @@ public class IndexFragment extends RoboFragment {
 
 		if (hasTableOfContentes()) {
 
-			ListView highlightList = (ListView) view
-					.findViewById(R.id.highlightList);
+			ListView indexList = (ListView) view
+					.findViewById(R.id.indexList);
 
-			HighlightListAdapter adapter = new HighlightListAdapter(
+			IndexListAdapter adapter = new IndexListAdapter(
 					getActivity());
 
-			highlightList.setAdapter(adapter);
-			highlightList.setOnItemClickListener(new OnItemClickListener() {
+			indexList.setAdapter(adapter);
+			indexList.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> list, View arg1,
 						int position, long arg3) {
