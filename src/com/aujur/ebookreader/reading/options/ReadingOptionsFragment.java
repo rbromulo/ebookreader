@@ -31,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +90,23 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 		changeColor(currentColor);
 
+		pager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			@Override
+			public void onPageSelected(int position) {
+				tabs.setBackgroundColor(getResources().getColor(R.color.green));
+			}
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
+
 	}
 
 	private Drawable.Callback drawableCallback = new Drawable.Callback() {
@@ -110,7 +128,10 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	private void changeColor(int newColor) {
 
-		tabs.setIndicatorColor(newColor);
+		// tabs.setIndicatorColor(newColor);
+		tabs.setIndicatorColor(getResources().getColor(
+				R.color.green_tab_indicator));
+		// tabs.setIndicatorColor(2131034133);
 
 		// change ActionBar color just if an ActionBar is available
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

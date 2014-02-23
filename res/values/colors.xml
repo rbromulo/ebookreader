@@ -19,5 +19,7 @@
 	<color name="background_window">#FFE5E5E5</color>
 	
 	<color name="green_tab_stripe">#FF96AA39</color>
+	
+	<color name="green_tab_indicator">#85b663</color>
     
 </resources>

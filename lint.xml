@@ -14,4 +14,7 @@
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/PageTurnerActivity.java" />
         <ignore path="src/com/aujur/vm2014/tradicional/s1p/activity/ReadingFragment.java" />
     </issue>
+    <issue id="ResourceAsColor">
+        <ignore path="src/com/aujur/ebookreader/reading/options/ReadingOptionsFragment.java" />
+    </issue>
 </lint>
