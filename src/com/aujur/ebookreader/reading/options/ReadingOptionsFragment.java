@@ -31,7 +31,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,23 +88,6 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 		tabs.setViewPager(pager);
 
 		changeColor(currentColor);
-
-		pager.setOnPageChangeListener(new OnPageChangeListener() {
-
-			@Override
-			public void onPageSelected(int position) {
-				tabs.setBackgroundColor(getResources().getColor(R.color.green));
-			}
-
-			@Override
-			public void onPageScrolled(int position, float positionOffset,
-					int positionOffsetPixels) {
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
 
 	}
 
@@ -186,7 +168,8 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 		// getString(R.string.notes_and_highlights),
 		// getString(R.string.bookmarks) };
 
-		private final String[] TITLES = { getString(R.string.toc_label) };
+		private final String[] TITLES = { getString(R.string.toc_label),
+				getString(R.string.notes_and_highlights) };
 
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -209,6 +192,9 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 			case 0:
 				return IndexFragment.newInstance();
+
+			case 1:
+				return HighlightsFragment.newInstance();
 
 			default:
 				return SuperAwesomeCardFragment.newInstance(position);

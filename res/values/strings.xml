@@ -171,6 +171,8 @@
     <string name="out_of_memory">Sorry, the program could not free enough memory to load this file.</string>
     
     <string name="notes_and_highlights">Notes &amp; Highlights</string>
+    <string name="no_notes_or_highlights">No note or highlight</string>
+    <string name="notes_or_highlights_desc">Long pressure on a word to select a passage. Then select Highlight. After highlighting you can still add a note, pressing on the highlighted word.</string>
 
     <string name="highlight">Highlight</string>
     <string name="highlights">Highlights</string>
