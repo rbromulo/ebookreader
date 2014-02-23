@@ -1,41 +1,50 @@
 /*
- * Copyright (C) 2013 Andreas Stuetz <andreas.stuetz@gmail.com>
+ * Copyright (C) 2014 Romulo Bittencourt <rbromulo@gmail.com>
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * 
+ * This file is part of AuJur E-Book Reader
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * AuJur E-Book Reader is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * PageTurner is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with AuJur E-Book Reader.  If not, see <http://www.gnu.org/licenses/>.*
  */
 
 package com.aujur.ebookreader.reading.options;
 
 import java.util.List;
 
+import roboguice.fragment.RoboFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.ReadingFragment;
 import com.aujur.ebookreader.dto.TocEntry;
 
-public class IndexFragment extends ListFragment {
-
-	private IndexArrayAdapter mAdapter;
+public class IndexFragment extends RoboFragment {
 
 	public static IndexFragment newInstance() {
 		IndexFragment f = new IndexFragment();
 		return f;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -48,46 +57,60 @@ public class IndexFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		// TODO: modify these fragment to show a sreen with a message that there
-		// is no index
-		// for book, or to show another screeen with the index list
-		View view = (View) inflater.inflate(R.layout.fragment_index_listview,
-				container, false);
+		if (hasTableOfContentes()) {
 
-		mAdapter = new IndexArrayAdapter(getActivity());
-		setListAdapter(mAdapter);
+			return (View) inflater.inflate(
+					R.layout.fragment_hightlight_listview, container, false);
 
-		List<TocEntry> tocCallbacks = ReadingFragment.getBookViewWraper()
-				.getBookView().getTableOfContents();
+		} else {
 
-		if (tocCallbacks != null && !tocCallbacks.isEmpty()) {
-			mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
-					.getTableOfContents());
+			return (View) inflater.inflate(
+					R.layout.fragment_hightlight_noitems, container, false);
+
 		}
 
-		mAdapter.notifyDataSetChanged();
-
-		return view;
-
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		if (hasTableOfContentes()) {
+
+			ListView highlightList = (ListView) view
+					.findViewById(R.id.highlightList);
+
+			HighlightListAdapter adapter = new HighlightListAdapter(
+					getActivity());
+
+			highlightList.setAdapter(adapter);
+			highlightList.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> list, View arg1,
+						int position, long arg3) {
+
+					ReadingFragment
+							.getBookViewWraper()
+							.getBookView()
+							.navigateTo(
+									ReadingFragment.getBookViewWraper()
+											.getBookView().getTableOfContents()
+											.get(position).getHref());
+
+					getActivity().finish();
+
+				}
+			});
+
+		}
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+	public boolean hasTableOfContentes() {
 
-		ReadingFragment
-				.getBookViewWraper()
-				.getBookView()
-				.navigateTo(
-						ReadingFragment.getBookViewWraper().getBookView()
-								.getTableOfContents().get(position).getHref());
+		List<TocEntry> tocEntries = ReadingFragment.getBookViewWraper()
+				.getBookView().getTableOfContents();
 
-		getActivity().finish();
-
+		return tocEntries != null && !tocEntries.isEmpty();
 	}
 
 }

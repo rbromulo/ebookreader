@@ -38,7 +38,9 @@ public class PageTurner extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+		
+		// ACRA.init(this);
+		
 		if (Configuration.IS_EINK_DEVICE) { // e-ink looks better with
 											// dark-on-light (esp. Nook Touch
 											// where theming breaks
@@ -46,6 +48,7 @@ public class PageTurner extends Application {
 			setTheme(R.style.Theme_Sherlock_Light);
 		}
 		super.onCreate();
+		
 	}
 
 	public static void changeLanguageSetting(Context context,

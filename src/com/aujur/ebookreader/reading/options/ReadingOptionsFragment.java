@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2011 Alex Kuiper
- * 
- * This file is part of PageTurner
+ * Copyright (C) 2014 Romulo Bittencourt <rbromulo@gmail.com>
  *
- * PageTurner is free software: you can redistribute it and/or modify
+ * 
+ * This file is part of AuJur E-Book Reader
+ *
+ * AuJur E-Book Reader is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PageTurner.  If not, see <http://www.gnu.org/licenses/>.*
+ * along with AuJur E-Book Reader.  If not, see <http://www.gnu.org/licenses/>.*
  */
 
 package com.aujur.ebookreader.reading.options;
