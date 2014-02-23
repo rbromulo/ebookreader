@@ -79,12 +79,14 @@ public class ReadingActivity extends PageTurnerActivity implements
 
 		if (this.readingFragment != null) {
 
-			List<NavigationCallback> tocCallbacks = this.readingFragment
-					.getTableOfContents();
+			// TODO: remove these statements because it was created a new way
+			// to show Table of Contents
+			// List<NavigationCallback> tocCallbacks = this.readingFragment
+			// .getTableOfContents();
 
-			if (tocCallbacks != null && !tocCallbacks.isEmpty()) {
-				getAdapter().setChildren(this.tocIndex, tocCallbacks);
-			}
+			// if (tocCallbacks != null && !tocCallbacks.isEmpty()) {
+			// getAdapter().setChildren(this.tocIndex, tocCallbacks);
+			// }
 
 			List<NavigationCallback> highlightCallbacks = this.readingFragment
 					.getHighlights();
@@ -187,9 +189,15 @@ public class ReadingActivity extends PageTurnerActivity implements
 
 		int correctedIndex = getCorrectIndex(i);
 
+		// TODO: remove these statements after successful tests
 		// FIXME: this is nasty and hacky!
-		if (correctedIndex == 2 || i == tocIndex || i == highlightIndex
-				|| i == searchIndex || i == bookmarksIndex) {
+		// if (correctedIndex == 2 || i == tocIndex || i == highlightIndex
+		// || i == searchIndex || i == bookmarksIndex) {
+		// return false;
+		// }
+
+		if (correctedIndex == 2 || i == highlightIndex || i == searchIndex
+				|| i == bookmarksIndex) {
 			return false;
 		}
 

@@ -2574,11 +2574,6 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			startActivity(i);
 			return true;
 
-		case R.id.index_reading:
-			Intent intent = new Intent(context, ReadingOptionsActivity.class);
-			startActivity(intent);
-			return true;
-
 		case R.id.open_file:
 			launchFileManager();
 			return true;

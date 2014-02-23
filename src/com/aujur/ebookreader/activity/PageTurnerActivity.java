@@ -233,7 +233,8 @@ public abstract class PageTurnerActivity extends RoboSherlockFragmentActivity
 		} else if (i == 2) {
 			launchActivity(ReadingActivity.class);
 		} else if (i == 3) {
-			launchActivity(ReadingOptionsActivity.class);
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			startActivity(intent);
 		}
 
 		closeNavigationDrawer();

@@ -16,6 +16,8 @@
 
 package com.aujur.ebookreader.reading.options;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.ListView;
 
 import com.aujur.ebookreader.R;
 import com.aujur.ebookreader.activity.ReadingFragment;
+import com.aujur.ebookreader.dto.TocEntry;
 
 public class IndexFragment extends ListFragment {
 
@@ -45,14 +48,22 @@ public class IndexFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		// TODO: modify these fragment to show a sreen with a message that there
+		// is no index
+		// for book, or to show another screeen with the index list
 		View view = (View) inflater.inflate(R.layout.fragment_index_listview,
 				container, false);
 
 		mAdapter = new IndexArrayAdapter(getActivity());
 		setListAdapter(mAdapter);
 
-		mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
-				.getTableOfContents());
+		List<TocEntry> tocCallbacks = ReadingFragment.getBookViewWraper()
+				.getBookView().getTableOfContents();
+
+		if (tocCallbacks != null && !tocCallbacks.isEmpty()) {
+			mAdapter.setData(ReadingFragment.getBookViewWraper().getBookView()
+					.getTableOfContents());
+		}
 
 		mAdapter.notifyDataSetChanged();
 

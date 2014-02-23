@@ -1250,7 +1250,6 @@ containing a value of this type.
         public static final int homeAsUp=0x7f060006;
         public static final int image=0x7f060076;
         public static final int importDialogLayout=0x7f060083;
-        public static final int index_reading=0x7f0600a1;
         public static final int innerView=0x7f06007c;
         public static final int itemAuthor=0x7f060057;
         public static final int itemDescription=0x7f060058;
@@ -1291,11 +1290,11 @@ containing a value of this type.
         public static final int readNowButton=0x7f06005a;
         public static final int readingProgress=0x7f060051;
         public static final int rel=0x7f060079;
-        public static final int rolling_blind=0x7f0600a4;
+        public static final int rolling_blind=0x7f0600a3;
         public static final int scan_books=0x7f06009b;
         public static final int scrollPane=0x7f060062;
         public static final int search=0x7f060093;
-        public static final int search_text=0x7f0600a2;
+        public static final int search_text=0x7f0600a1;
         public static final int secondDivider=0x7f06005d;
         public static final int selectBox=0x7f06006b;
         public static final int shelves_view=0x7f060096;
@@ -1310,7 +1309,7 @@ containing a value of this type.
         public static final int tabMode=0x7f060003;
         public static final int tabs=0x7f060077;
         public static final int tabs_options=0x7f060074;
-        public static final int text_to_speech=0x7f0600a3;
+        public static final int text_to_speech=0x7f0600a2;
         public static final int timeStamp=0x7f060092;
         public static final int titleField=0x7f060048;
         public static final int titleProgress=0x7f060082;
