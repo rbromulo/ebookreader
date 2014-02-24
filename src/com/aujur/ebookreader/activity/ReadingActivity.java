@@ -36,7 +36,6 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
-import com.aujur.ebookreader.dto.ReadingFragmentWraper;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 
@@ -89,13 +88,15 @@ public class ReadingActivity extends PageTurnerActivity implements
 			// getAdapter().setChildren(this.tocIndex, tocCallbacks);
 			// }
 
-			List<NavigationCallback> highlightCallbacks = this.readingFragment
-					.getHighlights();
-
-			if (highlightCallbacks != null && !highlightCallbacks.isEmpty()) {
-				getAdapter().setChildren(this.highlightIndex,
-						highlightCallbacks);
-			}
+			// List<NavigationCallback> highlightCallbacks =
+			// this.readingFragment
+			// .getHighlights();
+			//
+			// if (highlightCallbacks != null && !highlightCallbacks.isEmpty())
+			// {
+			// getAdapter().setChildren(this.highlightIndex,
+			// highlightCallbacks);
+			// }
 
 			List<NavigationCallback> searchCallbacks = this.readingFragment
 					.getSearchResults();
@@ -197,8 +198,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		// return false;
 		// }
 
-		if (correctedIndex == 2 || i == highlightIndex || i == searchIndex
-				|| i == bookmarksIndex) {
+		if (correctedIndex == 2 || i == searchIndex || i == bookmarksIndex) {
 			return false;
 		}
 

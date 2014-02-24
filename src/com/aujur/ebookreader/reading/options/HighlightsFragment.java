@@ -130,6 +130,12 @@ public class HighlightsFragment extends RoboFragment {
 													.getFileName()).get(
 											position);
 
+							ReadingFragment
+									.getBookViewWraper()
+									.getBookView()
+									.navigateTo(highLight.getIndex(),
+											highLight.getStart());
+
 							ReadingFragment.getReadingFragmentWraper()
 									.getReadingFragment()
 									.onHighLightClick(highLight);
