@@ -185,6 +185,9 @@
     <string name="no_notes_or_highlights">Sem nota ou destaque</string>
     <string name="notes_or_highlights_desc">Pressão longa sobre uma palavra para selecionar uma passagem. Em seguida, selecione Destacar. Depois de destacar voçê pode ainda adicionar uma nota, pressionando em cima da palavra destacada.</string>
     
+    <string name="no_bookmarks">Nenhum marcador</string>
+    <string name="bookmarks_desc">Durante a leitura, selecione no menu, o botão "Adicionar marcador", para marcar a página atual.</string>
+    
     <string name="highlight">Destacar</string>
     <string name="highlights">Destaques</string>
     <string name="highlight_options">Opções de destaque</string>

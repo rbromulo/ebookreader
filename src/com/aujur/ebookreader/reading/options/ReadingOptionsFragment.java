@@ -165,12 +165,9 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 
-		// private final String[] TITLES = { getString(R.string.toc_label),
-		// getString(R.string.notes_and_highlights),
-		// getString(R.string.bookmarks) };
-
 		private final String[] TITLES = { getString(R.string.toc_label),
-				getString(R.string.notes_and_highlights) };
+				getString(R.string.notes_and_highlights),
+				getString(R.string.bookmarks) };
 
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -192,15 +189,16 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 			switch (position) {
 
 			case 0:
-				// pager.setCurrentItem(0);
 				return IndexFragment.newInstance();
 
 			case 1:
-				// pager.setCurrentItem(1);
 				return HighlightsFragment.newInstance();
 
+			case 2:
+				return BookmarksFragment.newInstance();
+
 			default:
-				return SuperAwesomeCardFragment.newInstance(position);
+				return IndexFragment.newInstance();
 
 			}
 		}
@@ -210,5 +208,5 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 	public ViewPager getPager() {
 		return this.pager;
 	}
-	
+
 }

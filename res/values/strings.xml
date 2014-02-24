@@ -176,6 +176,9 @@
     <string name="notes_and_highlights">Notes &amp; Highlights</string>
     <string name="no_notes_or_highlights">No note or highlight</string>
     <string name="notes_or_highlights_desc">Long pressure on a word to select a passage. Then select Highlight. After highlighting you can still add a note, pressing on the highlighted word.</string>
+    
+    <string name="no_bookmarks">No bookmark</string>
+    <string name="bookmarks_desc">During reading, select the menu, then "Add Marker" button, to mark the current page.</string>
 
     <string name="highlight">Highlight</string>
     <string name="highlights">Highlights</string>

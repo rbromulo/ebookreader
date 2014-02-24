@@ -36,6 +36,7 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 
@@ -98,19 +99,19 @@ public class ReadingActivity extends PageTurnerActivity implements
 			// highlightCallbacks);
 			// }
 
+			// List<NavigationCallback> bookmarkCallbacks = this.readingFragment
+			// .getBookmarks();
+			//
+			// if (bookmarkCallbacks != null && !bookmarkCallbacks.isEmpty()) {
+			// getAdapter()
+			// .setChildren(this.bookmarksIndex, bookmarkCallbacks);
+			// }
+
 			List<NavigationCallback> searchCallbacks = this.readingFragment
 					.getSearchResults();
 
 			if (searchCallbacks != null && !searchCallbacks.isEmpty()) {
 				getAdapter().setChildren(this.searchIndex, searchCallbacks);
-			}
-
-			List<NavigationCallback> bookmarkCallbacks = this.readingFragment
-					.getBookmarks();
-
-			if (bookmarkCallbacks != null && !bookmarkCallbacks.isEmpty()) {
-				getAdapter()
-						.setChildren(this.bookmarksIndex, bookmarkCallbacks);
 			}
 
 		}
@@ -170,14 +171,14 @@ public class ReadingActivity extends PageTurnerActivity implements
 				this.highlightIndex = menuItems.size() - 1;
 			}
 
-			if (this.readingFragment.hasSearchResults()) {
-				menuItems.add(getString(R.string.search_results));
-				this.searchIndex = menuItems.size() - 1;
-			}
-
 			if (this.readingFragment.hasBookmarks()) {
 				menuItems.add(getString(R.string.bookmarks));
 				this.bookmarksIndex = menuItems.size() - 1;
+			}
+
+			if (this.readingFragment.hasSearchResults()) {
+				menuItems.add(getString(R.string.search_results));
+				this.searchIndex = menuItems.size() - 1;
 			}
 
 		}
@@ -198,7 +199,33 @@ public class ReadingActivity extends PageTurnerActivity implements
 		// return false;
 		// }
 
-		if (correctedIndex == 2 || i == searchIndex || i == bookmarksIndex) {
+		if (correctedIndex == 2 || i == searchIndex) {
+			return false;
+		}
+
+		else if (i == tocIndex) {
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 0);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			closeNavigationDrawer();
+			return false;
+		} else if (i == highlightIndex) {
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 1);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			closeNavigationDrawer();
+			return false;
+		} else if (i == bookmarksIndex) {
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 2);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			closeNavigationDrawer();
 			return false;
 		}
 
