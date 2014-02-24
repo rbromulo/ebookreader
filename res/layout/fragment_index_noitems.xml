@@ -40,7 +40,7 @@
             android:layout_marginLeft="50dip"
             android:layout_marginRight="50dip"
             android:text="@string/toc_desc"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/low_gray" />
     </LinearLayout>
 

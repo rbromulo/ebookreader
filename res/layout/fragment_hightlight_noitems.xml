@@ -12,11 +12,11 @@
 
         <ImageView
             android:id="@+id/no_note_or_highlight_img"
-            android:layout_width="150dip"
-            android:layout_height="150dip"
+            android:layout_width="120dip"
+            android:layout_height="120dip"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="50dip"
-            android:layout_marginTop="50dip"
+            android:layout_marginBottom="27dip"
+            android:layout_marginTop="60dip"
             android:src="@drawable/gray_book" />
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="50dip"
+            android:layout_marginBottom="27dip"
             android:text="@string/no_notes_or_highlights"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/gray"
@@ -37,10 +37,10 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="50dip"
-            android:layout_marginLeft="50dip"
-            android:layout_marginRight="50dip"
+            android:layout_marginLeft="41dip"
+            android:layout_marginRight="41dip"
             android:text="@string/notes_or_highlights_desc"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/low_gray" />
     </LinearLayout>
 

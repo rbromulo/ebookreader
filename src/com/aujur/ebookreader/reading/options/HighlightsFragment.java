@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.aujur.ebookreader.R;
@@ -88,15 +89,56 @@ public class HighlightsFragment extends RoboFragment {
 			HighlightListAdapter adapter = new HighlightListAdapter(
 					getActivity());
 
+			adapter.setHighLights(this.highlightManager
+					.getHighLights(ReadingFragment.getBookViewWraper()
+							.getBookView().getFileName()));
+
 			highlightList.setAdapter(adapter);
 			highlightList.setOnItemClickListener(new OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> list, View arg1,
+				public void onItemClick(AdapterView<?> list, View view,
 						int position, long arg3) {
-					// Entry entry = adapter.getItem(position);
-					// onEntryClicked(entry, position);
+
+					HighLight highLight = highlightManager.getHighLights(
+							ReadingFragment.getBookViewWraper().getBookView()
+									.getFileName()).get(position);
+
+					ReadingFragment
+							.getBookViewWraper()
+							.getBookView()
+							.navigateTo(highLight.getIndex(),
+									highLight.getStart());
+
+					getActivity().finish();
+
 				}
 			});
+
+			highlightList.setLongClickable(true);
+
+			highlightList
+					.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+						@Override
+						public boolean onItemLongClick(AdapterView<?> arg0,
+								View view, int position, long arg3) {
+
+							HighLight highLight = highlightManager
+									.getHighLights(
+											ReadingFragment.getBookViewWraper()
+													.getBookView()
+													.getFileName()).get(
+											position);
+
+							ReadingFragment.getReadingFragmentWraper()
+									.getReadingFragment()
+									.onHighLightClick(highLight);
+
+							getActivity().finish();
+
+							return true;
+						}
+					});
 
 		}
 	}

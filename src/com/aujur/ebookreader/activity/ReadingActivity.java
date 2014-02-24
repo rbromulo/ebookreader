@@ -36,6 +36,7 @@ import android.widget.ExpandableListView;
 
 import com.aujur.ebookreader.Configuration;
 import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.dto.ReadingFragmentWraper;
 import com.aujur.ebookreader.view.NavigationCallback;
 import com.google.inject.Inject;
 

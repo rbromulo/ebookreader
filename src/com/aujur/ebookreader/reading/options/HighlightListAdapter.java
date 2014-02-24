@@ -22,7 +22,6 @@ package com.aujur.ebookreader.reading.options;
 
 import java.util.List;
 
-import net.nightwhistler.nucular.atom.Entry;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,38 +30,41 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.aujur.ebookreader.R;
+import com.aujur.ebookreader.TextUtil;
 import com.aujur.ebookreader.activity.ReadingFragment;
-import com.aujur.ebookreader.dto.TocEntry;
+import com.aujur.ebookreader.dto.HighLight;
 import com.google.inject.Inject;
 
 public class HighlightListAdapter extends BaseAdapter {
 
-	private List<TocEntry> tocEntry;
 	private Context context;
 
-	private Entry loadingEntry = new Entry();
+	private List<HighLight> highLights;
 
 	@Inject
 	public HighlightListAdapter(Context context) {
-		tocEntry = ReadingFragment.getBookViewWraper().getBookView()
-				.getTableOfContents();
 		this.context = context;
+	}
+
+	public void setHighLights(List<HighLight> highLights) {
+		this.highLights = highLights;
+		this.notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
 
-		if (tocEntry == null) {
+		if (highLights == null) {
 			return 0;
 		}
 
-		return tocEntry.size();
+		return highLights.size();
 	}
 
 	@Override
-	public TocEntry getItem(int position) {
-		if (position >= 0 && position < tocEntry.size()) {
-			return tocEntry.get(position);
+	public HighLight getItem(int position) {
+		if (position >= 0 && position < highLights.size()) {
+			return highLights.get(position);
 		}
 
 		return null;
@@ -83,18 +85,49 @@ public class HighlightListAdapter extends BaseAdapter {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			rowView = inflater.inflate(R.layout.fragment_index_row, parent,
+			rowView = inflater.inflate(R.layout.fragment_highlight_row, parent,
 					false);
+
 		} else {
 			rowView = convertView;
 		}
 
-		TocEntry item = getItem(position);
-		((TextView) rowView.findViewById(R.id.toc_title)).setText(item
-				.getTitle());
+		HighLight item = getItem(position);
+		((TextView) rowView.findViewById(R.id.highlight_title)).setText(item
+				.getDisplayText());
+
+		final String finalText = getHighlightLabel(item.getIndex(),
+				item.getStart(), item.getTextNote());
+
+		((TextView) rowView.findViewById(R.id.highlight_subtitle))
+				.setText(finalText);
 
 		return rowView;
 
+	}
+
+	private String getHighlightLabel(int index, int position, String text) {
+
+		final int totalNumberOfPages = ReadingFragment.getBookViewWraper()
+				.getBookView().getTotalNumberOfPages();
+
+		int percentage = ReadingFragment.getBookViewWraper().getBookView()
+				.getPercentageFor(index, position);
+		int pageNumber = ReadingFragment.getBookViewWraper().getBookView()
+				.getPageNumberFor(index, position);
+
+		String result = percentage + "%";
+
+		if (pageNumber != -1) {
+			result = String.format(context.getString(R.string.page_number_of),
+					pageNumber, totalNumberOfPages) + " (" + percentage + "%)";
+		}
+
+		if (text != null && text.trim().length() > 0) {
+			result += ": " + TextUtil.shortenText(text);
+		}
+
+		return result;
 	}
 
 }

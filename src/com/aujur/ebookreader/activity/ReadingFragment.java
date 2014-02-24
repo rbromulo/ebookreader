@@ -121,10 +121,10 @@ import com.aujur.ebookreader.bookmark.Bookmark;
 import com.aujur.ebookreader.bookmark.BookmarkDatabaseHelper;
 import com.aujur.ebookreader.dto.BookViewWraper;
 import com.aujur.ebookreader.dto.HighLight;
+import com.aujur.ebookreader.dto.ReadingFragmentWraper;
 import com.aujur.ebookreader.dto.SearchResult;
 import com.aujur.ebookreader.dto.TocEntry;
 import com.aujur.ebookreader.library.LibraryService;
-import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.sync.AccessException;
 import com.aujur.ebookreader.sync.BookProgress;
 import com.aujur.ebookreader.sync.ProgressService;
@@ -195,6 +195,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.bookView)
 	private BookView bookView;
 
+	private static ReadingFragmentWraper readingFragmentWraper;
 	private static BookViewWraper bookViewWraper;
 
 	@InjectView(R.id.myTitleBarTextView)
@@ -321,6 +322,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		HandlerThread bgThread = new HandlerThread("background");
 		bgThread.start();
 		this.backgroundHandler = new Handler(bgThread.getLooper());
+
 	}
 
 	@Override
@@ -341,6 +343,9 @@ public class ReadingFragment extends RoboSherlockFragment implements
 		super.onViewCreated(view, savedInstanceState);
 		setHasOptionsMenu(true);
 		this.bookView.init();
+
+		readingFragmentWraper = new ReadingFragmentWraper();
+		readingFragmentWraper.setReadingFragment(this);
 
 		bookViewWraper = new BookViewWraper();
 		bookViewWraper.setBookView(this.bookView);
@@ -3401,6 +3406,10 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	public static BookViewWraper getBookViewWraper() {
 		return bookViewWraper;
+	}
+
+	public static ReadingFragmentWraper getReadingFragmentWraper() {
+		return readingFragmentWraper;
 	}
 
 }
