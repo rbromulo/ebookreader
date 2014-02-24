@@ -234,9 +234,15 @@ public abstract class PageTurnerActivity extends RoboSherlockFragmentActivity
 			launchActivity(ReadingActivity.class);
 		} else if (i == 3) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 0);
+			intent.putExtras(bundle);
 			startActivity(intent);
 		} else if (i == 4) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 1);
+			intent.putExtras(bundle);
 			startActivity(intent);
 		}
 

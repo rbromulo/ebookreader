@@ -192,9 +192,11 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 			switch (position) {
 
 			case 0:
+				// pager.setCurrentItem(0);
 				return IndexFragment.newInstance();
 
 			case 1:
+				// pager.setCurrentItem(1);
 				return HighlightsFragment.newInstance();
 
 			default:
@@ -205,4 +207,8 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	}
 
+	public ViewPager getPager() {
+		return this.pager;
+	}
+	
 }

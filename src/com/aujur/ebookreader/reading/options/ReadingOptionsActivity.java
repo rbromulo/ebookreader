@@ -20,6 +20,7 @@
 
 package com.aujur.ebookreader.reading.options;
 
+import roboguice.inject.InjectFragment;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -28,6 +29,9 @@ import com.aujur.ebookreader.activity.PageTurnerActivity;
 import com.aujur.ebookreader.activity.ReadingFragment;
 
 public class ReadingOptionsActivity extends PageTurnerActivity {
+
+	@InjectFragment(R.id.fragment_mainoptions)
+	private ReadingOptionsFragment readingOptionsFragment;
 
 	@Override
 	protected void onCreatePageTurnerActivity(Bundle savedInstanceState) {
@@ -41,6 +45,16 @@ public class ReadingOptionsActivity extends PageTurnerActivity {
 		// TODO: you can show author's name
 		// ab.setSubtitle((CharSequence) ReadingFragment.getBookViewWraper()
 		// .getBookView().getBook().getMetadata().getAuthors().get(0));
+
+		Bundle extras = getIntent().getExtras();
+		int selectedTab = 0;
+		if (extras != null) {
+			selectedTab = extras.getInt("SELECTED_TAB");
+		}
+
+		if (this.readingOptionsFragment != null) {
+			this.readingOptionsFragment.getPager().setCurrentItem(selectedTab);
+		}
 
 	}
 
