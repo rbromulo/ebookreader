@@ -1130,33 +1130,34 @@ containing a value of this type.
         public static final int search=0x7f0200b2;
         public static final int selectable_background_aujurtheme=0x7f0200b3;
         public static final int selection_rectangular=0x7f0200b4;
-        public static final int shelf_single=0x7f0200b5;
-        public static final int shelf_single_dark=0x7f0200b6;
-        public static final int shelf_singlee=0x7f0200b7;
-        public static final int shelf_singleee=0x7f0200b8;
-        public static final int shelves=0x7f0200b9;
-        public static final int speech_balloon=0x7f0200ba;
-        public static final int spinner_ab_default_aujurtheme=0x7f0200bb;
-        public static final int spinner_ab_disabled_aujurtheme=0x7f0200bc;
-        public static final int spinner_ab_focused_aujurtheme=0x7f0200bd;
-        public static final int spinner_ab_pressed_aujurtheme=0x7f0200be;
-        public static final int spinner_background_ab_aujurtheme=0x7f0200bf;
-        public static final int stop=0x7f0200c0;
-        public static final int sun=0x7f0200c1;
-        public static final int tab_indicator_ab_aujurtheme=0x7f0200c2;
-        public static final int tab_selected_aujurtheme=0x7f0200c3;
-        public static final int tab_selected_focused_aujurtheme=0x7f0200c4;
-        public static final int tab_selected_pressed_aujurtheme=0x7f0200c5;
-        public static final int tab_unselected_aujurtheme=0x7f0200c6;
-        public static final int tab_unselected_focused_aujurtheme=0x7f0200c7;
-        public static final int tab_unselected_pressed_aujurtheme=0x7f0200c8;
-        public static final int tabs_pattern=0x7f0200c9;
-        public static final int tabs_pattern_diagonal=0x7f0200ca;
-        public static final int trash_can=0x7f0200cb;
-        public static final int unknown_cover=0x7f0200cc;
-        public static final int user=0x7f0200cd;
-        public static final int writer=0x7f0200ce;
-        public static final int zoom=0x7f0200cf;
+        public static final int selector_greenbutton=0x7f0200b5;
+        public static final int shelf_single=0x7f0200b6;
+        public static final int shelf_single_dark=0x7f0200b7;
+        public static final int shelf_singlee=0x7f0200b8;
+        public static final int shelf_singleee=0x7f0200b9;
+        public static final int shelves=0x7f0200ba;
+        public static final int speech_balloon=0x7f0200bb;
+        public static final int spinner_ab_default_aujurtheme=0x7f0200bc;
+        public static final int spinner_ab_disabled_aujurtheme=0x7f0200bd;
+        public static final int spinner_ab_focused_aujurtheme=0x7f0200be;
+        public static final int spinner_ab_pressed_aujurtheme=0x7f0200bf;
+        public static final int spinner_background_ab_aujurtheme=0x7f0200c0;
+        public static final int stop=0x7f0200c1;
+        public static final int sun=0x7f0200c2;
+        public static final int tab_indicator_ab_aujurtheme=0x7f0200c3;
+        public static final int tab_selected_aujurtheme=0x7f0200c4;
+        public static final int tab_selected_focused_aujurtheme=0x7f0200c5;
+        public static final int tab_selected_pressed_aujurtheme=0x7f0200c6;
+        public static final int tab_unselected_aujurtheme=0x7f0200c7;
+        public static final int tab_unselected_focused_aujurtheme=0x7f0200c8;
+        public static final int tab_unselected_pressed_aujurtheme=0x7f0200c9;
+        public static final int tabs_pattern=0x7f0200ca;
+        public static final int tabs_pattern_diagonal=0x7f0200cb;
+        public static final int trash_can=0x7f0200cc;
+        public static final int unknown_cover=0x7f0200cd;
+        public static final int user=0x7f0200ce;
+        public static final int writer=0x7f0200cf;
+        public static final int zoom=0x7f0200d0;
     }
     public static final class id {
         public static final int about=0x7f0600a6;
@@ -1865,10 +1866,10 @@ containing a value of this type.
         public static final int zero_percent=0x7f0a0114;
     }
     public static final class style {
-        public static final int ActionBar_Solid_Aujurtheme=0x7f0b0064;
-        public static final int ActionBar_Transparent_Aujurtheme=0x7f0b0065;
-        public static final int ActionBarTabStyle_Aujurtheme=0x7f0b0068;
-        public static final int ActionButton_CloseMode_Aujurtheme=0x7f0b006b;
+        public static final int ActionBar_Solid_Aujurtheme=0x7f0b0065;
+        public static final int ActionBar_Transparent_Aujurtheme=0x7f0b0066;
+        public static final int ActionBarTabStyle_Aujurtheme=0x7f0b0069;
+        public static final int ActionButton_CloseMode_Aujurtheme=0x7f0b006c;
         /** 
         
         Base application theme, dependent on API level. This theme is replaced
@@ -1900,13 +1901,16 @@ containing a value of this type.
         public static final int AuJurListView=0x7f0b0062;
         public static final int ButtonBar=0x7f0b005f;
         public static final int ButtonBarButton=0x7f0b005e;
+        /**  buttons 
+         */
+        public static final int ButtonText=0x7f0b0063;
         public static final int DarkFullScreen=0x7f0b005a;
         public static final int Divider=0x7f0b0060;
-        public static final int DropDownListView_Aujurtheme=0x7f0b0067;
-        public static final int DropDownNav_Aujurtheme=0x7f0b0069;
+        public static final int DropDownListView_Aujurtheme=0x7f0b0068;
+        public static final int DropDownNav_Aujurtheme=0x7f0b006a;
         public static final int LightFullScreen=0x7f0b005c;
-        public static final int PopupMenu_Aujurtheme=0x7f0b0066;
-        public static final int ProgressBar_Aujurtheme=0x7f0b006a;
+        public static final int PopupMenu_Aujurtheme=0x7f0b0067;
+        public static final int ProgressBar_Aujurtheme=0x7f0b006b;
         public static final int Sherlock___TextAppearance_Small=0x7f0b0046;
         public static final int Sherlock___Theme=0x7f0b0051;
         public static final int Sherlock___Theme_DarkActionBar=0x7f0b0053;
@@ -1944,11 +1948,11 @@ containing a value of this type.
         public static final int TextAppearance_Sherlock_Widget_PopupMenu_Large=0x7f0b0040;
         public static final int TextAppearance_Sherlock_Widget_PopupMenu_Small=0x7f0b0042;
         public static final int TextAppearance_Sherlock_Widget_TextView_SpinnerItem=0x7f0b0044;
-        public static final int Theme_Aujurtheme=0x7f0b0063;
+        public static final int Theme_Aujurtheme=0x7f0b0064;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Theme_Aujurtheme_Widget=0x7f0b006c;
+        public static final int Theme_Aujurtheme_Widget=0x7f0b006d;
         public static final int Theme_Sherlock=0x7f0b0054;
         public static final int Theme_Sherlock_Light=0x7f0b0055;
         public static final int Theme_Sherlock_Light_DarkActionBar=0x7f0b0056;

@@ -84,4 +84,9 @@
         <item name="android:divider">@color/divider_gray</item>
     </style>
 
+    <!-- buttons -->
+    <style name="ButtonText">
+	    <item name="android:textColor">#ffffff</item>
+	</style>
+    
 </resources>
