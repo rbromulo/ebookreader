@@ -2510,6 +2510,8 @@ public class ReadingFragment extends RoboSherlockFragment implements
 			if (searchView != null) {
 
 				searchView.setSubmitButtonEnabled(true);
+				searchView.setIconifiedByDefault(false);
+				
 				searchView
 						.setOnQueryTextListener(new com.actionbarsherlock.widget.SearchView.OnQueryTextListener() {
 
@@ -2520,6 +2522,17 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 							@Override
 							public boolean onQueryTextSubmit(String query) {
+
+								/**
+								 * hides and then unhides search tab to make
+								 * sure keyboard disappears when query is
+								 * submitted
+								 */
+								if (searchView != null) {
+									searchView.setVisibility(View.INVISIBLE);
+									searchView.setVisibility(View.VISIBLE);
+
+								}
 
 								if (query.equals(lastQuery)
 										&& searchResults != null) {
@@ -2534,16 +2547,23 @@ public class ReadingFragment extends RoboSherlockFragment implements
 									bundle.putInt("SELECTED_TAB", 3);
 									intent.putExtras(bundle);
 									startActivity(intent);
-									// closeNavigationDrawer();
-									// return false;
+
+									// searchView.onActionViewCollapsed();
+									// searchView.setQuery("", false);
+									// searchView.clearFocus();
 
 								} else if (!query.equals(lastQuery)) {
 									searchResults = null;
 									lastQuery = query;
+
+									// searchView.onActionViewCollapsed();
+									// searchView.setQuery("", false);
+									// searchView.clearFocus();
+
 									performSearch(query);
 								}
 
-								return true;
+								return false;
 							}
 
 							@Override
@@ -2551,6 +2571,44 @@ public class ReadingFragment extends RoboSherlockFragment implements
 								return false;
 							}
 						});
+
+				searchView
+						.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+
+								if (!hasFocus) {
+									if (searchMenuItem != null) {
+										searchMenuItem.collapseActionView();
+									}
+									if (searchView != null) {
+										searchView.setQuery("", false);
+
+									}
+								}
+
+							}
+						});
+
+				searchView
+						.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+
+								if (!hasFocus) {
+									if (searchMenuItem != null) {
+										searchMenuItem.collapseActionView();
+									}// end if
+									if (searchView != null) {
+										searchView.setQuery("", false);
+
+									}// end if
+								}// end if
+
+							}
+						});
+
 			}
 		}
 	}
@@ -3004,7 +3062,6 @@ public class ReadingFragment extends RoboSherlockFragment implements
 						bundle.putInt("SELECTED_TAB", 3);
 						intent.putExtras(bundle);
 						startActivity(intent);
-						// closeNavigationDrawer();
 
 					} else {
 						Toast.makeText(context, R.string.search_no_matches,
