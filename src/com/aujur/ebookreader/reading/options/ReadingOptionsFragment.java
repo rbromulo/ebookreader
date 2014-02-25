@@ -82,9 +82,10 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 		pager.setAdapter(adapter);
 
 		final int pageMargin = (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 0, getResources()
+				TypedValue.COMPLEX_UNIT_DIP, 1, getResources()
 						.getDisplayMetrics());
 		pager.setPageMargin(pageMargin);
+		pager.setPageMarginDrawable(R.color.medium_gray);
 
 		tabs.setViewPager(pager);
 
