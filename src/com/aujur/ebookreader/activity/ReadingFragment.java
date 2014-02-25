@@ -123,8 +123,10 @@ import com.aujur.ebookreader.dto.BookViewWraper;
 import com.aujur.ebookreader.dto.HighLight;
 import com.aujur.ebookreader.dto.ReadingFragmentWraper;
 import com.aujur.ebookreader.dto.SearchResult;
+import com.aujur.ebookreader.dto.SearchResultWraper;
 import com.aujur.ebookreader.dto.TocEntry;
 import com.aujur.ebookreader.library.LibraryService;
+import com.aujur.ebookreader.reading.options.ReadingOptionsActivity;
 import com.aujur.ebookreader.sync.AccessException;
 import com.aujur.ebookreader.sync.BookProgress;
 import com.aujur.ebookreader.sync.ProgressService;
@@ -197,6 +199,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	private static ReadingFragmentWraper readingFragmentWraper;
 	private static BookViewWraper bookViewWraper;
+	private static SearchResultWraper searchResultWraper;
 
 	@InjectView(R.id.myTitleBarTextView)
 	private TextView titleBar;
@@ -349,6 +352,9 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 		bookViewWraper = new BookViewWraper();
 		bookViewWraper.setBookView(this.bookView);
+
+		searchResultWraper = new SearchResultWraper();
+		searchResultWraper.setSearchResult(this.searchResults);
 
 		this.progressBar.setFocusable(true);
 		this.progressBar
@@ -2517,7 +2523,20 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 								if (query.equals(lastQuery)
 										&& searchResults != null) {
-									showSearchResultDialog(searchResults);
+
+									// showSearchResultDialog(searchResults);
+									searchResultWraper
+											.setSearchResult(searchResults);
+
+									Intent intent = new Intent(getActivity(),
+											ReadingOptionsActivity.class);
+									Bundle bundle = new Bundle();
+									bundle.putInt("SELECTED_TAB", 3);
+									intent.putExtras(bundle);
+									startActivity(intent);
+									// closeNavigationDrawer();
+									// return false;
+
 								} else if (!query.equals(lastQuery)) {
 									searchResults = null;
 									lastQuery = query;
@@ -2976,7 +2995,17 @@ public class ReadingFragment extends RoboSherlockFragment implements
 				if (!isCancelled() && isAdded()) {
 					if (result.size() > 0) {
 						searchResults = result;
-						showSearchResultDialog(result);
+						searchResultWraper.setSearchResult(searchResults);
+
+						// showSearchResultDialog(result);
+						Intent intent = new Intent(getActivity(),
+								ReadingOptionsActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putInt("SELECTED_TAB", 3);
+						intent.putExtras(bundle);
+						startActivity(intent);
+						// closeNavigationDrawer();
+
 					} else {
 						Toast.makeText(context, R.string.search_no_matches,
 								Toast.LENGTH_LONG).show();
@@ -3410,6 +3439,10 @@ public class ReadingFragment extends RoboSherlockFragment implements
 
 	public static ReadingFragmentWraper getReadingFragmentWraper() {
 		return readingFragmentWraper;
+	}
+
+	public static SearchResultWraper getSearchResultWraper() {
+		return searchResultWraper;
 	}
 
 }

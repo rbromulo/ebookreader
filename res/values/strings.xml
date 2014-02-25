@@ -165,6 +165,8 @@
     <string name="lookup_wiktionary">Search on Wiktionary</string>
 
 	<string name="no_search_results">Your search yielded no results.</string>
+	<string name="no_results">No results</string>
+	<string name="results_desc">During reading, select Text search, which is the menu.</string>
 
     <string name="dead_link">Sorry, it looks like the link you clicked is broken.</string>
     <string name="could_not_load">Could not load text: %s</string>

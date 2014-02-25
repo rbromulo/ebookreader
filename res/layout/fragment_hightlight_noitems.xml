@@ -17,7 +17,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="27dip"
             android:layout_marginTop="60dip"
-            android:src="@drawable/gray_book" />
+            android:src="@drawable/writer" />
 
         <TextView
             android:id="@+id/itemTitle"

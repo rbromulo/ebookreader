@@ -173,6 +173,8 @@
     <string name="lookup_wiktionary">Pesquisar no Wiktionary</string>
 
     <string name="no_search_results">A pesquisa não encontrou nada.</string>
+    <string name="no_results">Sem resultados</string>
+    <string name="results_desc">Durante a leitura, selecione a opção Pesquisa de texto, que se encontra no menu.</string>
 
     <string name="dead_link">Desculpe, parece que o link que você clicou está quebrado.</string>
     <string name="could_not_load">Não foi possível carregar o texto: %s</string>

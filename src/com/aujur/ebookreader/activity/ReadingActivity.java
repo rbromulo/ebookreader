@@ -107,12 +107,12 @@ public class ReadingActivity extends PageTurnerActivity implements
 			// .setChildren(this.bookmarksIndex, bookmarkCallbacks);
 			// }
 
-			List<NavigationCallback> searchCallbacks = this.readingFragment
-					.getSearchResults();
-
-			if (searchCallbacks != null && !searchCallbacks.isEmpty()) {
-				getAdapter().setChildren(this.searchIndex, searchCallbacks);
-			}
+			// List<NavigationCallback> searchCallbacks = this.readingFragment
+			// .getSearchResults();
+			//
+			// if (searchCallbacks != null && !searchCallbacks.isEmpty()) {
+			// getAdapter().setChildren(this.searchIndex, searchCallbacks);
+			// }
 
 		}
 
@@ -199,7 +199,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		// return false;
 		// }
 
-		if (correctedIndex == 2 || i == searchIndex) {
+		if (correctedIndex == 2) {
 			return false;
 		}
 
@@ -223,6 +223,14 @@ public class ReadingActivity extends PageTurnerActivity implements
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putInt("SELECTED_TAB", 2);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			closeNavigationDrawer();
+			return false;
+		} else if (i == searchIndex) {
+			Intent intent = new Intent(this, ReadingOptionsActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("SELECTED_TAB", 3);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			closeNavigationDrawer();
