@@ -1108,56 +1108,57 @@ containing a value of this type.
         public static final int ic_action_select_all=0x7f02009c;
         public static final int ic_action_user=0x7f02009d;
         public static final int ic_action_view_as_list=0x7f02009e;
-        public static final int ic_drawer=0x7f02009f;
-        public static final int ic_launcher=0x7f0200a0;
-        public static final int ic_launcher_actionbar=0x7f0200a1;
-        public static final int info=0x7f0200a2;
-        public static final int item_selector=0x7f0200a3;
-        public static final int list=0x7f0200a4;
-        public static final int list_activated_holo=0x7f0200a5;
-        public static final int list_focused_aujurtheme=0x7f0200a6;
-        public static final int list_pressed_aujurtheme=0x7f0200a7;
-        public static final int menu_dropdown_panel_aujurtheme=0x7f0200a8;
-        public static final int next=0x7f0200a9;
-        public static final int play=0x7f0200aa;
-        public static final int play_pause=0x7f0200ab;
-        public static final int pressed_background_aujurtheme=0x7f0200ac;
-        public static final int previous=0x7f0200ad;
-        public static final int progress_bg_aujurtheme=0x7f0200ae;
-        public static final int progress_horizontal_aujurtheme=0x7f0200af;
-        public static final int progress_primary_aujurtheme=0x7f0200b0;
-        public static final int progress_secondary_aujurtheme=0x7f0200b1;
-        public static final int search=0x7f0200b2;
-        public static final int selectable_background_aujurtheme=0x7f0200b3;
-        public static final int selection_rectangular=0x7f0200b4;
-        public static final int selector_greenbutton=0x7f0200b5;
-        public static final int shelf_single=0x7f0200b6;
-        public static final int shelf_single_dark=0x7f0200b7;
-        public static final int shelf_singlee=0x7f0200b8;
-        public static final int shelf_singleee=0x7f0200b9;
-        public static final int shelves=0x7f0200ba;
-        public static final int speech_balloon=0x7f0200bb;
-        public static final int spinner_ab_default_aujurtheme=0x7f0200bc;
-        public static final int spinner_ab_disabled_aujurtheme=0x7f0200bd;
-        public static final int spinner_ab_focused_aujurtheme=0x7f0200be;
-        public static final int spinner_ab_pressed_aujurtheme=0x7f0200bf;
-        public static final int spinner_background_ab_aujurtheme=0x7f0200c0;
-        public static final int stop=0x7f0200c1;
-        public static final int sun=0x7f0200c2;
-        public static final int tab_indicator_ab_aujurtheme=0x7f0200c3;
-        public static final int tab_selected_aujurtheme=0x7f0200c4;
-        public static final int tab_selected_focused_aujurtheme=0x7f0200c5;
-        public static final int tab_selected_pressed_aujurtheme=0x7f0200c6;
-        public static final int tab_unselected_aujurtheme=0x7f0200c7;
-        public static final int tab_unselected_focused_aujurtheme=0x7f0200c8;
-        public static final int tab_unselected_pressed_aujurtheme=0x7f0200c9;
-        public static final int tabs_pattern=0x7f0200ca;
-        public static final int tabs_pattern_diagonal=0x7f0200cb;
-        public static final int trash_can=0x7f0200cc;
-        public static final int unknown_cover=0x7f0200cd;
-        public static final int user=0x7f0200ce;
-        public static final int writer=0x7f0200cf;
-        public static final int zoom=0x7f0200d0;
+        public static final int ic_actionbar=0x7f02009f;
+        public static final int ic_drawer=0x7f0200a0;
+        public static final int ic_launcher=0x7f0200a1;
+        public static final int ic_launcher_actionbar=0x7f0200a2;
+        public static final int info=0x7f0200a3;
+        public static final int item_selector=0x7f0200a4;
+        public static final int list=0x7f0200a5;
+        public static final int list_activated_holo=0x7f0200a6;
+        public static final int list_focused_aujurtheme=0x7f0200a7;
+        public static final int list_pressed_aujurtheme=0x7f0200a8;
+        public static final int menu_dropdown_panel_aujurtheme=0x7f0200a9;
+        public static final int next=0x7f0200aa;
+        public static final int play=0x7f0200ab;
+        public static final int play_pause=0x7f0200ac;
+        public static final int pressed_background_aujurtheme=0x7f0200ad;
+        public static final int previous=0x7f0200ae;
+        public static final int progress_bg_aujurtheme=0x7f0200af;
+        public static final int progress_horizontal_aujurtheme=0x7f0200b0;
+        public static final int progress_primary_aujurtheme=0x7f0200b1;
+        public static final int progress_secondary_aujurtheme=0x7f0200b2;
+        public static final int search=0x7f0200b3;
+        public static final int selectable_background_aujurtheme=0x7f0200b4;
+        public static final int selection_rectangular=0x7f0200b5;
+        public static final int selector_greenbutton=0x7f0200b6;
+        public static final int shelf_single=0x7f0200b7;
+        public static final int shelf_single_dark=0x7f0200b8;
+        public static final int shelf_singlee=0x7f0200b9;
+        public static final int shelf_singleee=0x7f0200ba;
+        public static final int shelves=0x7f0200bb;
+        public static final int speech_balloon=0x7f0200bc;
+        public static final int spinner_ab_default_aujurtheme=0x7f0200bd;
+        public static final int spinner_ab_disabled_aujurtheme=0x7f0200be;
+        public static final int spinner_ab_focused_aujurtheme=0x7f0200bf;
+        public static final int spinner_ab_pressed_aujurtheme=0x7f0200c0;
+        public static final int spinner_background_ab_aujurtheme=0x7f0200c1;
+        public static final int stop=0x7f0200c2;
+        public static final int sun=0x7f0200c3;
+        public static final int tab_indicator_ab_aujurtheme=0x7f0200c4;
+        public static final int tab_selected_aujurtheme=0x7f0200c5;
+        public static final int tab_selected_focused_aujurtheme=0x7f0200c6;
+        public static final int tab_selected_pressed_aujurtheme=0x7f0200c7;
+        public static final int tab_unselected_aujurtheme=0x7f0200c8;
+        public static final int tab_unselected_focused_aujurtheme=0x7f0200c9;
+        public static final int tab_unselected_pressed_aujurtheme=0x7f0200ca;
+        public static final int tabs_pattern=0x7f0200cb;
+        public static final int tabs_pattern_diagonal=0x7f0200cc;
+        public static final int trash_can=0x7f0200cd;
+        public static final int unknown_cover=0x7f0200ce;
+        public static final int user=0x7f0200cf;
+        public static final int writer=0x7f0200d0;
+        public static final int zoom=0x7f0200d1;
     }
     public static final class id {
         public static final int about=0x7f0600a6;
@@ -1409,7 +1410,7 @@ containing a value of this type.
     public static final class string {
         /**  Auto-scroll 
          */
-        public static final int about=0x7f0a001b;
+        public static final int about=0x7f0a001a;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
         public static final int abs__action_bar_home_description=0x7f0a0000;
@@ -1449,318 +1450,317 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0a0007;
-        public static final int access_denied=0x7f0a003d;
-        public static final int action_contact=0x7f0a000f;
-        public static final int add=0x7f0a0094;
-        public static final int add_bookmark=0x7f0a0093;
-        public static final int add_site=0x7f0a005c;
-        public static final int add_site_header=0x7f0a005e;
-        public static final int add_to_library=0x7f0a004e;
+        public static final int access_denied=0x7f0a003c;
+        public static final int add=0x7f0a0093;
+        public static final int add_bookmark=0x7f0a0092;
+        public static final int add_site=0x7f0a005b;
+        public static final int add_site_header=0x7f0a005d;
+        public static final int add_to_library=0x7f0a004d;
         /**  Last read: %s 
          */
-        public static final int added_to_lib=0x7f0a002e;
-        public static final int app_desc=0x7f0a0011;
+        public static final int added_to_lib=0x7f0a002d;
+        public static final int app_desc=0x7f0a0010;
         public static final int app_name=0x7f0a000e;
         /**  Book details 
          */
-        public static final int book_by=0x7f0a002c;
+        public static final int book_by=0x7f0a002b;
         /**  Library 
          */
-        public static final int book_details=0x7f0a002b;
-        public static final int book_failed=0x7f0a005a;
-        public static final int bookmark_deleted=0x7f0a0097;
-        public static final int bookmark_options=0x7f0a0096;
-        public static final int bookmarks=0x7f0a0095;
-        public static final int bookmarks_desc=0x7f0a0085;
+        public static final int book_details=0x7f0a002a;
+        public static final int book_failed=0x7f0a0059;
+        public static final int bookmark_deleted=0x7f0a0096;
+        public static final int bookmark_options=0x7f0a0095;
+        public static final int bookmarks=0x7f0a0094;
+        public static final int bookmarks_desc=0x7f0a0084;
         /**  There are no books in your library.\nWould you like to scan your device for books? 
          */
-        public static final int brightness=0x7f0a003c;
+        public static final int brightness=0x7f0a003b;
         /**  Downloading book… 
  Not yet translated 
          */
-        public static final int browse=0x7f0a0012;
-        public static final int buy_now=0x7f0a004c;
-        public static final int c2opds_server=0x7f0a0061;
-        public static final int calibre_server=0x7f0a005f;
-        public static final int cancelling=0x7f0a008f;
-        public static final int clear_note=0x7f0a008a;
+        public static final int browse=0x7f0a0011;
+        public static final int buy_now=0x7f0a004b;
+        public static final int c2opds_server=0x7f0a0060;
+        public static final int calibre_server=0x7f0a005e;
+        public static final int cancelling=0x7f0a008e;
+        public static final int clear_note=0x7f0a0089;
         /**  Please install OI File Manager from the Android Market. 
          */
-        public static final int cloud_bm=0x7f0a0024;
+        public static final int cloud_bm=0x7f0a0023;
         /**  Sync failed 
          */
-        public static final int connection_fail=0x7f0a0028;
-        public static final int cops_server=0x7f0a0060;
+        public static final int connection_fail=0x7f0a0027;
+        public static final int cops_server=0x7f0a005f;
         /**  Scan a specific folder 
          */
-        public static final int copy_to_library=0x7f0a0042;
-        public static final int could_not_load=0x7f0a007d;
-        public static final int custom_site=0x7f0a005b;
-        public static final int custom_site_desc=0x7f0a0064;
+        public static final int copy_to_library=0x7f0a0041;
+        public static final int could_not_load=0x7f0a007c;
+        public static final int custom_site=0x7f0a005a;
+        public static final int custom_site_desc=0x7f0a0063;
         /**  Not yet translated 
          */
-        public static final int dead_link=0x7f0a007c;
-        public static final int default_added_to_library=0x7f0a011b;
-        public static final int default_book_title=0x7f0a011e;
-        public static final int default_device_name_and_progress=0x7f0a0116;
-        public static final int default_filename=0x7f0a011d;
-        public static final int default_last_read=0x7f0a011c;
-        public static final int default_timestamp=0x7f0a0115;
+        public static final int dead_link=0x7f0a007b;
+        public static final int default_added_to_library=0x7f0a011a;
+        public static final int default_book_title=0x7f0a011d;
+        public static final int default_device_name_and_progress=0x7f0a0115;
+        public static final int default_filename=0x7f0a011c;
+        public static final int default_last_read=0x7f0a011b;
+        public static final int default_timestamp=0x7f0a0114;
         /**  View details 
          */
-        public static final int delete=0x7f0a0030;
+        public static final int delete=0x7f0a002f;
         /**  Error opening book: %s 
          */
-        public static final int dictionary_lookup=0x7f0a001d;
-        public static final int direitonet_lookup=0x7f0a001e;
+        public static final int dictionary_lookup=0x7f0a001c;
+        public static final int direitonet_lookup=0x7f0a001d;
         /**  Read now 
  Not yet translated 
          */
-        public static final int download=0x7f0a0048;
+        public static final int download=0x7f0a0047;
         /**  Not yet translated 
          */
-        public static final int download_complete=0x7f0a0058;
+        public static final int download_complete=0x7f0a0057;
         /**  Download books 
          */
-        public static final int downloading=0x7f0a0049;
-        public static final int drawer_close=0x7f0a0109;
-        public static final int drawer_layout=0x7f0a010a;
-        public static final int drawer_open=0x7f0a0108;
-        public static final int ebook_path=0x7f0a0117;
-        public static final int edit=0x7f0a006c;
-        public static final int edit_site=0x7f0a005d;
-        public static final int empty_opds_feed=0x7f0a0076;
-        public static final int end_of_section=0x7f0a0057;
-        public static final int enter_email=0x7f0a004d;
-        public static final int enter_query=0x7f0a004b;
+        public static final int downloading=0x7f0a0048;
+        public static final int drawer_close=0x7f0a0108;
+        public static final int drawer_layout=0x7f0a0109;
+        public static final int drawer_open=0x7f0a0107;
+        public static final int ebook_path=0x7f0a0116;
+        public static final int edit=0x7f0a006b;
+        public static final int edit_site=0x7f0a005c;
+        public static final int empty_opds_feed=0x7f0a0075;
+        public static final int end_of_section=0x7f0a0056;
+        public static final int enter_email=0x7f0a004c;
+        public static final int enter_query=0x7f0a004a;
         /**  About AuJur 
          */
-        public static final int error_open_bk=0x7f0a001c;
+        public static final int error_open_bk=0x7f0a001b;
         /**  Not yet translated 
  Not yet translated 
          */
-        public static final int feed_failed=0x7f0a0059;
-        public static final int folder_name=0x7f0a0118;
-        public static final int generic_server=0x7f0a0062;
+        public static final int feed_failed=0x7f0a0058;
+        public static final int folder_name=0x7f0a0117;
+        public static final int generic_server=0x7f0a0061;
         /**  Search on Wikipedia 
          */
-        public static final int google_lookup=0x7f0a0020;
-        public static final int hello_world=0x7f0a011f;
-        public static final int highlight=0x7f0a0086;
-        public static final int highlight_deleted=0x7f0a0092;
-        public static final int highlight_options=0x7f0a0088;
-        public static final int highlights=0x7f0a0087;
+        public static final int google_lookup=0x7f0a001f;
+        public static final int hello_world=0x7f0a011e;
+        public static final int highlight=0x7f0a0085;
+        public static final int highlight_deleted=0x7f0a0091;
+        public static final int highlight_options=0x7f0a0087;
+        public static final int highlights=0x7f0a0086;
         /**  Your access-key is invalid. Please visit AuJur-reader.org to obtain a valid access key. 
          */
-        public static final int import_books=0x7f0a003e;
+        public static final int import_books=0x7f0a003d;
         /**  Import Books 
          */
-        public static final int import_desc=0x7f0a003f;
+        public static final int import_desc=0x7f0a003e;
         /**  Scanning for EPUB files.\nFolders scanned: %d 
          */
-        public static final int import_errors=0x7f0a0036;
+        public static final int import_errors=0x7f0a0035;
         /**  The folder %s does not exist. 
          */
-        public static final int import_failed=0x7f0a0044;
-        public static final int import_this=0x7f0a008e;
+        public static final int import_failed=0x7f0a0043;
+        public static final int import_this=0x7f0a008d;
         /**  Scanning for EPUB files. 
          */
-        public static final int importing=0x7f0a0034;
+        public static final int importing=0x7f0a0033;
         /**  Scan for books 
          */
-        public static final int importing_books=0x7f0a0032;
-        public static final int init_tts=0x7f0a006f;
+        public static final int importing_books=0x7f0a0031;
+        public static final int init_tts=0x7f0a006e;
         /**  Loading, please wait 
          */
-        public static final int install_oi=0x7f0a0023;
-        public static final int language_switch_message=0x7f0a00fb;
-        public static final int large_text=0x7f0a011a;
+        public static final int install_oi=0x7f0a0022;
+        public static final int language_switch_message=0x7f0a00fa;
+        public static final int large_text=0x7f0a0119;
         /**  By %s 
          */
-        public static final int last_read=0x7f0a002d;
+        public static final int last_read=0x7f0a002c;
         /**  Never 
          */
-        public static final int library=0x7f0a002a;
+        public static final int library=0x7f0a0029;
         /**  Import failed 
          */
-        public static final int list_view=0x7f0a0045;
+        public static final int list_view=0x7f0a0044;
         /**  No books were found on your device.\nYou can download books at gutenberg.org or feedbooks.com 
          */
-        public static final int loading_library=0x7f0a003a;
-        public static final int loading_text=0x7f0a0056;
+        public static final int loading_library=0x7f0a0039;
+        public static final int loading_text=0x7f0a0055;
         /**  "You selected '%s' 
          */
-        public static final int loading_wait=0x7f0a0022;
-        public static final int lookup_wiktionary=0x7f0a0078;
+        public static final int loading_wait=0x7f0a0021;
+        public static final int lookup_wiktionary=0x7f0a0077;
         /**  Switch to night mode 
          */
-        public static final int manual_sync=0x7f0a0017;
-        public static final int msg_name_blank=0x7f0a006a;
-        public static final int msg_url_blank=0x7f0a006b;
+        public static final int manual_sync=0x7f0a0016;
+        public static final int msg_name_blank=0x7f0a0069;
+        public static final int msg_url_blank=0x7f0a006a;
         /**  Could not connect to the sync server. 
          */
-        public static final int never_read=0x7f0a0029;
-        public static final int next_page=0x7f0a0074;
+        public static final int never_read=0x7f0a0028;
+        public static final int next_page=0x7f0a0073;
         /**  Translation is not needed for the strings below 
  Translation is not needed for the strings below 
          */
-        public static final int no_author_byline=0x7f0a0113;
+        public static final int no_author_byline=0x7f0a0112;
         /**  No books found. 
          */
-        public static final int no_bks_fnd_text=0x7f0a0039;
-        public static final int no_bks_fnd_text2=0x7f0a0090;
-        public static final int no_bookmarks=0x7f0a0084;
+        public static final int no_bks_fnd_text=0x7f0a0038;
+        public static final int no_bks_fnd_text2=0x7f0a008f;
+        public static final int no_bookmarks=0x7f0a0083;
         /**  Some files had errors while importing: 
          */
-        public static final int no_books_found=0x7f0a0037;
-        public static final int no_custom_sites=0x7f0a006d;
-        public static final int no_new_books_found=0x7f0a0073;
-        public static final int no_notes_or_highlights=0x7f0a0082;
-        public static final int no_results=0x7f0a007a;
-        public static final int no_search_results=0x7f0a0079;
+        public static final int no_books_found=0x7f0a0036;
+        public static final int no_custom_sites=0x7f0a006c;
+        public static final int no_new_books_found=0x7f0a0072;
+        public static final int no_notes_or_highlights=0x7f0a0081;
+        public static final int no_results=0x7f0a0079;
+        public static final int no_search_results=0x7f0a0078;
         /**  Copy books to my library folder 
          */
-        public static final int no_such_folder=0x7f0a0043;
-        public static final int no_sync_points=0x7f0a0072;
-        public static final int no_toc=0x7f0a007f;
-        public static final int notes_and_highlights=0x7f0a0081;
-        public static final int notes_attached=0x7f0a0091;
-        public static final int notes_or_highlights_desc=0x7f0a0083;
-        public static final int opds_settings=0x7f0a0105;
+        public static final int no_such_folder=0x7f0a0042;
+        public static final int no_sync_points=0x7f0a0071;
+        public static final int no_toc=0x7f0a007e;
+        public static final int notes_and_highlights=0x7f0a0080;
+        public static final int notes_attached=0x7f0a0090;
+        public static final int notes_or_highlights_desc=0x7f0a0082;
+        public static final int opds_settings=0x7f0a0104;
         /**  Browse … 
          */
-        public static final int open_file=0x7f0a0013;
+        public static final int open_file=0x7f0a0012;
         /**  Open ePub file 
          */
-        public static final int open_library=0x7f0a0014;
-        public static final int opening_file=0x7f0a0055;
-        public static final int options=0x7f0a0038;
-        public static final int out_of_memory=0x7f0a007e;
-        public static final int page_number_of=0x7f0a008d;
-        public static final int pref_accept_self_signed=0x7f0a00fc;
-        public static final int pref_accept_self_signed_summary=0x7f0a00fd;
-        public static final int pref_access_key=0x7f0a009f;
-        public static final int pref_access_key_message=0x7f0a00a1;
-        public static final int pref_access_key_summary=0x7f0a00a0;
-        public static final int pref_acra=0x7f0a0103;
-        public static final int pref_acra_summary=0x7f0a0104;
-        public static final int pref_allow_css_colours=0x7f0a010b;
-        public static final int pref_always_open_book=0x7f0a010e;
-        public static final int pref_always_open_book_summary=0x7f0a010f;
-        public static final int pref_animations=0x7f0a00da;
-        public static final int pref_autoscroll_settings=0x7f0a00a2;
-        public static final int pref_calibre_password=0x7f0a00b1;
-        public static final int pref_calibre_password_summary=0x7f0a00b2;
-        public static final int pref_calibre_server=0x7f0a00aa;
-        public static final int pref_calibre_server_hint=0x7f0a00ad;
-        public static final int pref_calibre_server_message=0x7f0a00ac;
-        public static final int pref_calibre_server_summary=0x7f0a00ab;
-        public static final int pref_calibre_user=0x7f0a00ae;
-        public static final int pref_calibre_user_hint=0x7f0a00b0;
-        public static final int pref_calibre_user_summary=0x7f0a00af;
-        public static final int pref_colour_settings=0x7f0a00cd;
-        public static final int pref_copy_to_library=0x7f0a00a8;
-        public static final int pref_copy_to_library_summary=0x7f0a00a9;
-        public static final int pref_css_colours_day_summary=0x7f0a010c;
-        public static final int pref_css_colours_night_summary=0x7f0a010d;
-        public static final int pref_day_bg=0x7f0a00d0;
-        public static final int pref_day_bg_summary=0x7f0a00d1;
-        public static final int pref_day_bright=0x7f0a00bc;
-        public static final int pref_day_bright_summary=0x7f0a00bd;
+        public static final int open_library=0x7f0a0013;
+        public static final int opening_file=0x7f0a0054;
+        public static final int options=0x7f0a0037;
+        public static final int out_of_memory=0x7f0a007d;
+        public static final int page_number_of=0x7f0a008c;
+        public static final int pref_accept_self_signed=0x7f0a00fb;
+        public static final int pref_accept_self_signed_summary=0x7f0a00fc;
+        public static final int pref_access_key=0x7f0a009e;
+        public static final int pref_access_key_message=0x7f0a00a0;
+        public static final int pref_access_key_summary=0x7f0a009f;
+        public static final int pref_acra=0x7f0a0102;
+        public static final int pref_acra_summary=0x7f0a0103;
+        public static final int pref_allow_css_colours=0x7f0a010a;
+        public static final int pref_always_open_book=0x7f0a010d;
+        public static final int pref_always_open_book_summary=0x7f0a010e;
+        public static final int pref_animations=0x7f0a00d9;
+        public static final int pref_autoscroll_settings=0x7f0a00a1;
+        public static final int pref_calibre_password=0x7f0a00b0;
+        public static final int pref_calibre_password_summary=0x7f0a00b1;
+        public static final int pref_calibre_server=0x7f0a00a9;
+        public static final int pref_calibre_server_hint=0x7f0a00ac;
+        public static final int pref_calibre_server_message=0x7f0a00ab;
+        public static final int pref_calibre_server_summary=0x7f0a00aa;
+        public static final int pref_calibre_user=0x7f0a00ad;
+        public static final int pref_calibre_user_hint=0x7f0a00af;
+        public static final int pref_calibre_user_summary=0x7f0a00ae;
+        public static final int pref_colour_settings=0x7f0a00cc;
+        public static final int pref_copy_to_library=0x7f0a00a7;
+        public static final int pref_copy_to_library_summary=0x7f0a00a8;
+        public static final int pref_css_colours_day_summary=0x7f0a010b;
+        public static final int pref_css_colours_night_summary=0x7f0a010c;
+        public static final int pref_day_bg=0x7f0a00cf;
+        public static final int pref_day_bg_summary=0x7f0a00d0;
+        public static final int pref_day_bright=0x7f0a00bb;
+        public static final int pref_day_bright_summary=0x7f0a00bc;
         /**  Not yet translated 
          */
-        public static final int pref_day_link=0x7f0a00d2;
-        public static final int pref_day_link_summary=0x7f0a00d3;
-        public static final int pref_day_night=0x7f0a00be;
-        public static final int pref_day_night_summary=0x7f0a00bf;
-        public static final int pref_day_text=0x7f0a00ce;
-        public static final int pref_day_text_summary=0x7f0a00cf;
-        public static final int pref_dev_settings=0x7f0a0102;
-        public static final int pref_device_name=0x7f0a009c;
-        public static final int pref_device_name_message=0x7f0a009e;
-        public static final int pref_device_name_summary=0x7f0a009d;
-        public static final int pref_dim_system_ui=0x7f0a00fe;
-        public static final int pref_dim_system_ui_summary=0x7f0a00ff;
+        public static final int pref_day_link=0x7f0a00d1;
+        public static final int pref_day_link_summary=0x7f0a00d2;
+        public static final int pref_day_night=0x7f0a00bd;
+        public static final int pref_day_night_summary=0x7f0a00be;
+        public static final int pref_day_text=0x7f0a00cd;
+        public static final int pref_day_text_summary=0x7f0a00ce;
+        public static final int pref_dev_settings=0x7f0a0101;
+        public static final int pref_device_name=0x7f0a009b;
+        public static final int pref_device_name_message=0x7f0a009d;
+        public static final int pref_device_name_summary=0x7f0a009c;
+        public static final int pref_dim_system_ui=0x7f0a00fd;
+        public static final int pref_dim_system_ui_summary=0x7f0a00fe;
         /**  Preferences 
          */
-        public static final int pref_email=0x7f0a0099;
-        public static final int pref_email_message=0x7f0a009b;
-        public static final int pref_email_summary=0x7f0a009a;
-        public static final int pref_font_face=0x7f0a00c1;
-        public static final int pref_font_face_summary=0x7f0a00c2;
-        public static final int pref_full_screen=0x7f0a00b4;
-        public static final int pref_full_screen_summary=0x7f0a00b5;
-        public static final int pref_h_animation=0x7f0a00db;
-        public static final int pref_h_animation_summary=0x7f0a00dc;
-        public static final int pref_itext_size=0x7f0a00c5;
-        public static final int pref_itext_size_summary=0x7f0a00c6;
-        public static final int pref_keep_screen_on=0x7f0a00b8;
-        public static final int pref_keep_screen_on_summary=0x7f0a00b9;
+        public static final int pref_email=0x7f0a0098;
+        public static final int pref_email_message=0x7f0a009a;
+        public static final int pref_email_summary=0x7f0a0099;
+        public static final int pref_font_face=0x7f0a00c0;
+        public static final int pref_font_face_summary=0x7f0a00c1;
+        public static final int pref_full_screen=0x7f0a00b3;
+        public static final int pref_full_screen_summary=0x7f0a00b4;
+        public static final int pref_h_animation=0x7f0a00da;
+        public static final int pref_h_animation_summary=0x7f0a00db;
+        public static final int pref_itext_size=0x7f0a00c4;
+        public static final int pref_itext_size_summary=0x7f0a00c5;
+        public static final int pref_keep_screen_on=0x7f0a00b7;
+        public static final int pref_keep_screen_on_summary=0x7f0a00b8;
         public static final int pref_key=0x7f0a000d;
-        public static final int pref_lang=0x7f0a00f9;
-        public static final int pref_lang_summary=0x7f0a00fa;
-        public static final int pref_line_spacing=0x7f0a00cb;
-        public static final int pref_line_spacing_summary=0x7f0a00cc;
-        public static final int pref_long_short=0x7f0a0100;
-        public static final int pref_long_short_summary=0x7f0a0101;
-        public static final int pref_manage_sites=0x7f0a00f3;
-        public static final int pref_manage_sites_summary=0x7f0a00f4;
-        public static final int pref_margin_h=0x7f0a00c7;
-        public static final int pref_margin_h_summary=0x7f0a00c8;
-        public static final int pref_margin_v=0x7f0a00c9;
-        public static final int pref_margin_v_summary=0x7f0a00ca;
-        public static final int pref_my_books_settings=0x7f0a00a7;
-        public static final int pref_nav_swipe_h=0x7f0a00e4;
-        public static final int pref_nav_swipe_h_summary=0x7f0a00e5;
-        public static final int pref_nav_swipe_v=0x7f0a00e6;
-        public static final int pref_nav_swipe_v_summary=0x7f0a00e7;
-        public static final int pref_nav_tap_h=0x7f0a00e8;
-        public static final int pref_nav_tap_h_summary=0x7f0a00e9;
-        public static final int pref_nav_tap_v=0x7f0a00ea;
-        public static final int pref_nav_tap_v_summary=0x7f0a00eb;
-        public static final int pref_nav_vol=0x7f0a00e2;
-        public static final int pref_nav_vol_summary=0x7f0a00e3;
-        public static final int pref_navigation_settings=0x7f0a00df;
-        public static final int pref_night_bg=0x7f0a00d6;
-        public static final int pref_night_bg_summary=0x7f0a00d7;
-        public static final int pref_night_link=0x7f0a00d8;
-        public static final int pref_night_link_summary=0x7f0a00d9;
-        public static final int pref_night_text=0x7f0a00d4;
-        public static final int pref_night_text_summary=0x7f0a00d5;
+        public static final int pref_lang=0x7f0a00f8;
+        public static final int pref_lang_summary=0x7f0a00f9;
+        public static final int pref_line_spacing=0x7f0a00ca;
+        public static final int pref_line_spacing_summary=0x7f0a00cb;
+        public static final int pref_long_short=0x7f0a00ff;
+        public static final int pref_long_short_summary=0x7f0a0100;
+        public static final int pref_manage_sites=0x7f0a00f2;
+        public static final int pref_manage_sites_summary=0x7f0a00f3;
+        public static final int pref_margin_h=0x7f0a00c6;
+        public static final int pref_margin_h_summary=0x7f0a00c7;
+        public static final int pref_margin_v=0x7f0a00c8;
+        public static final int pref_margin_v_summary=0x7f0a00c9;
+        public static final int pref_my_books_settings=0x7f0a00a6;
+        public static final int pref_nav_swipe_h=0x7f0a00e3;
+        public static final int pref_nav_swipe_h_summary=0x7f0a00e4;
+        public static final int pref_nav_swipe_v=0x7f0a00e5;
+        public static final int pref_nav_swipe_v_summary=0x7f0a00e6;
+        public static final int pref_nav_tap_h=0x7f0a00e7;
+        public static final int pref_nav_tap_h_summary=0x7f0a00e8;
+        public static final int pref_nav_tap_v=0x7f0a00e9;
+        public static final int pref_nav_tap_v_summary=0x7f0a00ea;
+        public static final int pref_nav_vol=0x7f0a00e1;
+        public static final int pref_nav_vol_summary=0x7f0a00e2;
+        public static final int pref_navigation_settings=0x7f0a00de;
+        public static final int pref_night_bg=0x7f0a00d5;
+        public static final int pref_night_bg_summary=0x7f0a00d6;
+        public static final int pref_night_link=0x7f0a00d7;
+        public static final int pref_night_link_summary=0x7f0a00d8;
+        public static final int pref_night_text=0x7f0a00d3;
+        public static final int pref_night_text_summary=0x7f0a00d4;
         /**  Not yet translated 
  Not yet translated 
  Not yet translated 
          */
-        public static final int pref_nook_touch=0x7f0a00ee;
-        public static final int pref_nook_touch_button_nav=0x7f0a00ef;
-        public static final int pref_nook_touch_button_nav_summary=0x7f0a00f0;
-        public static final int pref_reading_direction=0x7f0a00f1;
-        public static final int pref_reading_direction_summary=0x7f0a00f2;
-        public static final int pref_sans_serif_font=0x7f0a00f7;
-        public static final int pref_sans_serif_summary=0x7f0a00f8;
-        public static final int pref_screen_orientation=0x7f0a00b6;
-        public static final int pref_screen_orientation_summary=0x7f0a00b7;
+        public static final int pref_nook_touch=0x7f0a00ed;
+        public static final int pref_nook_touch_button_nav=0x7f0a00ee;
+        public static final int pref_nook_touch_button_nav_summary=0x7f0a00ef;
+        public static final int pref_reading_direction=0x7f0a00f0;
+        public static final int pref_reading_direction_summary=0x7f0a00f1;
+        public static final int pref_sans_serif_font=0x7f0a00f6;
+        public static final int pref_sans_serif_summary=0x7f0a00f7;
+        public static final int pref_screen_orientation=0x7f0a00b5;
+        public static final int pref_screen_orientation_summary=0x7f0a00b6;
         /**  <string name="pref_scroll_style_summary"></string> 
          */
-        public static final int pref_scroll_speed=0x7f0a00a5;
-        public static final int pref_scroll_speed_summary=0x7f0a00a6;
-        public static final int pref_scroll_style=0x7f0a00a3;
+        public static final int pref_scroll_speed=0x7f0a00a4;
+        public static final int pref_scroll_speed_summary=0x7f0a00a5;
+        public static final int pref_scroll_style=0x7f0a00a2;
         /**  Not yet translated 
          */
-        public static final int pref_scroll_style_summary=0x7f0a00a4;
-        public static final int pref_scrolling=0x7f0a00e0;
-        public static final int pref_scrolling_summary=0x7f0a00e1;
-        public static final int pref_serif_font=0x7f0a00f5;
-        public static final int pref_serif_summary=0x7f0a00f6;
-        public static final int pref_set_brightness=0x7f0a00ba;
-        public static final int pref_set_brightness_summary=0x7f0a00bb;
-        public static final int pref_show_pagenum=0x7f0a00ec;
-        public static final int pref_show_pagenum_summary=0x7f0a00ed;
-        public static final int pref_strip_whitespace=0x7f0a00c3;
-        public static final int pref_strip_whitespace_summary=0x7f0a00c4;
-        public static final int pref_sync_server=0x7f0a0110;
-        public static final int pref_sync_server_message=0x7f0a0112;
-        public static final int pref_sync_server_summary=0x7f0a0111;
+        public static final int pref_scroll_style_summary=0x7f0a00a3;
+        public static final int pref_scrolling=0x7f0a00df;
+        public static final int pref_scrolling_summary=0x7f0a00e0;
+        public static final int pref_serif_font=0x7f0a00f4;
+        public static final int pref_serif_summary=0x7f0a00f5;
+        public static final int pref_set_brightness=0x7f0a00b9;
+        public static final int pref_set_brightness_summary=0x7f0a00ba;
+        public static final int pref_show_pagenum=0x7f0a00eb;
+        public static final int pref_show_pagenum_summary=0x7f0a00ec;
+        public static final int pref_strip_whitespace=0x7f0a00c2;
+        public static final int pref_strip_whitespace_summary=0x7f0a00c3;
+        public static final int pref_sync_server=0x7f0a010f;
+        public static final int pref_sync_server_message=0x7f0a0111;
+        public static final int pref_sync_server_summary=0x7f0a0110;
         /**  Preferences 
  Preferences 
  Preferences 
@@ -1771,99 +1771,99 @@ containing a value of this type.
  Preferences 
  Preferences 
          */
-        public static final int pref_sync_settings=0x7f0a0098;
-        public static final int pref_text_display_settings=0x7f0a00c0;
+        public static final int pref_sync_settings=0x7f0a0097;
+        public static final int pref_text_display_settings=0x7f0a00bf;
         /**  Not yet translated 
  Not yet translated 
          */
-        public static final int pref_use_publisher_style=0x7f0a0106;
-        public static final int pref_use_publisher_style_summary=0x7f0a0107;
-        public static final int pref_v_animation=0x7f0a00dd;
-        public static final int pref_v_animation_summary=0x7f0a00de;
-        public static final int pref_visual_settings=0x7f0a00b3;
+        public static final int pref_use_publisher_style=0x7f0a0105;
+        public static final int pref_use_publisher_style_summary=0x7f0a0106;
+        public static final int pref_v_animation=0x7f0a00dc;
+        public static final int pref_v_animation_summary=0x7f0a00dd;
+        public static final int pref_visual_settings=0x7f0a00b2;
         /**  Sync reading progress 
          */
-        public static final int prefs=0x7f0a0018;
-        public static final int prev_page=0x7f0a0075;
+        public static final int prefs=0x7f0a0017;
+        public static final int prev_page=0x7f0a0074;
         /**  My Books 
          */
-        public static final int profile_day=0x7f0a0015;
+        public static final int profile_day=0x7f0a0014;
         /**  Switch to day mode 
          */
-        public static final int profile_night=0x7f0a0016;
+        public static final int profile_night=0x7f0a0015;
         /**  Switch to shelves view 
          */
-        public static final int read=0x7f0a0047;
-        public static final int results_desc=0x7f0a007b;
+        public static final int read=0x7f0a0046;
+        public static final int results_desc=0x7f0a007a;
         /**  Show TOC 
          */
-        public static final int rolling_blind=0x7f0a001a;
-        public static final int save=0x7f0a0063;
-        public static final int save_note=0x7f0a008b;
+        public static final int rolling_blind=0x7f0a0019;
+        public static final int save=0x7f0a0062;
+        public static final int save_note=0x7f0a008a;
         /**  Loading library… 
          */
-        public static final int scan_bks_question=0x7f0a003b;
+        public static final int scan_bks_question=0x7f0a003a;
         /**  Delete from library 
          */
-        public static final int scan_books=0x7f0a0031;
+        public static final int scan_books=0x7f0a0030;
         /**  Scan my entire SD Card 
          */
-        public static final int scan_folder=0x7f0a0041;
+        public static final int scan_folder=0x7f0a0040;
         /**  Importing %1$d of %2$d 
          */
-        public static final int scan_folders=0x7f0a0035;
+        public static final int scan_folders=0x7f0a0034;
         /**  You can either scan your entire SD-Card, or specify a folder to search. 
          */
-        public static final int scan_whole_card=0x7f0a0040;
+        public static final int scan_whole_card=0x7f0a003f;
         /**  Importing books… 
          */
-        public static final int scanning_epub=0x7f0a0033;
-        public static final int search_books=0x7f0a004a;
-        public static final int search_cancelled=0x7f0a0052;
-        public static final int search_hits=0x7f0a0051;
-        public static final int search_library=0x7f0a0071;
-        public static final int search_no_matches=0x7f0a0053;
-        public static final int search_results=0x7f0a0054;
-        public static final int search_results_item=0x7f0a0077;
-        public static final int search_text=0x7f0a0050;
-        public static final int search_wait=0x7f0a004f;
-        public static final int set_colour=0x7f0a008c;
+        public static final int scanning_epub=0x7f0a0032;
+        public static final int search_books=0x7f0a0049;
+        public static final int search_cancelled=0x7f0a0051;
+        public static final int search_hits=0x7f0a0050;
+        public static final int search_library=0x7f0a0070;
+        public static final int search_no_matches=0x7f0a0052;
+        public static final int search_results=0x7f0a0053;
+        public static final int search_results_item=0x7f0a0076;
+        public static final int search_text=0x7f0a004f;
+        public static final int search_wait=0x7f0a004e;
+        public static final int set_colour=0x7f0a008b;
         /**  Switch to list view 
          */
-        public static final int shelves_view=0x7f0a0046;
+        public static final int shelves_view=0x7f0a0045;
         /**  Preferences 
          */
-        public static final int show_toc=0x7f0a0019;
-        public static final int site_desc=0x7f0a0067;
-        public static final int site_name=0x7f0a0065;
-        public static final int site_password=0x7f0a0069;
-        public static final int site_url=0x7f0a0066;
-        public static final int site_username=0x7f0a0068;
-        public static final int small_text=0x7f0a0119;
+        public static final int show_toc=0x7f0a0018;
+        public static final int site_desc=0x7f0a0066;
+        public static final int site_name=0x7f0a0064;
+        public static final int site_password=0x7f0a0068;
+        public static final int site_url=0x7f0a0065;
+        public static final int site_username=0x7f0a0067;
+        public static final int small_text=0x7f0a0118;
         /**  "Syncing progress…" 
          */
-        public static final int sync_failed=0x7f0a0027;
+        public static final int sync_failed=0x7f0a0026;
         /**  Table of contents 
          */
-        public static final int syncing=0x7f0a0026;
-        public static final int text_note=0x7f0a0089;
-        public static final int text_to_speech=0x7f0a006e;
-        public static final int title=0x7f0a0010;
-        public static final int toc_desc=0x7f0a0080;
+        public static final int syncing=0x7f0a0025;
+        public static final int text_note=0x7f0a0088;
+        public static final int text_to_speech=0x7f0a006d;
+        public static final int title=0x7f0a000f;
+        public static final int toc_desc=0x7f0a007f;
         /**  Cloud bookmarks 
          */
-        public static final int toc_label=0x7f0a0025;
-        public static final int tts_failed=0x7f0a0070;
+        public static final int toc_label=0x7f0a0024;
+        public static final int tts_failed=0x7f0a006f;
         /**  Added to library: %s 
          */
-        public static final int view_details=0x7f0a002f;
+        public static final int view_details=0x7f0a002e;
         /**  Look up in Dictionary 
          */
-        public static final int wikipedia_lookup=0x7f0a001f;
+        public static final int wikipedia_lookup=0x7f0a001e;
         /**  Search on Google 
          */
-        public static final int word_select=0x7f0a0021;
-        public static final int zero_percent=0x7f0a0114;
+        public static final int word_select=0x7f0a0020;
+        public static final int zero_percent=0x7f0a0113;
     }
     public static final class style {
         public static final int ActionBar_Solid_Aujurtheme=0x7f0b0065;

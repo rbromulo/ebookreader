@@ -69,6 +69,8 @@ public abstract class PageTurnerActivity extends RoboSherlockFragmentActivity
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
+		
+		getSupportActionBar().setIcon(R.drawable.ic_actionbar);
 
 		initDrawerItems(mDrawerOptions);
 

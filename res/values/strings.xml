@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">PagerSlidingTabStrip</string>
-    <string name="action_contact">Contact</string>
-
-    
-    <string name="app_name">AuJur</string>
+    <string name="app_name">AJ Reader</string>
     
     <string name="title">Title</string>
     <string name="app_desc">AuJur is a syncing e-book reader that allows you to sync your reading progress over multiple devices.</string>
