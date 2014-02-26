@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aujur.ebookreader"
     android:installLocation="auto"
-    android:versionCode="20"
-    android:versionName="20" >
+    android:versionCode="21"
+    android:versionName="21" >
 
     <uses-sdk
         android:minSdkVersion="7"
