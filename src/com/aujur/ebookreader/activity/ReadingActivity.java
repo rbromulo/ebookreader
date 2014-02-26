@@ -206,7 +206,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		else if (i == tocIndex) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putInt("SELECTED_TAB", 0);
+			bundle.putInt("SELECTED_TAB", 1);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			closeNavigationDrawer();
@@ -214,7 +214,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		} else if (i == highlightIndex) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putInt("SELECTED_TAB", 1);
+			bundle.putInt("SELECTED_TAB", 2);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			closeNavigationDrawer();
@@ -222,7 +222,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		} else if (i == bookmarksIndex) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putInt("SELECTED_TAB", 2);
+			bundle.putInt("SELECTED_TAB", 3);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			closeNavigationDrawer();
@@ -230,7 +230,7 @@ public class ReadingActivity extends PageTurnerActivity implements
 		} else if (i == searchIndex) {
 			Intent intent = new Intent(this, ReadingOptionsActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putInt("SELECTED_TAB", 3);
+			bundle.putInt("SELECTED_TAB", 4);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			closeNavigationDrawer();

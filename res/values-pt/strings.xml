@@ -53,6 +53,8 @@
     
     <string name="options">Opções</string>
     
+    <string name="overview">Visão geral</string>
+    
     <string name="no_bks_fnd_text">Nenhum livro foi encontrado em seu dispositivo.\nVoçê pode baixar livros de gutenberg.org ou feedbooks.com</string>
     <string name="loading_library">Carregando biblioteca…</string>
     <string name="scan_bks_question">Não há livros em sua biblioteca.\nVoçê gostaria de procurar livros em seu dispositivo?</string>    

@@ -847,14 +847,6 @@ public class LibraryFragment extends RoboSherlockFragment implements ImportCallb
 		}		
 	}	
 	
-	
-	/**
-	 * Based on example found here:
-	 * http://www.vogella.de/articles/AndroidListView/article.html
-	 * 
-	 * @author work
-	 *
-	 */
 	private class BookListAdapter extends KeyedResultAdapter {	
 		
 		private Context context;		

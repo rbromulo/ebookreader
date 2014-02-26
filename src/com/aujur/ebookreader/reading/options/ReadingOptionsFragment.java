@@ -166,7 +166,8 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 
-		private final String[] TITLES = { getString(R.string.toc_label),
+		private final String[] TITLES = { getString(R.string.overview),
+				getString(R.string.toc_label),
 				getString(R.string.notes_and_highlights),
 				getString(R.string.bookmarks),
 				getString(R.string.search_results) };
@@ -191,19 +192,22 @@ public class ReadingOptionsFragment extends RoboSherlockFragment {
 			switch (position) {
 
 			case 0:
-				return IndexFragment.newInstance();
+				return OverviewFragment.newInstance();
 
 			case 1:
-				return HighlightsFragment.newInstance();
+				return IndexFragment.newInstance();
 
 			case 2:
-				return BookmarksFragment.newInstance();
+				return HighlightsFragment.newInstance();
 
 			case 3:
+				return BookmarksFragment.newInstance();
+
+			case 4:
 				return SearchFragment.newInstance();
 
 			default:
-				return IndexFragment.newInstance();
+				return OverviewFragment.newInstance();
 
 			}
 		}

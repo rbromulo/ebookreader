@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_grey" >
+
+    <LinearLayout
+        android:id="@+id/bookInfoContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/light_grey"
+        android:orientation="vertical"
+        android:paddingRight="15dip" >
+
+        <RelativeLayout
+            android:id="@+id/topBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <include
+                android:id="@+id/coverImage"
+                layout="@layout/large_book_cover" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/coverImage"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/titleField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/large_text"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/authorField"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_author_byline"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

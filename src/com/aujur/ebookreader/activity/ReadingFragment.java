@@ -2544,7 +2544,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 									Intent intent = new Intent(getActivity(),
 											ReadingOptionsActivity.class);
 									Bundle bundle = new Bundle();
-									bundle.putInt("SELECTED_TAB", 3);
+									bundle.putInt("SELECTED_TAB", 4);
 									intent.putExtras(bundle);
 									startActivity(intent);
 
@@ -3059,7 +3059,7 @@ public class ReadingFragment extends RoboSherlockFragment implements
 						Intent intent = new Intent(getActivity(),
 								ReadingOptionsActivity.class);
 						Bundle bundle = new Bundle();
-						bundle.putInt("SELECTED_TAB", 3);
+						bundle.putInt("SELECTED_TAB", 4);
 						intent.putExtras(bundle);
 						startActivity(intent);
 
