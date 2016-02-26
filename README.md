@@ -1,7 +1,7 @@
 AuJur E-Book Reader for Android
 ========================================================
 
-AuJur E-Book Reader is a free, open-source ebook reader. It is licensed under the GPL-V3 license and based on PageTurner.
+AuJur E-Book Reader is a free, open-source ebook reader. It is licensed under the GPL-V3 license.
 
 ![AuJur E-Book Reader Sample Screenshot][1]
 
