@@ -1,10 +1,10 @@
-AuJur E-Book Reader for Android
+E-Book Reader for Android
 ========================================================
 
-AuJur E-Book Reader is a free, open-source ebook reader. It is licensed under the GPL-V3 license.
+E-Book Reader is a free, open-source ebook reader. It is licensed under the GPL-V3 license.
 
 
-Building AuJur E-Book Reader
+Building E-Book Reader
 ------------------------------
 
 # Install Java
@@ -34,12 +34,12 @@ Building AuJur E-Book Reader
         List of devices attached 
         015d18ad5c14000c        device
 
-NOTE: Currently AuJur E-Book Reader won't build using Maven.
+NOTE: Currently E-Book Reader won't build using Maven.
 
 Eclipse
 -------
 
-The recommended way to build AuJur E-Book Reader in Eclipse is using the m2e-android plugin.
+The recommended way to build E-Book Reader in Eclipse is using the m2e-android plugin.
 
 =======
 You can follow these steps to use dependencies (jar files):
@@ -47,7 +47,8 @@ You can follow these steps to use dependencies (jar files):
 1.   Download and unpack the sources        
 
 2.   In Eclipse, select "New Android Project" -> "From existing source" and
-     point it to the folder you unpacked AuJur E-Book Reader in.
+     point it to the folder you unpacked 
+     E-Book Reader in.
 
 3.   inside the source folder, there is a folder called "libs". Put all JAR files in the classpath of the project
 
